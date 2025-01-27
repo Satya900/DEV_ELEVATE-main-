@@ -1,0 +1,65 @@
+---
+import { supabase } from '../lib/supabase';
+---
+<div class="bg-green-500 text-white py-16">
+  <div class="max-w-4xl mx-auto px-4 text-center">
+    <h2 class="text-3xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+    <p class="mb-8">Get the latest articles and tutorials delivered to your inbox.</p>
+    <form id="newsletterForm" class="max-w-md mx-auto">
+      <div class="flex gap-2">
+        <input
+          type="email"
+          id="emailInput"
+          placeholder="Enter your email"
+          required
+          class="flex-1 px-4 py-2 rounded-lg text-gray-900"
+        />
+        <button
+          type="submit"
+          class="bg-gray-900 text-white px-6 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+        >
+          Subscribe
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('newsletterForm');
+    
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitButton = form.querySelector('button[type="submit"]');
+      
+      try {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Subscribing...';
+        
+        const email = form.querySelector('#emailInput').value;
+        
+        const response = await fetch('/api/newsletter/subscribe', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to subscribe');
+        }
+
+        form.reset();
+        alert('Thanks for subscribing! We\'ll be in touch soon.');
+      } catch (error) {
+        console.error('Error subscribing:', error);
+        alert('Failed to subscribe. Please try again.');
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = 'Subscribe';
+      }
+    });
+  });
+</script>
