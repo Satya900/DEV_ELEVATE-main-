@@ -27,18 +27,58 @@ const footerLinks = {
     { title: "YouTube", href: "https://youtube.com", icon: "ri:youtube-fill" }
   ]
 };
+
+// Default meta values
+const defaultMeta = {
+  description: "Dev Elevate - A comprehensive technical blog covering DSA, Web Development, System Design, OOP, and Machine Learning",
+  keywords: "programming, coding, software development, web development, DSA, algorithms, system design, machine learning",
+  author: "Dev Elevate Team",
+  image: "/social-image.jpg" // Default social image
+};
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Dev Elevate - A Technical Blog for Developers" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    
     <title>{title}</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="title" content={title} />
+    <meta name="description" content={defaultMeta.description} />
+    <meta name="keywords" content={defaultMeta.keywords} />
+    <meta name="author" content={defaultMeta.author} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={defaultMeta.description} />
+    <meta property="og:image" content={new URL(defaultMeta.image, Astro.url)} />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={defaultMeta.description} />
+    <meta property="twitter:image" content={new URL(defaultMeta.image, Astro.url)} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={Astro.url} />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="theme-color" content="#16a34a" /> <!-- Green-500 color -->
+    
+    <!-- Slot for page-specific meta tags -->
+    <slot name="head" />
+    
     <GoogleAnalytics />
   </head>
   <body class="bg-gray-50 flex flex-col min-h-screen">
@@ -64,6 +104,8 @@ const footerLinks = {
             <a href="/system-design" class="hover:text-green-400 transition-colors">System Design</a>
             <a href="/oops" class="hover:text-green-400 transition-colors">OOP</a>
             <a href="/machine-learning" class="hover:text-green-400 transition-colors">Machine Learning</a>
+            <a href="/projects" class="hover:text-green-400 transition-colors">Projects</a>
+            <a href="/roadmaps" class="hover:text-green-400 transition-colors">Roadmaps</a>
             <a href="/contact" class="hover:text-green-400 transition-colors">Contact</a>
           </div>
         </div>
@@ -76,6 +118,8 @@ const footerLinks = {
             <a href="/system-design" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">System Design</a>
             <a href="/oops" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">OOP</a>
             <a href="/machine-learning" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">Machine Learning</a>
+            <a href="/projects" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">Projects</a>
+            <a href="/roadmaps" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">Roadmaps</a>
             <a href="/contact" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">Contact</a>
           </div>
         </div>
