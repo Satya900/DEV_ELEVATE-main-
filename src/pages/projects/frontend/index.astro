@@ -1,0 +1,40 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return data.category === 'Projects' && data.tags?.includes('frontend');
+});
+---
+
+<Layout title="Frontend Projects - Dev Elevate">
+  <div class="max-w-7xl mx-auto px-4 py-16">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8">Frontend Projects</h1>
+    
+    <div class="prose lg:prose-xl mb-12">
+      <p>Explore hands-on frontend development projects using modern web technologies.</p>
+    </div>
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Projects</h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      {posts.map(post => (
+        <a href={`/blog/${post.slug}`} class="block">
+          <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
+            <h3 class="text-xl font-semibold mb-2">{post.data.title}</h3>
+            <p class="text-gray-600 mb-4">{post.data.description}</p>
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag: string) => (
+                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded-full text-sm">
+                  #{tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+      {posts.length === 0 && (
+        <p class="text-gray-600">No projects available yet. Check back soon!</p>
+      )}
+    </div>
+  </div>
+</Layout>
