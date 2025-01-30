@@ -1,6 +1,6 @@
 # Dev Elevate - Technical Learning Platform
 
-![Dev Elevate Banner](https://develevate.tech/banner.png)
+[Screenshot-2025-01-28-154022.png](https://postimg.cc/w7SJvQcD)
 
 Dev Elevate is a comprehensive technical learning platform built with Astro, offering in-depth tutorials, guides, and projects across multiple domains of software development.
 
