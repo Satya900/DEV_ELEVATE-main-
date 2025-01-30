@@ -21,10 +21,16 @@ const footerLinks = {
     { title: "Terms of Service", href: "/terms" }
   ],
   social: [
-    { title: "Twitter", href: "https://twitter.com", icon: "ri:twitter-x-fill" },
-    { title: "GitHub", href: "https://github.com", icon: "ri:github-fill" },
-    { title: "LinkedIn", href: "https://linkedin.com", icon: "ri:linkedin-fill" },
-    { title: "YouTube", href: "https://youtube.com", icon: "ri:youtube-fill" }
+    { title: "Twitter", href: "https://twitter.com/develevate", icon: "ri:twitter-x-fill" },
+    { title: "GitHub", href: "https://github.com/dev-elevate/dev-elevate", icon: "ri:github-fill" },
+    { title: "LinkedIn", href: "https://linkedin.com/company/develevate", icon: "ri:linkedin-fill" },
+    { title: "YouTube", href: "https://youtube.com/@develevate", icon: "ri:youtube-fill" }
+  ],
+  contribute: [
+    { title: "How to Contribute", href: "/contribute" },
+    { title: "Code of Conduct", href: "/code-of-conduct" },
+    { title: "Report Issues", href: "https://github.com/dev-elevate/dev-elevate/issues/new/choose" },
+    { title: "Feature Requests", href: "https://github.com/dev-elevate/dev-elevate/discussions/new?category=ideas" }
   ]
 };
 
@@ -179,26 +185,27 @@ const defaultMeta = {
             </ul>
           </div>
 
-          <!-- Newsletter -->
+          <!-- Contribute -->
           <div>
-            <h3 class="text-lg font-semibold mb-4">Stay Updated</h3>
-            <form class="space-y-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                class="w-full px-4 py-2 rounded bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-              <button
-                type="submit"
-                class="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-              >
-                Subscribe
-              </button>
-            </form>
+            <h3 class="text-lg font-semibold mb-4">Contribute</h3>
+            <ul class="space-y-2">
+              {footerLinks.contribute.map(link => (
+                <li>
+                  <a 
+                    href={link.href}
+                    class="text-gray-400 hover:text-green-400 transition-colors"
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  >
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
 
-        <!-- Social Links -->
+        <!-- Social Links and Copyright -->
         <div class="border-t border-gray-800 pt-8">
           <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p class="text-gray-400 text-sm">
