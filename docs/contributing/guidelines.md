@@ -4,7 +4,7 @@ Thank you for considering contributing to Dev Elevate! This document provides gu
 
 ## Code of Conduct
 
-Please read and follow our [Code of Conduct](https://develevate.tech/code-of-conduct) to maintain a positive and inclusive community.
+Please read and follow our [Code of Conduct](../../CODE_OF_CONDUCT.md) to maintain a positive and inclusive community.
 
 ## Ways to Contribute
 
@@ -91,7 +91,7 @@ Please read and follow our [Code of Conduct](https://develevate.tech/code-of-con
 
 ## Getting Help
 
-- Join our [Discord](https://discord.gg/develevate)
+- Join our [Discord](https://discord.gg/GCkQ6cuY)
 - Ask in GitHub Discussions
 - Read our [FAQ](../faq.md)
 
