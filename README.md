@@ -1,69 +1,55 @@
 # Dev Elevate - Technical Learning Platform
 
 ![Dev Elevate Banner](https://i.postimg.cc/qv7G1mND/Screenshot-2025-01-28-154022.png)
-Dev Elevate is a comprehensive technical learning platform built with Astro, offering in-depth tutorials, guides, and projects across multiple domains of software development.
+
+Welcome to **Dev Elevate**, a comprehensive technical learning platform built with **Astro**. We provide in-depth tutorials, guides, and projects across multiple domains of software development. Dev Elevate is committed to fostering open-source collaboration and empowering developers worldwide.
 
 ## 🚀 Features
 
-- **Rich Technical Content**
-  - Data Structures & Algorithms
-  - Web Development (Frontend & Backend)
-  - System Design
-  - Object-Oriented Programming
-  - Machine Learning
-  - Project-based Learning
-
-- **Interactive Components**
-  - Real-time Search
-  - Newsletter Subscription
-  - Contact Form
-  - Social Sharing
-  - Code Syntax Highlighting
-
-- **Performance Optimized**
-  - Static Site Generation with Astro
-  - Optimized Images and Assets
-  - Responsive Design
-  - SEO Friendly
-  - Fast Page Loads
+- 📚 Comprehensive tutorials and guides
+- 💻 Hands-on coding projects
+- 🎯 Interactive learning paths
+- 🤝 Active community support
+- 🌟 Regular content updates
+- 📱 Mobile-responsive design
 
 ## 🛠️ Tech Stack
 
-- **Frontend**
-  - [Astro](https://astro.build) - Static Site Generator
-  - [Tailwind CSS](https://tailwindcss.com) - Styling
-  - [TypeScript](https://www.typescriptlang.org) - Type Safety
-  - [Remix Icons](https://remixicon.com) - Icons
+- [Astro](https://astro.build) - Web Framework
+- [Tailwind CSS](https://tailwindcss.com) - Styling
+- [TypeScript](https://www.typescriptlang.org) - Type Safety
+- [Supabase](https://supabase.com) - Backend & Authentication
+- [Markdown](https://www.markdownguide.org) - Content Management
 
-- **Backend**
-  - [Supabase](https://supabase.com) - Database & Authentication
-  - [Node.js](https://nodejs.org) - Runtime Environment
+## 🌟 Open Source & Bounty Program
 
-- **Infrastructure**
-  - [Netlify](https://www.netlify.com) - Hosting & Deployment
-  - [Google Analytics](https://analytics.google.com) - Analytics
+Join our thriving open-source community and earn rewards through our Bounty Program!
 
-## 📁 Project Structure
+### Bounty Program Highlights
 
-```
-dev-elevate/
-├── src/
-│   ├── components/     # Reusable UI components
-│   ├── content/        # Blog posts and content
-│   ├── layouts/        # Page layouts
-│   ├── lib/           # Utility functions and configurations
-│   ├── pages/         # Route pages
-│   └── types/         # TypeScript type definitions
-├── public/            # Static assets
-├── supabase/          # Database migrations and configurations
-└── astro.config.mjs   # Astro configuration
-```
+#### Monthly Rewards
+- 🏆 Top 3 contributors receive exclusive Dev Elevate merchandise
+- ✨ Special recognition on our website and social media
+- 🎯 Opportunity to join our core team
 
-## 🔧 Setup & Installation
+#### Points System
+- Bug fixes: **5-20 points**
+- Feature implementations: **20-100 points**
+- Documentation improvements: **5-15 points**
+- Content contributions: **10-50 points**
+- Code reviews: **5-10 points**
+
+#### Reward Tiers
+- 🥉 **Bronze (100 points)**: Dev Elevate stickers pack
+- 🥈 **Silver (250 points)**: Custom Dev Elevate t-shirt
+- 🥇 **Gold (500 points)**: Complete Dev Elevate swag box
+- 💎 **Diamond (1000+ points)**: Exclusive mentorship session + all previous rewards
+
+## 🚀 Getting Started
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/dev-elevate.git
+   git clone https://github.com/dev-elevate/dev-elevate.git
    cd dev-elevate
    ```
 
@@ -72,11 +58,10 @@ dev-elevate/
    npm install
    ```
 
-3. **Environment Variables**
-   Create a `.env` file with the following:
-   ```env
-   PUBLIC_SUPABASE_URL=your_supabase_url
-   PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Update .env with your Supabase credentials
    ```
 
 4. **Start development server**
@@ -89,158 +74,71 @@ dev-elevate/
    npm run build
    ```
 
-## 📚 Content Structure
+## 🤝 How to Contribute
 
-### Blog Posts
-- Located in `src/content/blog/`
-- Written in Markdown format
-- Frontmatter includes:
-  - title
-  - description
-  - pubDate
-  - category
-  - author
-  - tags
+We welcome contributions from developers of all skill levels! Here's how you can get involved:
 
-### Categories
-1. **DSA**
-   - Arrays & Strings
-   - Linked Lists
-   - Trees & Graphs
+1. **Fork the Repository**
+   - Click the 'Fork' button on GitHub
+   - Clone your fork locally
 
-2. **Web Development**
-   - Frontend Development
-   - Backend Development
-
-3. **System Design**
-   - Architecture Patterns
-   - Scalability
-   - Security
-
-4. **OOP**
-   - Fundamentals
-   - Design Patterns
-   - SOLID Principles
-
-5. **Machine Learning**
-   - ML Fundamentals
-   - Deep Learning
-   - Data Science
-
-## 🔐 Database Schema
-
-### Tables
-1. **contacts**
-   - Stores user contact form submissions
-   - Row Level Security enabled
-   - Fields: id, name, email, message, created_at
-
-2. **newsletter_subscribers**
-   - Manages newsletter subscriptions
-   - Unique email constraint
-   - Fields: id, email, status, created_at
-
-## 🎯 Key Features Implementation
-
-### Search Functionality
-- Real-time search using client-side filtering
-- Searches through titles, descriptions, and tags
-- Instant results display
-
-### Newsletter System
-- Email validation
-- Duplicate prevention
-- Subscription status management
-
-### Contact Form
-- Form validation
-- Spam prevention
-- Admin notification system
-
-### Social Sharing
-- Support for multiple platforms
-- Dynamic URL generation
-- Share count tracking
-
-## 🔄 CI/CD Pipeline
-
-1. **Build Process**
+2. **Create a Branch**
    ```bash
-   npm run build
+   git checkout -b feature/your-feature-name
    ```
-   - Generates static assets
-   - Optimizes images
-   - Minifies CSS/JS
 
-2. **Deployment**
-   - Automatic deployment on main branch updates
-   - Preview deployments for pull requests
-   - Environment variable management
+3. **Make Changes**
+   - Write clean, documented code
+   - Follow our coding standards
+   - Add tests where applicable
 
-## 📈 Performance Metrics
-
-- Lighthouse Score: 95+
-- First Contentful Paint: < 1s
-- Time to Interactive: < 2s
-- SEO Score: 100
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
+4. **Commit Changes**
    ```bash
-   git checkout -b feature/amazing-feature
+   git add .
+   git commit -m "Add feature: description"
    ```
-3. Commit changes
+
+5. **Push to GitHub**
    ```bash
-   git commit -m 'Add amazing feature'
+   git push origin feature/your-feature-name
    ```
-4. Push to branch
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. Open a Pull Request
 
-## 📝 Content Guidelines
+6. **Submit a Pull Request**
+   - Create a PR with a clear description
+   - Link related issues
+   - Wait for review
 
-1. **Blog Posts**
-   - Clear and concise explanations
-   - Practical examples
-   - Code snippets with explanations
-   - Proper formatting and structure
+For detailed guidelines, check our [Contribution Guide](/contribute).
 
-2. **Code Examples**
-   - Working code only
-   - Well-commented
-   - Follow best practices
-   - Include error handling
+## 📜 Code of Conduct
+
+We are committed to providing a welcoming and inclusive environment. Please read our [Code of Conduct](/code-of-conduct) before contributing.
+
+## 🐛 Issue Reporting
+
+Found a bug or have a feature request? We'd love to hear about it!
+
+- 🐞 [Report a Bug](https://github.com/dev-elevate/dev-elevate/issues/new?template=bug_report.md)
+- 💡 [Request a Feature](https://github.com/dev-elevate/dev-elevate/discussions/new?category=ideas)
+
+## 📖 Documentation
+
+- [Installation Guide](docs/installation.md)
+- [API Reference](docs/api-reference.md)
+- [Contributing Guidelines](docs/contributing.md)
+- [Development Setup](docs/development.md)
+
+## 📱 Connect With Us
+
+- [Twitter](https://twitter.com/develevate)
+- [GitHub](https://github.com/dev-elevate/dev-elevate)
+- [LinkedIn](https://linkedin.com/company/develevate)
+- [YouTube](https://youtube.com/@develevate)
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👥 Team
-
-- **Dev Elevate Team**
-  - Frontend Developers
-  - Content Writers
-  - Technical Reviewers
-  - UX Designers
-
-## 📞 Contact
-
-- Website: [https://develevate.tech](https://develevate.tech)
-- Email: contact@develevate.tech
-- Twitter: [@develevate](https://twitter.com/develevate)
-- LinkedIn: [Dev Elevate](https://linkedin.com/company/develevate)
-
-## 🙏 Acknowledgments
-
-- [Astro Documentation](https://docs.astro.build)
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-- [Supabase Documentation](https://supabase.com/docs)
-- Open Source Community
-
 ---
 
-Made with ❤️ by the Dev Elevate Team
+<p align="center">Made with ❤️ by the Dev Elevate Team</p>
