@@ -1,9 +1,20 @@
 ---
 interface Props {
   title: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  type?: string;
 }
 
-const { title } = Astro.props;
+const { 
+  title,
+  description = "Dev Elevate - A comprehensive technical blog covering DSA, Web Development, System Design, OOP, and Machine Learning",
+  keywords = "programming, coding, software development, web development, DSA, algorithms, system design, machine learning",
+  image = "/social-image.jpg",
+  type = "website"
+} = Astro.props;
+
 import GoogleAnalytics from '../components/GoogleAnalytics.astro';
 
 const footerLinks = {
@@ -31,16 +42,14 @@ const footerLinks = {
     { title: "Code of Conduct", href: "/code-of-conduct" },
     { title: "Report Issues", href: "https://github.com/Satya900/DEV_MAIN/issues" },
     { title: "Feature Requests", href: "https://github.com/Satya900/DEV_MAIN/discussions" }
+  ],
+  resources: [
+    { title: "Sitemap", href: "/sitemap.xml" },
+    { title: "RSS Feed", href: "/rss.xml" }
   ]
 };
 
-// Default meta values
-const defaultMeta = {
-  description: "Dev Elevate - A comprehensive technical blog covering DSA, Web Development, System Design, OOP, and Machine Learning",
-  keywords: "programming, coding, software development, web development, DSA, algorithms, system design, machine learning",
-  author: "Dev Elevate Team",
-  image: "/social-image.jpg" // Default social image
-};
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -54,36 +63,52 @@ const defaultMeta = {
     
     <title>{title}</title>
     
-    <!-- Primary Meta Tags -->
+    <!-- SEO Meta Tags -->
     <meta name="title" content={title} />
-    <meta name="description" content={defaultMeta.description} />
-    <meta name="keywords" content={defaultMeta.keywords} />
-    <meta name="author" content={defaultMeta.author} />
+    <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="author" content="Dev Elevate Team" />
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={defaultMeta.description} />
-    <meta property="og:image" content={new URL(defaultMeta.image, Astro.url)} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={defaultMeta.description} />
-    <meta property="twitter:image" content={new URL(defaultMeta.image, Astro.url)} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
     
     <!-- Canonical URL -->
-    <link rel="canonical" href={Astro.url} />
+    <link rel="canonical" href={canonicalURL} />
     
     <!-- Additional Meta Tags -->
-    <meta name="robots" content="index, follow" />
-    <meta name="googlebot" content="index, follow" />
-    <meta name="theme-color" content="#16a34a" /> <!-- Green-500 color -->
+    <meta name="theme-color" content="#16a34a" />
     
-    <!-- Slot for page-specific meta tags -->
-    <slot name="head" />
+    <!-- JSON-LD Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Dev Elevate",
+        "url": "https://develevate.tech",
+        "description": "A comprehensive technical blog covering DSA, Web Development, System Design, OOP, and Machine Learning",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Dev Elevate",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://develevate.tech/logo.png"
+          }
+        }
+      }
+    </script>
     
     <GoogleAnalytics />
   </head>
@@ -96,14 +121,12 @@ const defaultMeta = {
             <span class="text-2xl font-bold">Dev Elevate</span>
           </a>
           
-          <!-- Mobile menu button -->
-          <button id="menuButton" class="md:hidden p-2 rounded-md hover:bg-gray-800 transition-colors">
+          <button id="menuButton" class="md:hidden p-2 rounded-md hover:bg-gray-800 transition-colors" aria-label="Toggle menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
 
-          <!-- Desktop menu -->
           <div class="hidden md:flex space-x-8">
             <a href="/dsa" class="hover:text-green-400 transition-colors">DSA</a>
             <a href="/web-dev" class="hover:text-green-400 transition-colors">Web Dev</a>
@@ -116,7 +139,6 @@ const defaultMeta = {
           </div>
         </div>
 
-        <!-- Mobile menu -->
         <div id="mobileMenu" class="md:hidden hidden">
           <div class="px-2 pt-2 pb-3 space-y-1">
             <a href="/dsa" class="block px-3 py-2 rounded-md hover:bg-gray-800 transition-colors">DSA</a>
@@ -138,9 +160,7 @@ const defaultMeta = {
 
     <footer class="bg-gray-900 text-white mt-16">
       <div class="max-w-7xl mx-auto px-4 py-12">
-        <!-- Footer Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          <!-- Brand -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div class="space-y-4">
             <div class="flex items-center space-x-2">
               <span class="text-2xl font-bold font-mono">&lt;/&gt;</span>
@@ -151,7 +171,6 @@ const defaultMeta = {
             </p>
           </div>
 
-          <!-- Learn -->
           <div>
             <h3 class="text-lg font-semibold mb-4">Learn</h3>
             <ul class="space-y-2">
@@ -168,7 +187,6 @@ const defaultMeta = {
             </ul>
           </div>
 
-          <!-- Company -->
           <div>
             <h3 class="text-lg font-semibold mb-4">Company</h3>
             <ul class="space-y-2">
@@ -185,7 +203,6 @@ const defaultMeta = {
             </ul>
           </div>
 
-          <!-- Contribute -->
           <div>
             <h3 class="text-lg font-semibold mb-4">Contribute</h3>
             <ul class="space-y-2">
@@ -201,9 +218,24 @@ const defaultMeta = {
               ))}
             </ul>
           </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4">Resources</h3>
+            <ul class="space-y-2">
+              {footerLinks.resources.map(link => (
+                <li>
+                  <a 
+                    href={link.href}
+                    class="text-gray-400 hover:text-green-400 transition-colors"
+                  >
+                    {link.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
 
-        <!-- Social Links and Copyright -->
         <div class="border-t border-gray-800 pt-8">
           <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p class="text-gray-400 text-sm">
@@ -244,7 +276,6 @@ const defaultMeta = {
     padding: 0;
   }
 
-  /* Animations */
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
@@ -263,7 +294,6 @@ const defaultMeta = {
     animation: slideIn 0.3s ease-out forwards;
   }
 
-  /* Card hover effects */
   .hover-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
@@ -275,7 +305,6 @@ const defaultMeta = {
 </style>
 
 <script>
-  // Mobile menu functionality
   const menuButton = document.getElementById('menuButton');
   const mobileMenu = document.getElementById('mobileMenu');
 
@@ -286,7 +315,6 @@ const defaultMeta = {
     }
   });
 
-  // Add animation classes to elements on page load
   document.addEventListener('DOMContentLoaded', () => {
     const cards = document.querySelectorAll('.bg-white');
     cards.forEach((card, index) => {
