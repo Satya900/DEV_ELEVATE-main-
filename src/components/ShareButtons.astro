@@ -1,0 +1,95 @@
+---
+interface Props {
+  title: string;
+  url: string;
+  description?: string;
+}
+
+const { title, url, description = '' } = Astro.props;
+
+const shareLinks = [
+  {
+    name: 'Twitter',
+    icon: 'ri-twitter-x-fill',
+    color: 'bg-black',
+    getUrl: () => `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`
+  },
+  {
+    name: 'LinkedIn',
+    icon: 'ri-linkedin-fill',
+    color: 'bg-[#0A66C2]',
+    getUrl: () => `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&summary=${encodeURIComponent(description)}`
+  },
+  {
+    name: 'Facebook',
+    icon: 'ri-facebook-fill',
+    color: 'bg-[#1877F2]',
+    getUrl: () => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`
+  },
+  {
+    name: 'WhatsApp',
+    icon: 'ri-whatsapp-fill',
+    color: 'bg-[#25D366]',
+    getUrl: () => `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`
+  }
+];
+---
+
+<div class="share-buttons">
+  <h3 class="text-lg font-semibold text-gray-700 mb-4 text-center">Share this article</h3>
+  <div class="flex flex-wrap justify-center gap-3">
+    {shareLinks.map(link => (
+      <button
+        onclick={`window.open('${link.getUrl()}', '_blank', 'width=600,height=400')`}
+        class={`${link.color} text-white px-4 py-2 rounded-lg hover:opacity-90 transition-opacity flex items-center space-x-2`}
+        aria-label={`Share on ${link.name}`}
+      >
+        <i class={link.icon}></i>
+        <span>{link.name}</span>
+      </button>
+    ))}
+  </div>
+  
+  <!-- Copy Link Button -->
+  <div class="mt-4 flex justify-center">
+    <button
+      id="copyLinkBtn"
+      class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition-colors flex items-center space-x-2"
+      aria-label="Copy link to clipboard"
+    >
+      <i class="ri-link"></i>
+      <span>Copy Link</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const copyLinkBtn = document.getElementById('copyLinkBtn');
+  
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        
+        // Change button text temporarily
+        const originalContent = copyLinkBtn.innerHTML;
+        copyLinkBtn.innerHTML = `
+          <i class="ri-check-line"></i>
+          <span>Copied!</span>
+        `;
+        copyLinkBtn.classList.remove('bg-gray-100');
+        copyLinkBtn.classList.add('bg-green-100', 'text-green-700');
+        
+        // Reset button after 2 seconds
+        setTimeout(() => {
+          copyLinkBtn.innerHTML = originalContent;
+          copyLinkBtn.classList.remove('bg-green-100', 'text-green-700');
+          copyLinkBtn.classList.add('bg-gray-100');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy link:', err);
+        alert('Failed to copy link to clipboard');
+      }
+    });
+  }
+</script>

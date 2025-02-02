@@ -166,4 +166,4 @@ npm run cypress:open
 
 - Check our [FAQ](../faq.md)
 - Join [Discord](https://discord.gg/develevate)
-- Create an [Issue](https://github.com/Satya900/DEV_MAIN/issues)
+- Create an [Issue](https://github.com/dev-elevate/dev-elevate/issues)

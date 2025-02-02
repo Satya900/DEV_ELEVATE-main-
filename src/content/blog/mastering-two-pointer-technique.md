@@ -11,6 +11,8 @@ tags: ["arrays-strings", "algorithms", "two-pointer"]
 
 The two-pointer technique is a fundamental approach to solving array and string problems efficiently. This article explores how to use this technique effectively with practical examples.
 
+
+
 ## What is the Two-Pointer Technique?
 
 The two-pointer technique involves using two pointers that either:
