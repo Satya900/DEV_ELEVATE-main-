@@ -1,11 +1,14 @@
 ---
+title: "Design Patterns - Dev Elevate"
+description: "Learn common OOP design patterns and their practical implementations."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'OOP' && data.tags?.includes('design-patterns');
 });
----
 
 <Layout title="Design Patterns - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

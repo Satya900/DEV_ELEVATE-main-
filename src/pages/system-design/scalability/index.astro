@@ -1,11 +1,15 @@
 ---
+title: "Scalability - Dev Elevate"
+description: "Design systems that can handle growth and learn scalability patterns for modern applications."
+---
+
+<!-- Import statements and other code should be placed outside the YAML front matter -->
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'System Design' && data.tags?.includes('scalability');
 });
----
 
 <Layout title="Scalability - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

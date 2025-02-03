@@ -1,11 +1,15 @@
 ---
+title: "Trees & Graphs - DSA - Dev Elevate"
+description: "Explore hierarchical and network-based data structures through comprehensive tutorials and examples."
+---
+
+<!-- Import statements and other code should be placed outside the YAML front matter -->
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'DSA' && data.tags?.includes('trees-graphs');
 });
----
 
 <Layout title="Trees & Graphs - DSA - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

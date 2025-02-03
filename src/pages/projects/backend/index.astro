@@ -1,11 +1,14 @@
 ---
+title: "Backend Projects - Dev Elevate"
+description: "Build robust server-side applications with practical backend development projects."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'Projects' && data.tags?.includes('backend');
 });
----
 
 <Layout title="Backend Projects - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

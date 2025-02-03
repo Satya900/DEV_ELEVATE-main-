@@ -1,11 +1,15 @@
 ---
+title: "Backend Development - Dev Elevate"
+description: "Build robust server-side applications with modern backend technologies and best practices."
+---
+
+<!-- Import statements and other code should be placed outside the YAML front matter -->
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'Web Development' && data.tags?.includes('backend');
 });
----
 
 <Layout title="Backend Development - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

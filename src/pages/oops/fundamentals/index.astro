@@ -1,11 +1,14 @@
 ---
+title: "OOP Fundamentals - Dev Elevate"
+description: "Master the core concepts of Object-Oriented Programming through comprehensive tutorials."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'OOP' && data.tags?.includes('fundamentals');
 });
----
 
 <Layout title="OOP Fundamentals - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

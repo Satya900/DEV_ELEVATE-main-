@@ -1,11 +1,14 @@
 ---
+title: "Frontend Projects - Dev Elevate"
+description: "Explore hands-on frontend development projects using modern web technologies."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'Projects' && data.tags?.includes('frontend');
 });
----
 
 <Layout title="Frontend Projects - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

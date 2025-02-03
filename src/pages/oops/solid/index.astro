@@ -1,11 +1,15 @@
 ---
+title: "SOLID Principles - Dev Elevate"
+description: "Understanding SOLID principles for better code design and maintainability."
+---
+
+<!-- Import statements and other code should be placed outside the YAML front matter -->
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'OOP' && data.tags?.includes('solid');
 });
----
 
 <Layout title="SOLID Principles - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

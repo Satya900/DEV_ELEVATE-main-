@@ -1,11 +1,14 @@
 ---
+title: "Arrays & Strings - DSA - Dev Elevate"
+description: "Learn array manipulation techniques and string algorithms."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'DSA' && data.tags?.includes('arrays-strings');
 });
----
 
 <Layout title="Arrays & Strings - DSA - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

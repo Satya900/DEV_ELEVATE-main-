@@ -1,11 +1,14 @@
 ---
+title: "Linked Lists - DSA - Dev Elevate"
+description: "Understanding linear data structures and their implementations."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'DSA' && data.tags?.includes('linked-lists');
 });
----
 
 <Layout title="Linked Lists - DSA - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

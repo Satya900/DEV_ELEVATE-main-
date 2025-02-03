@@ -1,11 +1,14 @@
 ---
+title: "ML Fundamentals - Dev Elevate"
+description: "Learn the basics of Machine Learning algorithms and concepts."
+---
+
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'Machine Learning' && data.tags?.includes('fundamentals');
 });
----
 
 <Layout title="ML Fundamentals - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">

@@ -1,11 +1,15 @@
 ---
+title: "Deep Learning - Dev Elevate"
+description: "Explore neural networks and deep learning concepts through practical examples."
+---
+
+<!-- Import statements and other code should be placed outside the YAML front matter -->
 import Layout from '../../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('blog', ({ data }) => {
   return data.category === 'Machine Learning' && data.tags?.includes('deep-learning');
 });
----
 
 <Layout title="Deep Learning - Dev Elevate">
   <div class="max-w-7xl mx-auto px-4 py-16">
