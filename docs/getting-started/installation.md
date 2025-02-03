@@ -13,8 +13,8 @@ This guide will help you set up Dev Elevate locally for development.
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/dev-elevate/dev-elevate.git
-cd dev-elevate
+git clone https://github.com/Satya900/DEV_MAIN.git
+cd DEV_MAIN
 ```
 
 ### 2. Install Dependencies
@@ -88,6 +88,6 @@ Visit `http://localhost:3000` to see the application running.
 
 ## Need Help?
 
-- Create an issue on [GitHub](https://github.com/dev-elevate/dev-elevate/issues)
+- Create an issue on [GitHub](https://github.com/Satya900/DEV_MAIN/issues)
 - Ask in our [Discord Community](https://discord.gg/develevate)
 - Check our [FAQ](../faq.md)

@@ -3,7 +3,6 @@ import tailwind from '@astrojs/tailwind';
 import partytown from '@astrojs/partytown';
 
 export default defineConfig({
-  site: 'https://develevate.tech',
   integrations: [
     tailwind(),
     partytown({
@@ -12,14 +11,4 @@ export default defineConfig({
       },
     }),
   ],
-  markdown: {
-    shikiConfig: {
-      theme: 'github-dark',
-      wrap: true
-    }
-  },
-  compressHTML: true,
-  build: {
-    inlineStylesheets: 'auto'
-  }
 });

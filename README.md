@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/github/license/Satya900/DEV_MAIN)](https://github.com/Satya900/DEV_MAIN/blob/main/LICENSE)
 
 <p>
-  <img src="https://raw.githubusercontent.com/Satya900/DEV_MAIN/main/public/banner.png" alt="Dev Elevate Banner" width="800">
+  <img src="https://i.postimg.cc/qv7G1mND/Screenshot-2025-01-28-154022.png" alt="Dev Elevate Banner" width="800">
 </p>
 
 **Dev Elevate** empowers developers with interactive tutorials, hands-on projects, and a thriving community to master modern software development.
