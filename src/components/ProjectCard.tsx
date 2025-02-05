@@ -9,7 +9,7 @@ export function ProjectCard({ project }: { project: Project }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100"
+      className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100  dark:bg-black dark:border-gray-700"
     >
       <div className="relative h-48 overflow-hidden group">
         <Link to={`/projects/${project.id}`}>
@@ -28,19 +28,19 @@ export function ProjectCard({ project }: { project: Project }) {
       </div>
 
       <div className="p-6">
-        <Link 
+        <Link
           to={`/projects/${project.id}`}
           className="block hover:text-emerald-500 transition-colors"
         >
-          <h3 className="text-xl font-bold mb-2 text-black">{project.title}</h3>
+          <h3 className="text-xl font-bold mb-2 text-black dark:text-neutral-200">{project.title}</h3>
         </Link>
-        <p className="text-black mb-4">{project.description}</p>
+        <p className="text-black mb-4 dark:text-neutral-300">{project.description}</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.map((tech) => (
             <span
               key={tech}
-              className="px-2 py-1 bg-emerald-50 text-emerald-700 text-sm rounded"
+              className="px-2 py-1 bg-emerald-50 text-emerald-700 text-sm rounded dark:bg-emerald-500 dark:text-neutral-900"
             >
               {tech}
             </span>

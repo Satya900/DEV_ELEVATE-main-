@@ -36,8 +36,8 @@ export function ProjectDetails() {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-20 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-white pt-20 pb-12 ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <Link
           to="/projects"
           className="inline-flex items-center text-emerald-500 hover:text-emerald-600 mb-8"
@@ -51,7 +51,7 @@ export function ProjectDetails() {
           className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100"
         >
           {/* Hero Section */}
-          <div className="relative h-96">
+          <div className="relative h-96 ">
             <img
               src={project.image}
               alt={project.title}
