@@ -1,0 +1,81 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply antialiased text-black;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500;
+  }
+}
+
+/* Markdown Styles */
+.prose h1 {
+  @apply text-3xl font-bold mb-6 text-black;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold mt-8 mb-4 text-black;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold mt-6 mb-3 text-black;
+}
+
+.prose p {
+  @apply text-black mb-4;
+}
+
+.prose ul {
+  @apply list-disc list-inside mb-4 text-black;
+}
+
+.prose ol {
+  @apply list-decimal list-inside mb-4 text-black;
+}
+
+.prose li {
+  @apply mb-2;
+}
+
+.prose code {
+  @apply px-2 py-1 bg-gray-100 text-black rounded text-sm;
+}
+
+.prose pre {
+  @apply p-4 bg-gray-100 rounded-lg overflow-x-auto mb-4;
+}
+
+.prose blockquote {
+  @apply pl-4 border-l-4 border-purple-500 italic text-black mb-4;
+}
+
+.prose a {
+  @apply text-purple-600 hover:underline;
+}
+
+.prose table {
+  @apply w-full border-collapse mb-4;
+}
+
+.prose th,
+.prose td {
+  @apply border border-gray-200 p-2 text-left text-black;
+}
+
+.prose th {
+  @apply bg-gray-50 font-semibold;
+}
