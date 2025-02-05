@@ -15,13 +15,17 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/projects/:id" element={<ProjectDetails />} />
-          <Route path="/dsa/*" element={<CategoryLayout category={categories.dsa} />} />
-          <Route path="/web-dev/*" element={<CategoryLayout category={categories.webDev} />} />
-          <Route path="/system-design/*" element={<CategoryLayout category={categories.systemDesign} />} />
+          {Object.entries(categories).map(([key, category]) => (
+            <Route 
+              key={key}
+              path={`/${category.id}/*`} 
+              element={<CategoryLayout category={category} />}
+            />
+          ))}
         </Routes>
       </div>
     </Router>
   );
 }
 
-export default App
+export default App;
