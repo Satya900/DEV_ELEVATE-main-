@@ -7,4 +7,4 @@ author: "Dev Elevate Team"
 tags: ["arrays", "data-structures", "algorithms"]
 ---
 
-[Previous content remains the same]
+# INSERTION IN AN ARRAY USING LOOPS
