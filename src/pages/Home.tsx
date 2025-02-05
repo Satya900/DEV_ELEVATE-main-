@@ -8,7 +8,7 @@ export function Home() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-black">
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       
       {/* Hero Section */}
@@ -30,17 +30,17 @@ export function Home() {
               >
                 <Code2 className="h-12 w-12 text-white" />
               </motion.div>
-              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight dark:text-neutral-300">
                 Master Modern
                 <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent"> Development</span>
               </h1>
-              <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto dark:text-neutral-300">
                 Your comprehensive platform for learning programming, from data structures to system design. Build real-world projects and advance your career.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium"
+                  className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90"
                 >
                   Start Learning
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -85,7 +85,7 @@ export function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -93,10 +93,10 @@ export function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 dark:text-gray-200">
               Everything You Need to Excel
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto dark:text-gray-300">
               Comprehensive learning paths designed to take you from beginner to expert
             </p>
           </motion.div>
@@ -125,7 +125,7 @@ export function Home() {
       </section>
 
       {/* Open Source Contribution Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -133,49 +133,49 @@ export function Home() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4 dark:text-neutral-200">
               Contribute & Earn Rewards
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+            <p className="text-gray-600 max-w-2xl mx-auto dark:text-neutral-300">
               Join our open source community and earn exciting rewards through our bounty program
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 ">
             <motion.div
               whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center"
+              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center dark:bg-black dark:border-gray-700"
             >
               <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Gift className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Bronze Tier</h3>
-              <p className="text-gray-600 mb-4">Earn 10 points and get a limited edition Develevate T-shirt</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Bronze Tier</h3>
+              <p className="text-gray-600 mb-4 dark:text-neutral-400">Earn 10 points and get a limited edition Develevate T-shirt</p>
               <div className="text-emerald-500 font-semibold">10 Points</div>
             </motion.div>
 
             <motion.div
               whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center transform scale-105"
+              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center transform scale-105  dark:bg-black dark:border-gray-700 "
             >
               <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Award className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Silver Tier</h3>
-              <p className="text-gray-600 mb-4">Earn 20 points and receive an exclusive Develevate Swag Box</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Silver Tier</h3>
+              <p className="text-gray-600 mb-4 dark:text-neutral-400">Earn 20 points and receive an exclusive Develevate Swag Box</p>
               <div className="text-emerald-500 font-semibold">20 Points</div>
             </motion.div>
 
             <motion.div
               whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center"
+              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center  dark:bg-black dark:border-gray-700"
             >
               <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <Trophy className="h-8 w-8" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Gold Tier</h3>
-              <p className="text-gray-600 mb-4">Earn 30 points and win Rs. 2000 cash prize + Swag Box</p>
-              <div className="text-emerald-500 font-semibold">30 Points</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Gold Tier</h3>
+              <p className="text-gray-600 mb-4 dark:text-neutral-400">Earn 30 points and win Rs. 2000 cash prize + Swag Box</p>
+              <div className="text-emerald-500 font-semibold ">30 Points</div>
             </motion.div>
           </div>
 
@@ -184,7 +184,7 @@ export function Home() {
               href="https://github.com/Satya900/DEV_MAIN/blob/main/CONTRIBUTING.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium"
+              className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90"
             >
               Start Contributing
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -194,7 +194,7 @@ export function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-100">
+      <footer className="bg-white border-t border-gray-100 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
@@ -204,7 +204,7 @@ export function Home() {
                 </div>
                 <span className="text-black font-bold text-xl">DEVELEVATE</span>
               </Link>
-              <p className="text-gray-600 mb-6 max-w-md">
+              <p className="text-gray-600 mb-6 max-w-md dark:text-neutral-300">
                 Empowering developers with comprehensive learning resources and practical projects.
               </p>
               <div className="flex space-x-4">
@@ -216,7 +216,7 @@ export function Home() {
             </div>
             
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Resources</h3>
+              <h3 className="font-semibold text-gray-900 mb-4 dark:text-neutral-200">Resources</h3>
               <FooterLink to="/dsa">DSA</FooterLink>
               <FooterLink to="/web-dev">Web Development</FooterLink>
               <FooterLink to="/system-design">System Design</FooterLink>
@@ -224,7 +224,7 @@ export function Home() {
             </div>
 
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
+              <h3 className="font-semibold text-gray-900 mb-4 dark:text-neutral-200">Company</h3>
               <FooterLink to="/about">About</FooterLink>
               <FooterLink to="/contact">Contact</FooterLink>
               <FooterLink to="/privacy">Privacy Policy</FooterLink>
@@ -233,7 +233,7 @@ export function Home() {
           </div>
           
           <div className="mt-12 pt-8 border-t border-gray-100">
-            <p className="text-gray-600 text-center">
+            <p className="text-gray-600 text-center dark:text-neutral-200">
               © {new Date().getFullYear()} Develevate. All rights reserved.
             </p>
           </div>
@@ -249,7 +249,7 @@ function SocialLink({ href, icon, label }: { href: string; icon: React.ReactNode
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors group"
+      className="flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors group dark:bg-black dark:text-neutral-400 dark:hover:bg-emerald-500/90 dark:hover:text-white p-2"
     >
       <div className="w-12 h-12 flex items-center justify-center">
         {icon}
@@ -278,13 +278,13 @@ function FeatureCard({
     <Link to={to}>
       <motion.div
         whileHover={{ y: -5 }}
-        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer"
+        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer dark:bg-black dark:border-gray-700 "
       >
         <div className="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
           {icon}
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-500 transition-colors">{title}</h3>
-        <p className="text-gray-600">{description}</p>
+        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-500 transition-colors dark:text-neutral-200">{title}</h3>
+        <p className="text-gray-600 dark:text-neutral-400">{description}</p>
       </motion.div>
     </Link>
   );
@@ -294,7 +294,7 @@ function FooterLink({ to, children }: { to: string; children: React.ReactNode })
   return (
     <Link
       to={to}
-      className="block text-gray-600 hover:text-gray-900 mb-3 transition-colors"
+      className="block text-gray-600 hover:text-gray-900 mb-3 transition-colors dark:text-neutral-400 dark:hover:text-neutral-200"
     >
       {children}
     </Link>
