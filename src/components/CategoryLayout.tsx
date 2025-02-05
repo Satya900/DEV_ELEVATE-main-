@@ -39,14 +39,8 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Category Header */}
         <div className="bg-white rounded-xl shadow-sm p-8 mb-8 border border-gray-100">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="max-w-3xl"
-          >
-            <h1 className="text-3xl font-bold text-black mb-4">{category.title}</h1>
-            <p className="text-lg text-black">{category.description}</p>
-          </motion.div>
+          <h1 className="text-3xl font-bold text-black mb-4">{category.title}</h1>
+          <p className="text-lg text-black">{category.description}</p>
         </div>
 
         {/* Subcategories */}
