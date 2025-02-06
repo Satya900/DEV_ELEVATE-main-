@@ -42,7 +42,7 @@ export const dsaCategory: Category = {
           title: 'Introduction to Arrays',
           description: 'Understanding arrays and their fundamentals',
           slug: 'arrays-basics',
-          markdownFile: 'dsa/arrays/arrays-basics.md',
+          markdownFile: 'dsa/arrays/array-basics.md',
           readingTime: '15 min',
           lastUpdated: '2024-03-28'
         },
