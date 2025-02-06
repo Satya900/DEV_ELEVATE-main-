@@ -27,11 +27,11 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
   const [frontmatter, setFrontmatter] = useState<Frontmatter | null>(null);
 
   useEffect(() => {
-    // Update the fetch path to use the public directory
+    // Update the fetch path to use the content directory
     fetch(`/content/${article.markdownFile}`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Failed to load article');
+          throw new Error(`Failed to load article: ${response.status} ${response.statusText}`);
         }
         return response.text();
       })
@@ -47,6 +47,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
               const [key, ...valueParts] = line.split(':');
               let value = valueParts.join(':').trim();
               if (key === 'tags') {
+                // Parse tags array from the format ["tag1", "tag2", "tag3"]
                 value = JSON.parse(value.replace(/'/g, '"'));
               }
               return { ...acc, [key.trim()]: value };
@@ -60,7 +61,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
       })
       .catch(error => {
         console.error('Error loading article:', error);
-        setContent('# Error\nFailed to load the article content.');
+        setContent('# Error\nFailed to load the article content. Please try again later.');
       });
   }, [article.markdownFile]);
 
@@ -185,6 +186,9 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                   ),
                   td: ({ children }) => (
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{children}</td>
+                  ),
+                  img: ({ src, alt }) => (
+                    <img src={src} alt={alt} className="rounded-lg shadow-md my-8" />
                   ),
                 }}
               >
