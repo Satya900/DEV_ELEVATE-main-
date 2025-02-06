@@ -15,8 +15,8 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
   if (!isRoot) {
     return (
       <Routes>
-        {category.subcategories.map(subcategory =>
-          subcategory.articles.map(article => (
+        {category.subcategories.map((subcategory) =>
+          subcategory.articles.map((article) => (
             <Route
               key={article.id}
               path={`${subcategory.id}/${article.slug}`}
@@ -38,24 +38,28 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
     <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Category Header */}
-        <div className="bg-white rounded-xl shadow-sm p-8 mb-8 border border-gray-100 mt-5 dark:bg-black dark:border-gray-700">
+        <div className="bg-white rounded-xl shadow-sm p-8 mb-8 border border-gray-100 dark:bg-black dark:border-gray-700">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-3xl font-bold text-black mb-4 dark:text-neutral-200">{category.title}</h1>
-            <p className="text-lg text-black dark:text-neutral-300">{category.description}</p>
+            <h1 className="text-3xl font-bold text-black mb-4 dark:text-neutral-200">
+              {category.title}
+            </h1>
+            <p className="text-lg text-black dark:text-neutral-300">
+              {category.description}
+            </p>
           </motion.div>
         </div>
 
         {/* Subcategories */}
         <div className="space-y-12">
           {category.subcategories.map((subcategory) => (
-            <SubcategorySection 
-              key={subcategory.id} 
-              subcategory={subcategory} 
-              categoryId={category.id} 
+            <SubcategorySection
+              key={subcategory.id}
+              subcategory={subcategory}
+              categoryId={category.id}
             />
           ))}
         </div>
@@ -64,17 +68,25 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
   );
 }
 
-function SubcategorySection({ subcategory, categoryId }: { subcategory: Subcategory; categoryId: string }) {
+function SubcategorySection({
+  subcategory,
+  categoryId,
+}: {
+  subcategory: Subcategory;
+  categoryId: string;
+}) {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-black mb-6">{subcategory.title}</h2>
+      <h2 className="text-2xl font-bold text-black mb-6 dark:text-neutral-200">
+        {subcategory.title}
+      </h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {subcategory.articles.map((article) => (
-          <ArticleCard 
-            key={article.id} 
-            article={article} 
-            categoryId={categoryId} 
-            subcategoryId={subcategory.id} 
+          <ArticleCard
+            key={article.id}
+            article={article}
+            categoryId={categoryId}
+            subcategoryId={subcategory.id}
           />
         ))}
       </div>
@@ -82,21 +94,21 @@ function SubcategorySection({ subcategory, categoryId }: { subcategory: Subcateg
   );
 }
 
-function ArticleCard({ 
-  article, 
-  categoryId, 
-  subcategoryId 
-}: { 
-  article: Article; 
-  categoryId: string; 
+function ArticleCard({
+  article,
+  categoryId,
+  subcategoryId,
+}: {
+  article: Article;
+  categoryId: string;
   subcategoryId: string;
 }) {
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100  dark:bg-black dark:border-gray-700" 
+      className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:bg-black dark:border-gray-700"
     >
-      <Link 
+      <Link
         to={`/${categoryId}/${subcategoryId}/${article.slug}`}
         className="block p-6"
       >
@@ -104,12 +116,12 @@ function ArticleCard({
           {article.title}
         </h3>
         <p className="text-black mb-4 dark:text-neutral-300">{article.description}</p>
-        <div className="flex items-center text-sm text-black space-x-4">
-          <div className="flex items-center dark:text-neutral-300">
+        <div className="flex items-center text-sm text-black space-x-4 dark:text-neutral-300">
+          <div className="flex items-center">
             <Clock className="h-4 w-4 mr-1 text-emerald-500" />
             {article.readingTime}
           </div>
-          <div className="flex items-center dark:text-neutral-300">
+          <div className="flex items-center">
             <Calendar className="h-4 w-4 mr-1 text-emerald-500" />
             {article.lastUpdated}
           </div>

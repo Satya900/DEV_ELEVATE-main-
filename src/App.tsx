@@ -6,7 +6,7 @@ import { ProjectDetails } from './pages/ProjectDetails';
 import { CategoryLayout } from './components/CategoryLayout';
 import { categories } from './data/categories';
 import { ThemeProvider } from './context/theme';
-import  useThemeManager  from './hooks/useThemeManager';
+import useThemeManager from './hooks/useThemeManager';
 
 function App() {
   const { themeMode, lightTheme, darkTheme } = useThemeManager();
@@ -20,9 +20,13 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetails />} />
-            <Route path="/dsa/*" element={<CategoryLayout category={categories.dsa} />} />
-            <Route path="/web-dev/*" element={<CategoryLayout category={categories.webDev} />} />
-            <Route path="/system-design/*" element={<CategoryLayout category={categories.systemDesign} />} />
+            {Object.entries(categories).map(([key, category]) => (
+              <Route 
+                key={key}
+                path={`/${category.id}/*`} 
+                element={<CategoryLayout category={category} />}
+              />
+            ))}
           </Routes>
         </div>
       </Router>
