@@ -11,7 +11,7 @@ tags: ["arrays", "data-structures", "fundamentals"]
 
 Arrays are one of the most fundamental data structures in programming. They allow you to store a fixed-size collection of elements (all of the same type) in contiguous memory, enabling quick and efficient access to each element using an index.
 
-![Array Concept](https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=1200&q=80)  
+![Array Concept](https://media.geeksforgeeks.org/wp-content/uploads/20240503114810/one-dimensional-array-in-c.png)  
 *Figure 1: Visual representation of a one-dimensional array*
 
 ## What Is an Array?
@@ -33,7 +33,7 @@ Arrays offer several benefits:
 - **Efficient Storage:** Memory is allocated contiguously, which optimizes performance and cache utilization.
 - **Simplified Code:** Arrays allow you to manage large datasets with simple loops and operations.
 
-![Memory Layout](https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?auto=format&fit=crop&w=1200&q=80)  
+![Memory Layout](https://miro.medium.com/v2/resize:fit:858/0*-hqJYd29-0v2TyVO.png)  
 *Figure 2: Contiguous memory layout of array elements*
 
 ## Array Syntax and Examples
@@ -153,8 +153,6 @@ Arrays are used in a wide variety of applications:
 - **Implementing Data Structures:** Such as stacks and queues.
 - **Caching Data:** Temporary storage for quick access.
 
-![Array Applications](https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80)  
-*Figure 3: Array applications in real-world scenarios*
 
 ## Conclusion
 
