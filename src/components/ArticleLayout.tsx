@@ -27,8 +27,14 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
   const [frontmatter, setFrontmatter] = useState<Frontmatter | null>(null);
 
   useEffect(() => {
-    fetch(`/src/data/content/${article.markdownFile}`)
-      .then(response => response.text())
+    // Update the fetch path to use the public directory
+    fetch(`/content/${article.markdownFile}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to load article');
+        }
+        return response.text();
+      })
       .then(text => {
         // Extract frontmatter
         const match = text.match(/^---([\s\S]*?)---\n([\s\S]*)$/);
@@ -52,7 +58,10 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
           setContent(text);
         }
       })
-      .catch(error => console.error('Error loading article:', error));
+      .catch(error => {
+        console.error('Error loading article:', error);
+        setContent('# Error\nFailed to load the article content.');
+      });
   }, [article.markdownFile]);
 
   return (
