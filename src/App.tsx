@@ -5,26 +5,32 @@ import { Projects } from './pages/Projects';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { CategoryLayout } from './components/CategoryLayout';
 import { categories } from './data/categories';
+import { ThemeProvider } from './context/theme';
+import useThemeManager from './hooks/useThemeManager';
 
 function App() {
+  const { themeMode, lightTheme, darkTheme } = useThemeManager();
+
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Navbar />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/projects/:id" element={<ProjectDetails />} />
-          {Object.entries(categories).map(([key, category]) => (
-            <Route 
-              key={key}
-              path={`/${category.id}/*`} 
-              element={<CategoryLayout category={category} />}
-            />
-          ))}
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider value={{ themeMode, lightTheme, darkTheme }}>
+      <Router>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetails />} />
+            {Object.entries(categories).map(([key, category]) => (
+              <Route 
+                key={key}
+                path={`/${category.id}/*`} 
+                element={<CategoryLayout category={category} />}
+              />
+            ))}
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 }
 
