@@ -38,6 +38,15 @@ export const dsaCategory: Category = {
       description: 'Linear data structures and algorithms',
       articles: [
         {
+          id: 'array-basics',
+          title: 'Introduction to Arrays',
+          description: 'Understanding arrays and their fundamentals',
+          slug: 'arrays-basics',
+          markdownFile: 'dsa/arrays/arrays-basics.md',
+          readingTime: '15 min',
+          lastUpdated: '2024-03-28'
+        },
+        {
           id: 'array-operations',
           title: 'Array Operations',
           description: 'Basic array manipulation techniques',
