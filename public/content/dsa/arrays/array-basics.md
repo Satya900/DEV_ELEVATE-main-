@@ -44,20 +44,20 @@ Below are examples of array creation and usage in different programming language
 
 In Python, arrays are commonly represented using lists:
 
-\`\`\`python
+```python
 # Creating a 1D array (list in Python)
 grades = [85, 90, 78, 92, 88]
 
 # Accessing elements (0-based indexing)
 print("First student's grade:", grades[0])  # Output: 85
 print("Fourth student's grade:", grades[3])  # Output: 92
-\`\`\`
+```
 
 ### Java Example
 
 In Java, arrays must be declared with a specific size or initialized with values:
 
-\`\`\`java
+```java
 // Creating and initializing an array in Java
 int[] numbers = {10, 20, 30, 40};
 
@@ -67,13 +67,13 @@ System.out.println("Third element: " + numbers[2]);   // Output: 30
 
 // Declaring an empty array of size 4
 int[] emptyArray = new int[4];
-\`\`\`
+```
 
 ### C++ Example
 
 In C++, arrays are declared in a similar manner:
 
-\`\`\`cpp
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -90,7 +90,7 @@ int main() {
 
     return 0;
 }
-\`\`\`
+```
 
 ## Types of Arrays
 
@@ -99,59 +99,33 @@ Arrays can be categorized based on their dimensions:
 1. **One-Dimensional Array (1D Array):**  
    A simple list of values.  
    *Example (Python):*  
-   \`\`\`python
+   ```python
    arr = [10, 20, 30, 40]
-   \`\`\`
+   ```
 
 2. **Two-Dimensional Array (2D Array):**  
    An array of arrays (a matrix), often used for grids or tables.  
    *Example (Java):*  
-   \`\`\`java
+   ```java
    int[][] matrix = {
        {1, 2, 3},
        {4, 5, 6},
        {7, 8, 9}
    };
    System.out.println("Element at row 2, column 3: " + matrix[1][2]);  // Output: 6
-   \`\`\`
+   ```
 
 3. **Multidimensional Array:**  
    Arrays with more than two dimensions.  
    *Example (Python):*  
-   \`\`\`python
+   ```python
    # 3D array example
    cube = [
        [[1, 2], [3, 4]],
        [[5, 6], [7, 8]]
    ]
    print("Element at position [1][0][1]:", cube[1][0][1])  # Output: 6
-   \`\`\`
-
-4. **Jagged Array (Array of Arrays):**  
-   An array whose inner arrays can have different lengths.  
-   *Example (Java):*  
-   \`\`\`java
-   int[][] jagged = {
-       {1, 2, 3},
-       {4, 5},
-       {6}
-   };
-   System.out.println("Second element of first row: " + jagged[0][1]);  // Output: 2
-   \`\`\`
-
-5. **Dynamic Arrays:**  
-   Arrays that can grow or shrink at runtime. Languages like Python and JavaScript use dynamic arrays (lists) by default.
-
-6. **Associative Arrays (Hash Maps):**  
-   Arrays that use keys instead of numeric indices.  
-   *Example (JavaScript):*  
-   \`\`\`javascript
-   let user = {
-       name: "Alice",
-       age: 25
-   };
-   console.log("User name:", user["name"]);  // Output: Alice
-   \`\`\`
+   ```
 
 ## Advantages and Limitations
 
