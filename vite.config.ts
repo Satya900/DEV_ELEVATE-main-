@@ -7,5 +7,7 @@ export default defineConfig({
     hmr: {
       overlay: false
     }
-  }
+  },
+  // Add support for serving markdown files
+  assetsInclude: ['**/*.md']
 });
