@@ -63,6 +63,16 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/static-vs-dynamic-arrays.md',
           readingTime: '8 min',
           lastUpdated: '2025-02-07'
+        },
+        {
+          id: 'Memory Management in Arrays: How Arrays are Stored and Accessed in Memory',
+          title: 'Memory Management in Arrays: How Arrays are Stored and Accessed in Memory',
+          description: 'How arrays are stored and accessed in memory',
+          slug: 'memory-management-in-arrays',
+          markdownFile: 'dsa/arrays/memory-management-in-arrays.md',
+          readingTime: '12 min',
+          lastUpdated: '2025-02-07'
+
         }
       ]
     },
