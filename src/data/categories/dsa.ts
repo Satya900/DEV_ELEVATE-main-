@@ -54,7 +54,7 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/evolve-array.md',
           readingTime: '10 min',
           lastUpdated: '2024-03-15'
-        }
+        },
         {
           id: 'static-vs-dynamic-arrays',
           title: 'Static vs. Dynamic Arrays: Pros, Cons, and Use Cases',
