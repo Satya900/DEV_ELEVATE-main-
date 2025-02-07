@@ -47,11 +47,11 @@ export const dsaCategory: Category = {
           lastUpdated: '2024-03-28'
         },
         {
-          id: 'array-operations',
-          title: 'Array Operations',
-          description: 'Basic array manipulation techniques',
-          slug: 'array-operations',
-          markdownFile: 'dsa/arrays/operations.md',
+          id: 'Evolve-arrays',
+          title: 'The Evolution of Arrays in Computer Science: A Historical Perspective',
+          description: 'A brief history of arrays in computer science',
+          slug: 'evolve-arrays',
+          markdownFile: 'dsa/arrays/evolve-array.md',
           readingTime: '10 min',
           lastUpdated: '2024-03-15'
         }
