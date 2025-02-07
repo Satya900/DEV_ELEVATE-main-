@@ -55,6 +55,15 @@ export const dsaCategory: Category = {
           readingTime: '10 min',
           lastUpdated: '2024-03-15'
         }
+        {
+          id: 'static-vs-dynamic-arrays',
+          title: 'Static vs. Dynamic Arrays: Pros, Cons, and Use Cases',
+          description: 'Comparing static and dynamic arrays',
+          slug: 'static-vs-dynamic-arrays',
+          markdownFile: 'dsa/arrays/static-vs-dynamic-arrays.md',
+          readingTime: '8 min',
+          lastUpdated: '2025-02-07'
+        }
       ]
     },
     {
