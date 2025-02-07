@@ -146,8 +146,3 @@ The evolution of arrays mirrors the progress of computer science itself—from r
 
 As technology advances, the concepts behind arrays continue to influence new data structures and algorithms, ensuring that arrays remain relevant in solving modern computational challenges.
 
----
-
-*References:*  
-- [Wikipedia: Array (data structure)](https://en.wikipedia.org/wiki/Array_%28data_structure%29)
-- [Fynd Academy: Explain Array with Examples](https://www.fynd.academy/blog/explain-array-with-examples)
