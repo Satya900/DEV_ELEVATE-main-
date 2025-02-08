@@ -35,22 +35,22 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white pt-20 pb-12">
+    <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Category Header */}
-        <div className="bg-white rounded-xl shadow-sm p-8 mb-8 border border-gray-100">
+        <div className="bg-white rounded-xl shadow-sm p-8 mb-8 mt-6 border border-gray-100  dark:bg-black dark:border-gray-700">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="max-w-3xl"
           >
-            <h1 className="text-3xl font-bold text-black mb-4">{category.title}</h1>
-            <p className="text-lg text-black">{category.description}</p>
+            <h1 className="text-3xl font-bold text-black mb-4 dark:text-neutral-100">{category.title}</h1>
+            <p className="text-lg text-black dark:text-neutral-300">{category.description}</p>
           </motion.div>
         </div>
 
         {/* Subcategories */}
-        <div className="space-y-12">
+        <div className="space-y-12 ">
           {category.subcategories.map((subcategory) => (
             <SubcategorySection 
               key={subcategory.id} 
@@ -67,7 +67,7 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
 function SubcategorySection({ subcategory, categoryId }: { subcategory: Subcategory; categoryId: string }) {
   return (
     <section>
-      <h2 className="text-2xl font-bold text-black mb-6">{subcategory.title}</h2>
+      <h2 className="text-2xl font-bold text-black mb-6 dark:text-neutral-100">{subcategory.title}</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {subcategory.articles.map((article) => (
           <ArticleCard 
@@ -94,22 +94,22 @@ function ArticleCard({
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+      className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100  dark:bg-black dark:border-gray-700"
     >
       <Link 
         to={`/${categoryId}/${subcategoryId}/${article.slug}`}
         className="block p-6"
       >
-        <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-emerald-500">
+        <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-emerald-500 dark:text-neutral-100">
           {article.title}
         </h3>
-        <p className="text-black mb-4">{article.description}</p>
+        <p className="text-black mb-4 dark:text-neutral-300">{article.description}</p>
         <div className="flex items-center text-sm text-black space-x-4">
-          <div className="flex items-center">
-            <Clock className="h-4 w-4 mr-1 text-emerald-500" />
+          <div className="flex items-center dark:text-neutral-100">
+            <Clock className="h-4 w-4 mr-1 text-emerald-500 " />
             {article.readingTime}
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center dark:text-neutral-100">
             <Calendar className="h-4 w-4 mr-1 text-emerald-500" />
             {article.lastUpdated}
           </div>
