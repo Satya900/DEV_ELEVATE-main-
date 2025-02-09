@@ -18,7 +18,7 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group -m-4">
       <button
         onClick={handleCopy}
         className="absolute right-2 top-2 p-2 rounded-lg bg-gray-800 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -30,7 +30,7 @@ export function CodeBlock({ language, value }: CodeBlockProps) {
           <Copy className="h-4 w-4" />
         )}
       </button>
-      <div className="rounded-lg overflow-hidden">
+      <div className="rounded-lg overflow-hidden ">
         <SyntaxHighlighter
           language={language}
           style={oneDark}
