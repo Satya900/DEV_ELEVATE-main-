@@ -82,27 +82,27 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
           className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:bg-black dark:border-gray-700"
         >
           <div className="p-8 md:p-12">
-            {frontmatter && (
+          {frontmatter && (
               <header className="mb-12">
-                <div className="flex items-center space-x-2 text-sm text-emerald-600 font-medium mb-4">
+                <div className="flex items-center space-x-2 text-sm text-emerald-600 dark:text-emerald-400 font-medium mb-4">
                   <span className="uppercase tracking-wider">{frontmatter.category}</span>
                 </div>
                 
-                <h1 className="text-4xl font-bold text-black mb-4 leading-tight">
+                <h1 className="text-4xl font-bold text-black dark:text-neutral-100 mb-4 leading-tight">
                   {frontmatter.title}
                 </h1>
                 
-                <p className="text-xl text-black mb-6">
+                <p className="text-xl text-black dark:text-neutral-100 mb-6">
                   {frontmatter.description}
                 </p>
                 
-                <div className="flex flex-wrap items-center gap-6 text-sm text-black">
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-2 text-emerald-500" />
+                <div className="flex flex-wrap items-center gap-6 text-sm text-black dark:text-neutral-100">
+                  <div className="flex items-center ">
+                    <User className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     {frontmatter.author}
                   </div>
                   <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-emerald-500" />
+                    <Calendar className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     Published: {new Date(frontmatter.pubDate).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -110,7 +110,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                     })}
                   </div>
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-emerald-500" />
+                    <Clock className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     {article.readingTime} read
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                   {frontmatter.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-emerald-100 text-emerald-700"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-emerald-100 dark:bg-emerald-400 dark:text-emerald-900 text-emerald-700"
                     >
                       <Tag className="h-3 w-3 mr-1" />
                       {tag}
@@ -128,6 +128,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                 </div>
               </header>
             )}
+
 
             <div className="prose prose-lg max-w-none ">
               <ReactMarkdown
