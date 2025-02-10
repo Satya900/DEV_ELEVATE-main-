@@ -66,43 +66,43 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
   }, [article.markdownFile]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20 pb-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen  pt-20 pb-12 dark:bg-black">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 dark:bg-black ">
         <Link
           to={categoryPath}
-          className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium mb-8 transition-colors"
+          className="inline-flex items-center text-emerald-600 hover:text-emerald-700 font-medium mb-8 transition-colors mt-8"
         >
           <ChevronLeft className="h-4 w-4 mr-1" />
           Back to {categoryTitle}
         </Link>
-
+        
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100"
+          className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 dark:bg-black dark:border-gray-700"
         >
           <div className="p-8 md:p-12">
-            {frontmatter && (
+          {frontmatter && (
               <header className="mb-12">
-                <div className="flex items-center space-x-2 text-sm text-emerald-600 font-medium mb-4">
+                <div className="flex items-center space-x-2 text-sm text-emerald-600 dark:text-emerald-400 font-medium mb-4">
                   <span className="uppercase tracking-wider">{frontmatter.category}</span>
                 </div>
                 
-                <h1 className="text-4xl font-bold text-black mb-4 leading-tight">
+                <h1 className="text-4xl font-bold text-black dark:text-neutral-100 mb-4 leading-tight">
                   {frontmatter.title}
                 </h1>
                 
-                <p className="text-xl text-black mb-6">
+                <p className="text-xl text-black dark:text-neutral-100 mb-6">
                   {frontmatter.description}
                 </p>
                 
-                <div className="flex flex-wrap items-center gap-6 text-sm text-black">
-                  <div className="flex items-center">
-                    <User className="h-4 w-4 mr-2 text-emerald-500" />
+                <div className="flex flex-wrap items-center gap-6 text-sm text-black dark:text-neutral-100">
+                  <div className="flex items-center ">
+                    <User className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     {frontmatter.author}
                   </div>
                   <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-2 text-emerald-500" />
+                    <Calendar className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     Published: {new Date(frontmatter.pubDate).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -110,7 +110,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                     })}
                   </div>
                   <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-2 text-emerald-500" />
+                    <Clock className="h-4 w-4 mr-2 text-emerald-500 dark:text-emerald-400" />
                     {article.readingTime} read
                   </div>
                 </div>
@@ -119,7 +119,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                   {frontmatter.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-emerald-100 text-emerald-700"
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-emerald-100 dark:bg-emerald-400 dark:text-emerald-900 text-emerald-700"
                     >
                       <Tag className="h-3 w-3 mr-1" />
                       {tag}
@@ -129,40 +129,41 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
               </header>
             )}
 
-            <div className="prose prose-lg max-w-none">
+
+            <div className="prose prose-lg max-w-none ">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
                   h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold text-black mt-8 mb-4">{children}</h1>
+                    <h1 className="text-3xl font-bold text-black mt-8 mb-4 dark:text-neutral-100">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="text-2xl font-bold text-black mt-8 mb-4">{children}</h2>
+                    <h2 className="text-2xl font-bold text-black mt-8 mb-4 dark:text-neutral-200">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="text-xl font-semibold text-black mt-6 mb-3">{children}</h3>
+                    <h3 className="text-xl font-semibold text-black mt-6 mb-3 dark:text-neutral-100">{children}</h3>
                   ),
                   p: ({ children }) => (
-                    <p className="text-black leading-relaxed mb-4">{children}</p>
+                    <p className="text-black leading-relaxed mb-4 dark:text-neutral-200 ">{children}</p>
                   ),
                   ul: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-2 mb-4 text-black">{children}</ul>
+                    <ul className="list-disc list-inside space-y-2 mb-4 text-black dark:text-neutral-200 ">{children}</ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-2 mb-4 text-black">{children}</ol>
+                    <ol className="list-decimal list-inside space-y-2 mb-4 text-black dark:text-neutral-200 ">{children}</ol>
                   ),
                   li: ({ children }) => (
-                    <li className="text-black">{children}</li>
+                    <li className="text-black dark:text-neutral-200 ">{children}</li>
                   ),
                   blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-emerald-500 pl-4 italic text-black my-4">{children}</blockquote>
+                    <blockquote className="border-l-4 border-emerald-500 pl-4 italic text-black my-4 dark:text-neutral-200 ">{children}</blockquote>
                   ),
                   a: ({ href, children }) => (
-                    <a href={href} className="text-emerald-600 hover:text-emerald-700 underline">{children}</a>
+                    <a href={href} className="text-emerald-600 hover:text-emerald-700 underline ">{children}</a>
                   ),
-                  code({ node, inline, className, children, ...props }) {
+                  code({ node, className, children, ...props }) {
                     const match = /language-(\w+)/.exec(className || '');
-                    return !inline && match ? (
+                    return match ? (
                       <CodeBlock
                         language={match[1]}
                         value={String(children).replace(/\n$/, '')}
@@ -180,12 +181,12 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                     </div>
                   ),
                   th: ({ children }) => (
-                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-black uppercase tracking-wider">
+                    <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-black uppercase tracking-wider dark:text-neutral-200">
                       {children}
                     </th>
                   ),
                   td: ({ children }) => (
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black">{children}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-black dark:text-neutral-200">{children}</td>
                   ),
                   img: ({ src, alt }) => (
                     <img src={src} alt={alt} className="rounded-lg shadow-md my-8" />
