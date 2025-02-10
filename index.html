@@ -39,6 +39,28 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.tsx">
+        var ctrlDown = false;
+        var ctrlKey = 17, f5Key = 116, rKey = 82;
+
+        $(document).keydown(function( e ) {
+        if( e.keyCode == f5Key )
+          {
+            window.location = window.location;
+          }
+
+        if( e.keyCode == ctrlKey )
+          ctrlDown = true;
+        if( ctrlDown && ( e.keyCode == rKey ) )
+          {
+            window.location = window.location;
+          }
+
+        }).keyup(function(e) {
+          if (e.keyCode == ctrlKey)
+            ctrlDown = false;
+        });
+
+    </script>
   </body>
 </html>
