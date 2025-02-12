@@ -66,12 +66,26 @@ const Compiler: React.FC = () => {
     }
   }, []);
 
-  return ( 
+  const defaultTemplates: Record<string, string> = {
+    "71": `print("Hello, World!")`,
+    "62": `import java.util.*;\npublic class Main {\n   public static void main(String[] args) {\n       System.out.println("Hello, World!");\n    }\n}`,
+    "63": `console.log("Hello, World!");`,
+    "54": `#include <bits/stdc++.h> \nusing namespace std;\nint main() {\n   cout << "Hello, World!";\n   return 0;\n}`,
+  };
+
+  // Handle language change and update the code template
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    setCode(defaultTemplates[newLanguage] || "");
+  };
+
+  return (
     <div className="max-w mx-auto p-1 pt-20 dark:bg-zinc-900">
       <div className="w-full h-14 text-sm bg-gray-100 flex justify-end items-center rounded-md dark:bg-zinc-900">
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          onChange={(e) => handleLanguageChange(e.target.value)
+          }
           className=" h-10 w-28 bg-emerald-500 border rounded-md mr-4 p-2 "
         >
           <option value="71">Python 3</option>
