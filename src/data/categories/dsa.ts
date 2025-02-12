@@ -74,6 +74,15 @@ export const dsaCategory: Category = {
           lastUpdated: '2025-02-07'
 
         }
+        {
+          id: 'Comparing Arrays and Linked Lists: When to Choose Which Structure',
+          title: 'Comparing Arrays and Linked Lists: When to Choose Which Structure',
+          description: 'Comparing arrays and linked lists',
+          slug: 'comparing-arrays-and-linked-lists',
+          markdownFile: 'dsa/arrays/arrays-vs-linked-lists.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-12'
+        }
       ]
     },
     {
