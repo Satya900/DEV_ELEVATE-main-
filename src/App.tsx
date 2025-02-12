@@ -5,7 +5,6 @@ import { Projects } from './pages/Projects';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { CategoryLayout } from './components/CategoryLayout';
 import { categories } from './data/categories';
-import Compiler from './pages/Cmpiler';
 import { ThemeProvider } from './context/theme';
 import useThemeManager from './hooks/useThemeManager';
 
@@ -22,13 +21,12 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetails />} />
             {Object.entries(categories).map(([key, category]) => (
-              <Route
+              <Route 
                 key={key}
-                path={`/${category.id}/*`}
+                path={`/${category.id}/*`} 
                 element={<CategoryLayout category={category} />}
               />
             ))}
-            <Route path="/compiler" element={<Compiler />} />
           </Routes>
         </div>
       </Router>
