@@ -24,6 +24,7 @@ export function Navbar() {
             <NavLink to="/web-dev">Web Dev</NavLink>
             <NavLink to="/system-design">System Design</NavLink>
             <NavLink to="/projects">Projects</NavLink>
+            <NavLink to="/compiler">DevCompiler</NavLink>
             <a
               href="https://github.com"
               target="_blank"
@@ -60,6 +61,7 @@ export function Navbar() {
             <MobileNavLink to="/web-dev" onClick={() => setIsOpen(false)}>Web Dev</MobileNavLink>
             <MobileNavLink to="/system-design" onClick={() => setIsOpen(false)}>System Design</MobileNavLink>
             <MobileNavLink to="/projects" onClick={() => setIsOpen(false)}>Projects</MobileNavLink>
+            <MobileNavLink to="/compiler" onClick={() => setIsOpen(false)}>Compiler</MobileNavLink>
             <a
               href="https://github.com"
               target="_blank"
