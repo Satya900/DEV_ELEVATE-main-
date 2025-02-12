@@ -73,7 +73,7 @@ export const dsaCategory: Category = {
           readingTime: '12 min',
           lastUpdated: '2025-02-07'
 
-        }
+        },
         {
           id: 'Comparing Arrays and Linked Lists: When to Choose Which Structure',
           title: 'Comparing Arrays and Linked Lists: When to Choose Which Structure',
