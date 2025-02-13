@@ -82,6 +82,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/array-vs-linked-list.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-12'
+        },
+        {
+          id: 'Functional Programming with Arrays: Map, Filter, and Reduce Operations',
+          title: 'Functional Programming with Arrays: Map, Filter, and Reduce Operations',
+          description: 'Functional programming with arrays',
+          slug: 'functional-programming-with-arrays',
+          markdownFile: 'dsa/arrays/functional-program-arrays.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-12'
         }
       ]
     },
