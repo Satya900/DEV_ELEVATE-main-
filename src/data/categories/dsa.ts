@@ -91,6 +91,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/functional-program-arrays.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-12'
+        },
+        {
+          id: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
+          title: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
+          description: 'Advanced array algorithms',
+          slug: 'advanced-array-algorithms',
+          markdownFile: 'dsa/arrays/advance-array-algo.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-13'
         }
       ]
     },
