@@ -11,8 +11,6 @@ tags: ["arrays", "data-structures", "algorithms"]
 
 Arrays have been a core data structure in computer science since the early days of programming. Over the decades, arrays have evolved from simple, manually managed blocks of memory into versatile, high-level constructs available in almost every modern programming language. In this article, we explore the historical evolution of arrays, key milestones in their development, and provide code examples along with visual aids to illustrate these changes.
 
-
-
 ## Early Beginnings
 
 ### Assembly and Early Machine Code
@@ -142,7 +140,4 @@ print("Matrix after adding 10:\n", matrix_plus_ten)
 
 The evolution of arrays mirrors the progress of computer science itself—from raw memory manipulation in assembly languages to high-level, dynamic, and multidimensional data structures in modern programming. This historical perspective not only highlights how far arrays have come but also underscores their enduring importance as a fundamental building block in software development.
 
-
-
 As technology advances, the concepts behind arrays continue to influence new data structures and algorithms, ensuring that arrays remain relevant in solving modern computational challenges.
-
