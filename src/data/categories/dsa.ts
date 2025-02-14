@@ -100,6 +100,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/advance-array-algo.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-13'
+        },
+        {
+          id: 'Multidimensional Arrays: Concepts, Implementation, and Applications',
+          title: 'Multidimensional Arrays: Concepts, Implementation, and Applications',
+          description: 'Explanation of Multidimensional arrays in Multiple Languages',
+          slug: 'multidimensional-arrays',
+          markdownFile: 'dsa/arrays/multi-dimensional-arrays.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-13'
         }
       ]
     },
