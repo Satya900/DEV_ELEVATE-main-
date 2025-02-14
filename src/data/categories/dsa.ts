@@ -91,6 +91,24 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/functional-program-arrays.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-12'
+        },
+        {
+          id: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
+          title: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
+          description: 'Advanced array algorithms',
+          slug: 'advanced-array-algorithms',
+          markdownFile: 'dsa/arrays/advance-array-algo.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-13'
+        },
+        {
+          id: 'Multidimensional Arrays: Concepts, Implementation, and Applications',
+          title: 'Multidimensional Arrays: Concepts, Implementation, and Applications',
+          description: 'Explanation of Multidimensional arrays in Multiple Languages',
+          slug: 'multidimensional-arrays',
+          markdownFile: 'dsa/arrays/multi-dimensional-arrays.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-13'
         }
       ]
     },
