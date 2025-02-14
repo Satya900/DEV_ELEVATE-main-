@@ -109,6 +109,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/arrays/multi-dimensional-arrays.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-13'
+        },
+        {
+          id: 'Optimizing Array Performance: Tips for High-Performance Computing',
+          title: 'Optimizing Array Performance: Tips for High-Performance Computing',
+          description: 'Optimizing array performance',
+          slug: 'optimizing-array-performance',
+          markdownFile: 'dsa/arrays/optimizing-performance-in-array.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-14'
         }
       ]
     },
