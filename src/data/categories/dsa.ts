@@ -127,6 +127,14 @@ export const dsaCategory: Category = {
           lastUpdated: '2024-03-15'
         }
       ]
+    },
+    {
+      id: 'Stack',
+      titlt: 'Stack',
+      description: 'Introduction to Stack Data Structurr',
+      articles: [
+        {}
+      ]
     }
   ]
 };
