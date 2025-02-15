@@ -1,8 +1,8 @@
 # AI Image Generator
 
-[Previous content remains the same until the first code block]
 
 #### Frontend Code Example (React + TypeScript)
+
 ```typescript
 import React, { useState } from 'react';
 import axios from 'axios';
