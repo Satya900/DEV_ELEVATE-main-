@@ -136,7 +136,7 @@ export const dsaCategory: Category = {
           lastUpdated: '2024-03-15'
         },
         {
-          id: 'Singly Linked Lists 101: A Step-by-Step Guide',\
+          id: 'Singly Linked Lists 101: A Step-by-Step Guide',
           title: 'Singly Linked Lists 101: A Step-by-Step Guide',
           description: 'Full Explanation of Singly Linked Lists in language of your choice',
           slug: 'singly-linked-lists',
