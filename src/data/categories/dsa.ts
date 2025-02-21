@@ -139,10 +139,18 @@ export const dsaCategory: Category = {
     },
     {
       id: 'Stack',
-      titlt: 'Stack',
-      description: 'Introduction to Stack Data Structurr',
+      title: 'Stack',
+      description: 'Understanding the stack data structure',
       articles: [
-        {}
+        {
+          id: 'Introduction to the Stack Data Structure: Principles and Application',
+          title: 'Introduction to the Stack Data Structure: Principles and Application',
+          description: 'Introduction to the stack data structure',
+          slug: 'introduction-to-stack',
+          markdownFile: 'dsa/Stack/intro-to-stack.md',
+          readingTime: '5 min',
+          lastUpdated: '2025-02-21'
+        }
       ]
     }
   ]
