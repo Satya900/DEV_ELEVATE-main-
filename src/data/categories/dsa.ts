@@ -134,6 +134,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/linked-lists/basics.md',
           readingTime: '7 min',
           lastUpdated: '2024-03-15'
+        },
+        {
+          id: 'Singly Linked Lists 101: A Step-by-Step Guide',\
+          title: 'Singly Linked Lists 101: A Step-by-Step Guide',
+          description: 'Full Explanation of Singly Linked Lists in language of your choice',
+          slug: 'singly-linked-lists',
+          markdownFile: 'dsa/linked-lists/singly-linked-list-101.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-21'
         }
       ]
     },
