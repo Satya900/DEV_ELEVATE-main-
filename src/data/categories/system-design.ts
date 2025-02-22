@@ -22,12 +22,12 @@ export const systemDesignCategory: Category = {
         },
         {
           id: 'microservices-patterns',
-          title: 'Understanding Microservices Architecture Patterns',
+          title: 'Introduction to Microservices Architecture',
           description: 'A comprehensive guide to microservices architecture patterns',
-          slug: 'microservices-patterns',
-          markdownFile: 'system-design/fundamentals/microservices-patterns.md',
-          readingTime: '15 min',
-          lastUpdated: '2024-03-28'
+          slug: 'intro-to-microservices-architecture',
+          markdownFile: 'system-design/intro-to-microservices-architecture.md',
+          readingTime: '10 min',
+          lastUpdated: '2025-02-22'
         },
         {
           id: 'scalability',
