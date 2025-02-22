@@ -75,7 +75,7 @@ export function Home() {
                 label="X (Twitter)"
               />
               <SocialLink 
-                href="https://instagram.com/develevate" 
+                href="https://instagram.com/dev_elevate" 
                 icon={<Instagram className="h-6 w-6" />}
                 label="Instagram"
               />
