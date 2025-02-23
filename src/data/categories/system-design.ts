@@ -25,7 +25,7 @@ export const systemDesignCategory: Category = {
           title: 'Introduction to Microservices Architecture',
           description: 'A comprehensive guide to microservices architecture patterns',
           slug: 'intro-to-microservices-architecture',
-          markdownFile: 'system-design/intro-to-microservices-architecture.md',
+          markdownFile: 'system-design/fundamentals/intro-to-microservices-architecture.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-22'
         },
