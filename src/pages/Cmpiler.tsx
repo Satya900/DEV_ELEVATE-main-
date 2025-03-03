@@ -6,6 +6,7 @@ const Compiler: React.FC = () => {
   const [code, setCode] = useState<string>("print('Hello, World!')");
   const [language, setLanguage] = useState<string>("71");
   const [output, setOutput] = useState<string>("");
+  const [input, setInput] = useState<string>("");
 
   const handleCompile = async () => {
     setOutput("Compiling...");
@@ -16,10 +17,11 @@ const Compiler: React.FC = () => {
         {
           source_code: code,
           language_id: parseInt(language),
+          stdin: input,
         },
         {
           headers: {
-            "X-RapidAPI-Key": "2b22ea0cb6msh7e3e865ff03f1eep11be06jsn4247dfad1f34", // Replace with your key
+            "X-RapidAPI-Key": "2b22ea0cb6msh7e3e865ff03f1eep11be06jsn4247dfad1f34",
             "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
           },
         }
@@ -104,7 +106,7 @@ const Compiler: React.FC = () => {
 
       <div className="w-full flex flex-col lg:flex-row h-screen bg-gray-100  dark:bg-zinc-900">
         {/* Left Panel - Code Editor */}
-        <div className="h-1/2 lg:h-full lg:w-1/2 bg-white rounded-md dark:bg-black p-2">
+        <div className="h-1/2 lg:h-full lg:w-1/2 bg-white rounded-sm dark:bg-black p-2">
           <Editor
             height="100%"
             language="python"
@@ -116,6 +118,7 @@ const Compiler: React.FC = () => {
               minimap: { enabled: false },
               fontSize: 16,
             }}
+            className=""
           />
         </div>
 
@@ -123,12 +126,22 @@ const Compiler: React.FC = () => {
         <div className="h-[2px] bg-gray-100 dark:bg-zinc-900 lg:h-full lg:w-[2px]"></div>
 
         {/* Right Panel - Output */}
-        <div className="h-1/2 lg:h-full lg:w-1/2 bg-white rounded-md dark:bg-black p-3">
-          <pre className="p-3 rounded-md h-full text-black dark:text-white">Output: <br />{output}</pre>
+        <div className="h-1/2 lg:h-full lg:w-1/2 bg-white rounded-sm dark:bg-black p-3">
+          {/* Input Section */}
+          <textarea
+            placeholder="Custom input here..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            className="w-full p-2 mb-3 rounded-sm bg-gray-200 dark:bg-zinc-800 text-black focus:outline-none dark:text-white"
+            rows={4}
+          ></textarea>
+          {/* Output Section */}
+          <pre className="p-3 rounded-md  text-black dark:text-white">
+            Output: <br />
+            {output}
+          </pre>
         </div>
       </div>
-
-
     </div>
   );
 };
