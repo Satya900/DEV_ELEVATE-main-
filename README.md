@@ -105,6 +105,22 @@ develevate/
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+
+[![All Contributors](https://img.shields.io/github/all-contributors/Satya900/DEV_MAIN?color=ee8449&style=flat-square)](#contributors)
+
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+
 ## 🙏 Acknowledgments
 
 - All our amazing contributors

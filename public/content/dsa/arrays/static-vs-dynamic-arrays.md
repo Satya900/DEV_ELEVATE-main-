@@ -8,11 +8,7 @@ tags: ["arrays", "data-structures", "algorithms"]
 ---
 
 
-# Static vs. Dynamic Arrays: Pros, Cons, and Use Cases
-
 Arrays come in two main forms: **static arrays** and **dynamic arrays**. While both store a collection of elements of the same type in contiguous memory, they differ significantly in how they handle size, memory management, and flexibility. In this article, we will explore what static and dynamic arrays are, compare their advantages and disadvantages, and discuss common use cases for each.
-
-
 
 ## What Are Static Arrays?
 
@@ -121,11 +117,13 @@ Below is a summary of the pros and cons of each:
 ### Static Arrays
 
 **Advantages:**
+
 - Simplicity in implementation.
 - Predictable memory usage.
 - Fast and constant-time access to elements.
 
 **Disadvantages:**
+
 - Inflexible size.
 - Potential for wasted memory if the allocated size exceeds the actual number of elements.
 - Not suitable when the data size may change frequently.
@@ -133,11 +131,13 @@ Below is a summary of the pros and cons of each:
 ### Dynamic Arrays
 
 **Advantages:**
+
 - Flexibility to adjust size as needed.
 - Ideal for applications with unpredictable data requirements.
 - Built-in support in many high-level languages simplifies programming.
 
 **Disadvantages:**
+
 - Extra overhead during resizing.
 - More complex memory management (especially in languages like C/C++).
 - Potential for performance hits if many resize operations occur.
@@ -147,4 +147,3 @@ Below is a summary of the pros and cons of each:
 Both static and dynamic arrays serve essential roles in computer programming. Static arrays provide predictable performance and minimal overhead, making them ideal for systems where the data size is fixed and known in advance. In contrast, dynamic arrays offer flexibility and adaptability, which is critical for applications that must handle varying amounts of data during runtime.
 
 Choosing between static and dynamic arrays depends on your specific use case, available language features, and performance requirements. Understanding the trade-offs between the two will help you make informed decisions in designing efficient and maintainable software.
-
