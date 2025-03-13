@@ -159,6 +159,16 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/Stack/intro-to-stack.md',
           readingTime: '5 min',
           lastUpdated: '2025-02-21'
+        },
+        {
+          id: 'Understanding the Last-In-First-Out (LIFO) Principle in Stack Data Structure',
+          title: 'Understanding the Last-In-First-Out (LIFO) Principle in Stack Data Structure',
+          description: 'Understanding the Last-In-First-Out in detail.',
+          slug: 'understanding-lifo-in-stack',
+          markdownFile: 'dsa\Stack\understanding-lifo-principle.md',
+          readingTime: '5 min',
+          lastUpdated: '2025-03-13'
+
         }
       ]
     }
