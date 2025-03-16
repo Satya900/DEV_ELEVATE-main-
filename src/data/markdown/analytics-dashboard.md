@@ -3,6 +3,7 @@
 [Previous content remains the same until the first code block]
 
 ### Data Processing Pipeline
+
 ```typescript
 interface DataSource {
   id: string;
@@ -28,6 +29,7 @@ class DataPipeline {
 ```
 
 ### Visualization Components
+
 ```typescript
 interface ChartConfig {
   type: 'line' | 'bar' | 'pie' | 'scatter';
@@ -52,6 +54,7 @@ class VisualizationManager {
 ```
 
 ### Real-time Updates
+
 ```typescript
 class WebSocketManager {
   private socket: WebSocket;
