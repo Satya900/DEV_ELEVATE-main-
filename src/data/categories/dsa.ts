@@ -1,5 +1,4 @@
 import { Category } from '../../types';
-import { Square as AlgorithmSquare, Binary, BrainCircuit, GitGraph } from 'lucide-react';
 
 export const dsaCategory: Category = {
   id: 'dsa',
