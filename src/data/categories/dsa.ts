@@ -142,6 +142,16 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/linked-lists/singly-linked-list-101.md',
           readingTime: '10 min',
           lastUpdated: '2025-02-21'
+        },
+        {
+          id: 'singly-vs-doubly-linked-lists',
+          title: 'Singly vs. Doubly Linked Lists: A Comprehensive Comparison',
+          description: 'Explore the differences between singly and doubly linked lists, including their structures, use cases, and time/space complexities for common operations.',
+          slug: 'singly-vs-doubly-linked-lists',
+          markdownFile: 'dsa/linked-lists/doubly-vs-singly-list.md',
+          readingTime: '12 min',
+          lastUpdated: '2025-03-17'
+
         }
       ]
     },
