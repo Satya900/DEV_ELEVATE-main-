@@ -172,7 +172,7 @@ export const dsaCategory: Category = {
           id: 'Implementing a Stack in C and C++: A Step-by-Step Guide',
           title: 'Implementing a Stack in C and C++: A Step-by-Step Guide',
           description: 'In this guide, well learn how to implement a stack using both C and C++.',
-          slug: 'implementing-stack-in-c-and-c++',
+          slug: 'implementing-stack-in-c-and-cpp',
           markdownFile: 'dsa/Stack/Implement-Stack-c-and-cpp.md',
           readingTime: '5 min',
           lastUpdated: '2025-03-16'

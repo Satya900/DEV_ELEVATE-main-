@@ -1,6 +1,6 @@
 ---
 title: "Implementing a Stack in C and C++: A Step-by-Step Guide"
-description: " In this guide, we'll learn how to implement a stack using both C and C++. "
+description: " In this guide, we'll learn how to implement a stack using both C and C++."
 pubDate: 2025-03-16
 category: "DSA"
 author: "Dev Elevate Team"
