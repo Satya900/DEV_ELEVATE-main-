@@ -45,7 +45,16 @@ export const systemDesignCategory: Category = {
           slug: 'why-decompose-monoliths',
           markdownFile: 'system-design/fundamentals/why-decompose-monolith.md',
           readingTime: '12 min',
-          lastUpdated: '2024-03-15'
+          lastUpdated: '2025-04-05'
+        },
+        {
+          id: 'Fundamentals of Service Decomposition',
+          title: 'Fundamentals of Service Decomposition',
+          description: 'Learn the principles and techniques for effective service decomposition in microservices architecture.',
+          slug: 'fundamentals-of-service-decomposition',
+          markdownFile: 'system-design/fundamentals/fundamentals-of-service-decomposition.md',
+          readingTime: '12 min',
+          lastUpdated: '2025-04-05'
         }
       ]
     },
