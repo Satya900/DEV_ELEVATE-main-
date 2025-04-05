@@ -177,6 +177,15 @@ export const dsaCategory: Category = {
           markdownFile: 'dsa/Stack/understanding-lifo-principle.md',
           readingTime: '5 min',
           lastUpdated: '2025-03-13'
+        },
+        {
+          id: 'Implementing a Stack in C++ Using Standard Template Library (STL)',
+          title: 'Implementing a Stack in C++ Using Standard Template Library (STL)',
+          description: 'How to implement a stack in C++ using the Standard Template Library (STL).',
+          slug: 'implementing-stack-in-cpp',
+          markdownFile: 'dsa/Stack/implementing-stack-in-cpp.md',
+          readingTime: '5 min',
+          lastUpdated: '2025-03-13'
         }
       ]
     }
