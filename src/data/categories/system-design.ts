@@ -59,18 +59,18 @@ export const systemDesignCategory: Category = {
       ]
     },
     {
-      id: 'databases',
-      title: 'Database Design',
-      description: 'Database architecture and optimization',
+      id: 'HA & FT',
+      title: 'High Availability and Fault Tolerance',
+      description: 'Design patterns for ensuring system reliability and uptime.',
       articles: [
         {
-          id: 'db-selection',
-          title: 'Choosing the Right Database',
-          description: 'SQL vs NoSQL and use cases',
-          slug: 'database-selection',
-          markdownFile: 'system-design/databases/selection.md',
-          readingTime: '12 min',
-          lastUpdated: '2024-03-15'
+          id: 'Introduction to High Availability & Fault Tolerance',
+          title: 'Introduction to High Availability & Fault Tolerance',
+          description: 'Learn the fundamentals of High Availability (HA) and Fault Tolerance (FT), their differences, and how to build resilient and reliable systems.',
+          slug: 'introduction-to-ha-ft',
+          markdownFile: 'system-design/High Availability and Fault tolerance/introduction-to-HA-&-FT.md',
+          readingTime: '05 min',
+          lastUpdated: '2025-04-05'
         }
       ]
     }
