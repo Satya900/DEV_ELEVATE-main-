@@ -37,6 +37,15 @@ export const systemDesignCategory: Category = {
           markdownFile: 'system-design/fundamentals/scalability.md',
           readingTime: '15 min',
           lastUpdated: '2024-03-15'
+        },
+        {
+          id: 'Why decompose a Monoliths',
+          title: 'Why Decompose a Monolith?',
+          description: 'Explore the benefits, business drivers, and practical strategies for breaking up legacy monolithic systems into microservices.',
+          slug: 'why-decompose-monoliths',
+          markdownFile: 'system-design/fundamentals/why-decompose-monolith.md',
+          readingTime: '12 min',
+          lastUpdated: '2024-03-15'
         }
       ]
     },
