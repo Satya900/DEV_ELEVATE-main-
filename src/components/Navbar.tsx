@@ -2,10 +2,20 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Menu, X, Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import ThemeBtn from './ThemeBtn';
 
 export function Navbar() {
+  const { currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Failed to log out:', error);
+    }
+  };
 
   return (
     <nav className="fixed w-full  bg-white/90 backdrop-blur-sm z-50 dark:bg-black/80 dark:text-neutral-300">
@@ -36,6 +46,36 @@ export function Navbar() {
             </a>
             </div>
             <ThemeBtn />
+            {currentUser ? (
+              <div className="ml-3 relative">
+                <div className="flex items-center space-x-4">
+                  <span className="text-gray-700 dark:text-gray-300">
+                    {currentUser.email}
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/signin"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
 
           <div className="md:hidden">
