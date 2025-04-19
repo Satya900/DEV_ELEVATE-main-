@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Lock } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { FirebaseError } from 'firebase/app';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -14,15 +15,48 @@ export default function SignIn() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!email.trim() || !password.trim()) {
+      setError('Please enter both email and password');
+      return;
+    }
+
     try {
       setError('');
       setLoading(true);
       await signIn(email, password);
       navigate('/');
     } catch (err) {
-      setError('Failed to sign in');
+      console.error('Sign in error:', err);
+      if (err instanceof FirebaseError) {
+        // Handle specific Firebase Auth errors with user-friendly messages
+        switch (err.code) {
+          case 'auth/invalid-email':
+            setError('Invalid email address format');
+            break;
+          case 'auth/user-disabled':
+            setError('This account has been disabled');
+            break;
+          case 'auth/user-not-found':
+            setError('No account found with this email');
+            break;
+          case 'auth/wrong-password':
+            setError('Incorrect password');
+            break;
+          case 'auth/too-many-requests':
+            setError('Too many failed login attempts. Please try again later');
+            break;
+          case 'auth/network-request-failed':
+            setError('Network error. Please check your connection');
+            break;
+          default:
+            setError('Failed to sign in. Please try again');
+        }
+      } else {
+        setError('An error occurred during sign in');
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   return (
@@ -37,8 +71,9 @@ export default function SignIn() {
           </p>
         </div>
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-200 px-4 py-3 rounded-lg relative" role="alert">
-            <span className="block sm:inline">{error}</span>
+          <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-200 px-4 py-3 rounded-lg relative flex items-center" role="alert">
+            <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
+            <span className="block">{error}</span>
           </div>
         )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -101,7 +136,7 @@ export default function SignIn() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -148,6 +183,15 @@ export default function SignIn() {
               </svg>
             </button>
           </div>
+        </div>
+
+        <div className="text-center mt-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Don't have an account?{' '}
+            <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+              Sign up now
+            </Link>
+          </p>
         </div>
       </div>
     </div>

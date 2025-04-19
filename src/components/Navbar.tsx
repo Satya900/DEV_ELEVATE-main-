@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Menu, X, Github } from 'lucide-react';
+import { Code2, Menu, X, Github, User } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThemeBtn from './ThemeBtn';
@@ -8,10 +8,26 @@ import ThemeBtn from './ThemeBtn';
 export function Navbar() {
   const { currentUser, logout } = useAuth();
   const [isOpen, setIsOpen] = React.useState(false);
+  const [userMenuOpen, setUserMenuOpen] = React.useState(false);
+  const userMenuRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = async () => {
     try {
       await logout();
+      setUserMenuOpen(false);
     } catch (error) {
       console.error('Failed to log out:', error);
     }
@@ -47,18 +63,34 @@ export function Navbar() {
             </div>
             <ThemeBtn />
             {currentUser ? (
-              <div className="ml-3 relative">
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {currentUser.email}
-                  </span>
-                  <button
-                    onClick={handleLogout}
-                    className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    Logout
-                  </button>
-                </div>
+              <div className="ml-3 relative" ref={userMenuRef}>
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center text-emerald-600 dark:text-emerald-300">
+                    <User className="h-5 w-5" />
+                  </div>
+                  <span className="hidden sm:inline-block">{currentUser.email?.split('@')[0]}</span>
+                </button>
+                
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10 ring-1 ring-black ring-opacity-5">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      Your Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center space-x-4">
@@ -102,6 +134,9 @@ export function Navbar() {
             <MobileNavLink to="/system-design" onClick={() => setIsOpen(false)}>System Design</MobileNavLink>
             <MobileNavLink to="/projects" onClick={() => setIsOpen(false)}>Projects</MobileNavLink>
             <MobileNavLink to="/compiler" onClick={() => setIsOpen(false)}>Compiler</MobileNavLink>
+            {currentUser && (
+              <MobileNavLink to="/profile" onClick={() => setIsOpen(false)}>Profile</MobileNavLink>
+            )}
             <a
               href="https://github.com"
               target="_blank"
@@ -111,6 +146,18 @@ export function Navbar() {
               <Github className="h-5 w-5 mr-3" />
               GitHub
             </a>
+            
+            {currentUser && (
+              <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="flex items-center w-full px-4 py-3 text-black hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                Sign out
+              </button>
+            )}
           </div>
         </motion.div>
       )}
