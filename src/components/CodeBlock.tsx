@@ -1,49 +1,41 @@
-import { useState } from 'react';
-import { Check, Copy } from 'lucide-react';
+import React from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-interface CodeBlockProps {
+export interface CodeBlockProps {
+  code: string;
   language: string;
-  value: string;
+  showLineNumbers?: boolean;
 }
 
-export function CodeBlock({ language, value }: CodeBlockProps) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(value);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
+export const CodeBlock: React.FC<CodeBlockProps> = ({ 
+  code, 
+  language, 
+  showLineNumbers = false // Hide line numbers for a cleaner look
+}) => {
   return (
-    <div className="relative group -m-4">
-      <button
-        onClick={handleCopy}
-        className="absolute right-2 top-2 p-2 rounded-lg bg-gray-800 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity"
-        aria-label="Copy code"
+    <div style={{
+      border: '6px solid #e5e7eb', // Tailwind gray-200
+      borderRadius: '12px',
+      boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
+      background: '#232323',
+      margin: '0.5rem 0',
+      overflow: 'auto',
+    }}>
+      <SyntaxHighlighter
+        language={language}
+        style={vscDarkPlus}
+        showLineNumbers={showLineNumbers}
+        customStyle={{
+          margin: 0,
+          borderRadius: '8px',
+          fontSize: '1rem',
+          background: 'transparent',
+          padding: '1.25rem',
+        }}
       >
-        {copied ? (
-          <Check className="h-4 w-4 text-green-500" />
-        ) : (
-          <Copy className="h-4 w-4" />
-        )}
-      </button>
-      <div className="rounded-lg overflow-hidden ">
-        <SyntaxHighlighter
-          language={language}
-          style={oneDark}
-          customStyle={{
-            margin: 0,
-            padding: '1rem',
-            fontSize: '0.875rem',
-            lineHeight: '1.5',
-          }}
-        >
-          {value}
-        </SyntaxHighlighter>
-      </div>
+        {code}
+      </SyntaxHighlighter>
     </div>
   );
-}
+};

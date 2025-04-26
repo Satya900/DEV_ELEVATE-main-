@@ -73,12 +73,27 @@ const Compiler: React.FC = () => {
     "62": `import java.util.*;\npublic class Main {\n   public static void main(String[] args) {\n       System.out.println("Hello, World!");\n    }\n}`,
     "63": `console.log("Hello, World!");`,
     "54": `#include <bits/stdc++.h> \nusing namespace std;\nint main() {\n   cout << "Hello, World!";\n   return 0;\n}`,
+    "50": `#include <stdio.h>
+
+int main() {
+    printf("Hello, World!");
+    return 0;
+}`,
   };
 
   // Handle language change and update the code template
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
     setCode(defaultTemplates[newLanguage] || "");
+  };
+
+  // Add a language mapping object for Monaco Editor
+  const languageMap: Record<string, string> = {
+    "71": "python",
+    "62": "java",
+    "63": "javascript",
+    "54": "cpp",
+    "50": "c"
   };
 
   return (
@@ -88,12 +103,13 @@ const Compiler: React.FC = () => {
           value={language}
           onChange={(e) => handleLanguageChange(e.target.value)
           }
-          className=" h-10 w-28 bg-emerald-500 border rounded-md mr-4 p-2 "
+          className="h-10 w-28 bg-emerald-500 border rounded-md mr-4 p-2"
         >
           <option value="71">Python 3</option>
           <option value="62">Java 11</option>
           <option value="63">JavaScript</option>
           <option value="54">C++</option>
+          <option value="50">C</option>
         </select>
 
         <button
@@ -109,7 +125,7 @@ const Compiler: React.FC = () => {
         <div className="h-1/2 lg:h-full lg:w-1/2 bg-white rounded-sm dark:bg-black p-2">
           <Editor
             height="100%"
-            language="python"
+            language={languageMap[language]}
             value={code}
             onChange={(value) => setCode(value || "")}
             theme={editorTheme}

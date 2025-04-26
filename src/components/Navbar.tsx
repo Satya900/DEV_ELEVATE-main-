@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Code2, Menu, X, Github, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThemeBtn from './ThemeBtn';
 
@@ -45,12 +45,68 @@ export function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            <div>
-            <NavLink to="/dsa">DSA</NavLink>
-            <NavLink to="/web-dev">Web Dev</NavLink>
-            <NavLink to="/system-design">System Design</NavLink>
-            <NavLink to="/projects">Projects</NavLink>
-            <NavLink to="/compiler">DevCompiler</NavLink>
+            <div className="flex items-center space-x-4">
+              <RouterNavLink
+                to="/dsa"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >DSA</RouterNavLink>
+              <RouterNavLink
+                to="/web-dev"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >Web Dev</RouterNavLink>
+              <RouterNavLink
+                to="/system-design"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >System Design</RouterNavLink>
+              <RouterNavLink
+                to="/projects"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >Projects</RouterNavLink>
+              <RouterNavLink
+                to="/topics"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >Prepare</RouterNavLink>
+              <RouterNavLink
+                to="/compiler"
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-emerald-600 text-white'
+                      : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                  }`
+                }
+              >DevCompiler</RouterNavLink>
+            </div>
             <a
               href="https://github.com"
               target="_blank"
@@ -60,7 +116,6 @@ export function Navbar() {
               <Github className="h-4 w-4 mr-2" />
               GitHub
             </a>
-            </div>
             <ThemeBtn />
             {currentUser ? (
               <div className="ml-3 relative" ref={userMenuRef}>
@@ -133,6 +188,7 @@ export function Navbar() {
             <MobileNavLink to="/web-dev" onClick={() => setIsOpen(false)}>Web Dev</MobileNavLink>
             <MobileNavLink to="/system-design" onClick={() => setIsOpen(false)}>System Design</MobileNavLink>
             <MobileNavLink to="/projects" onClick={() => setIsOpen(false)}>Projects</MobileNavLink>
+            <MobileNavLink to="/topics" onClick={() => setIsOpen(false)}>Prepare</MobileNavLink>
             <MobileNavLink to="/compiler" onClick={() => setIsOpen(false)}>Compiler</MobileNavLink>
             {currentUser && (
               <MobileNavLink to="/profile" onClick={() => setIsOpen(false)}>Profile</MobileNavLink>
@@ -167,23 +223,29 @@ export function Navbar() {
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
   return (
-    <Link
+    <RouterNavLink
       to={to}
-      className="px-4 py-2 text-gray-700 hover:text-black rounded-full hover:bg-gray-100 transition-colors text-sm font-medium dark:text-gray-300 dark:hover:bg-gradient-to-r from-emerald-500 to-teal-500 dark:hover:bg-black"
+      className={({ isActive }) =>
+        `w-full block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+          isActive
+            ? 'bg-emerald-600 text-white'
+            : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+        }`
+      }
     >
       {children}
-    </Link>
+    </RouterNavLink>
   );
 }
 
 function MobileNavLink({ to, children, onClick }: { to: string; children: React.ReactNode; onClick: () => void }) {
   return (
-    <Link
+    <RouterNavLink
       to={to}
       className="flex items-center px-4 py-3 text-black hover:bg-gray-50 rounded-lg transition-colors"
       onClick={onClick}
     >
       {children}
-    </Link>
+    </RouterNavLink>
   );
 }

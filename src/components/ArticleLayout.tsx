@@ -166,7 +166,7 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
                     return match ? (
                       <CodeBlock
                         language={match[1]}
-                        value={String(children).replace(/\n$/, '')}
+                        code={String(children).replace(/\n$/, '')}
                         {...props}
                       />
                     ) : (

@@ -3,12 +3,15 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, AlertCircle } from 'lucide-react';
 import { FirebaseError } from 'firebase/app';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
   const { signIn } = useAuth();
   const navigate = useNavigate();
 
@@ -24,7 +27,7 @@ export default function SignIn() {
       setError('');
       setLoading(true);
       await signIn(email, password);
-      navigate('/');
+      navigate('/profile');
     } catch (err) {
       console.error('Sign in error:', err);
       if (err instanceof FirebaseError) {
@@ -59,6 +62,34 @@ export default function SignIn() {
     }
   }
 
+  // Function to test Firebase connection
+  const testFirebaseConnection = async () => {
+    setTestResult("Testing Firebase connection...");
+    try {
+      // Create a test document
+      const testDocRef = doc(db, "testCollection", "testDocument");
+      
+      // Set some data
+      await setDoc(testDocRef, {
+        timestamp: new Date(),
+        test: true,
+        message: "Firebase connection test"
+      });
+      
+      // Try to read it back
+      const docSnap = await getDoc(testDocRef);
+      
+      if (docSnap.exists()) {
+        setTestResult("✅ Firebase connection successful! Data written and read back correctly.");
+      } else {
+        setTestResult("❌ Firebase write succeeded but read failed.");
+      }
+    } catch (error) {
+      console.error("Firebase test error:", error);
+      setTestResult(`❌ Firebase connection error: ${error}`);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl">
@@ -74,6 +105,15 @@ export default function SignIn() {
           <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-200 px-4 py-3 rounded-lg relative flex items-center" role="alert">
             <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0" />
             <span className="block">{error}</span>
+          </div>
+        )}
+        {testResult && (
+          <div className={`p-3 rounded-md mb-4 text-sm ${
+            testResult.includes('✅') 
+              ? 'bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300' 
+              : 'bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+          }`}>
+            {testResult}
           </div>
         )}
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -192,6 +232,16 @@ export default function SignIn() {
               Sign up now
             </Link>
           </p>
+        </div>
+
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={testFirebaseConnection}
+            className="text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300"
+          >
+            Test Firebase
+          </button>
         </div>
       </div>
     </div>

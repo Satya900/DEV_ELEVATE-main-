@@ -14,11 +14,48 @@ export const dsaCategory: Category = {
         {
           id: 'intro-to-dsa',
           title: 'Introduction to DSA',
-          description: 'Understanding the importance of DSA',
+          description: 'Understanding the importance of DSA in computer science and software engineering',
           slug: 'introduction-to-dsa',
           markdownFile: 'dsa/basics/intro-to-dsa.md',
-          readingTime: '5 min',
-          lastUpdated: '2024-03-15'
+          
+          // Enhanced metadata
+          difficultyLevel: 'beginner',
+          contentType: 'concept',
+          author: 'DevElevate Team',
+          authorImageUrl: '/images/authors/team-avatar.png',
+          estimatedMinutes: 8,
+          lastUpdated: '2024-03-15',
+          
+          // Tags for improved categorization and search
+          tags: ['fundamentals', 'algorithms', 'data structures', 'computer science', 'beginner'],
+          
+          // Learning outcomes
+          learningOutcomes: [
+            'Understand what data structures and algorithms are',
+            'Recognize the importance of DSA in software development',
+            'Identify common applications of DSA in real-world scenarios',
+            'Prepare for your journey in learning DSA'
+          ],
+          
+          // Related content
+          relatedArticles: ['time-complexity'],
+          
+          // Additional resources
+          externalResources: [
+            {
+              title: 'Introduction to Algorithms (MIT OpenCourseWare)',
+              url: 'https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/',
+              type: 'video'
+            },
+            {
+              title: 'Why Study Algorithms?',
+              url: 'https://www.geeksforgeeks.org/why-study-algorithm/',
+              type: 'article'
+            }
+          ],
+          
+          // For backward compatibility
+          readingTime: '5 min'
         },
         {
           id: 'time-complexity',
@@ -92,8 +129,8 @@ export const dsaCategory: Category = {
           lastUpdated: '2025-02-12'
         },
         {
-          id: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
-          title: 'Advanced Array Algorithms: From Kadane’s Algorithm to Dynamic Programming',
+          id: "Advanced Array Algorithms: From Kadane's Algorithm to Dynamic Programming",
+          title: "Advanced Array Algorithms: From Kadane's Algorithm to Dynamic Programming",
           description: 'Advanced array algorithms',
           slug: 'advanced-array-algorithms',
           markdownFile: 'dsa/arrays/advance-array-algo.md',
