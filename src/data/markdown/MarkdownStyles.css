@@ -1,31 +1,51 @@
 .markdown-body {
-    color: #333;
-  }
-  
-  .dark .markdown-body {
-    color: #e0e0e0;
-  }
-  
-  .markdown-body h1 {
-    color: #333;
-  }
-  
-  .dark .markdown-body h1 {
-    color: #ffffff;
-  }
-  .dark .markdown-body h3 {
-    color: #ffffff;
-  }
-  
-  .custom-code-block {
-    background: #f3f4f6;
-    color: #1e293b;
-    padding: 2px 4px;
-    border-radius: 4px;
-  }
-  
-  .dark .custom-code-block {
-    background: #1e293b;
-    color: #f0f6fc;
-  }
-  
+  color: #333;
+}
+
+.dark .markdown-body {
+  color: #e0e0e0;
+}
+
+.markdown-body h1 {
+  color: #333;
+}
+
+.dark .markdown-body h1 {
+  color: #ffffff;
+}
+
+.markdown-body h2 {
+  color: #333;
+}
+
+.dark .markdown-body h2 {
+  color: #ffffff;
+}
+
+.markdown-body h3 {
+  color: #333;
+}
+
+.dark .markdown-body h3 {
+  color: #ffffff;
+}
+
+.markdown-body p {
+  color: #333;
+}
+
+.dark .markdown-body p {
+  color: #e0e0e0;
+}
+
+.custom-code-block {
+  background: #f3f4f6;
+  color: #1e293b;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.dark .custom-code-block {
+  background: #1e293b;
+  color: #f0f6fc;
+}

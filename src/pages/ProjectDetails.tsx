@@ -111,7 +111,7 @@ export function ProjectDetails() {
             </div>
 
             {/* Markdown Content */}
-            <div className="prose prose-lg max-w-none markdown-body">
+            <div className="prose prose-lg max-w-none dark:prose-invert">
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -120,7 +120,7 @@ export function ProjectDetails() {
                     return !inline && match ? (
                       <CodeBlock
                         language={match[1]}
-                        value={String(children).replace(/\n$/, '')}
+                        code={String(children).replace(/\n$/, '')}
                         {...props}
                       />
                     ) : (
@@ -129,6 +129,33 @@ export function ProjectDetails() {
                       </code>
                     );
                   },
+                  h1: ({ children }) => (
+                    <h1 className="text-3xl font-bold text-black mt-8 mb-4 dark:text-neutral-100">{children}</h1>
+                  ),
+                  h2: ({ children }) => (
+                    <h2 className="text-2xl font-bold text-black mt-8 mb-4 dark:text-neutral-200">{children}</h2>
+                  ),
+                  h3: ({ children }) => (
+                    <h3 className="text-xl font-semibold text-black mt-6 mb-3 dark:text-neutral-100">{children}</h3>
+                  ),
+                  p: ({ children }) => (
+                    <p className="text-black leading-relaxed mb-4 dark:text-neutral-200">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside space-y-2 mb-4 text-black dark:text-neutral-200">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside space-y-2 mb-4 text-black dark:text-neutral-200">{children}</ol>
+                  ),
+                  li: ({ children }) => (
+                    <li className="text-black dark:text-neutral-200">{children}</li>
+                  ),
+                  blockquote: ({ children }) => (
+                    <blockquote className="border-l-4 border-emerald-500 pl-4 italic text-black my-4 dark:text-neutral-200">{children}</blockquote>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} className="text-emerald-600 hover:text-emerald-700 underline">{children}</a>
+                  ),
                 }}
               >
                 {markdown}
@@ -151,7 +178,7 @@ export function ProjectDetails() {
                 href={project.sourceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3 border border-gray-200 text-base font-medium rounded-md text-black bg-white hover:bg-gray-50 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 border border-gray-200 text-base font-medium rounded-md text-black bg-white hover:bg-gray-50 transition-colors dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700"
               >
                 <Github className="mr-2 h-5 w-5" />
                 View Source Code
