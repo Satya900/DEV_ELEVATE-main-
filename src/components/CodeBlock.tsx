@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -13,15 +13,42 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   language, 
   showLineNumbers = false 
 }) => {
-  // Check if dark mode is active
-  const isDarkMode = document.documentElement.classList.contains('dark');
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Function to check current theme
+    const checkTheme = () => {
+      const htmlElement = document.documentElement;
+      setIsDarkMode(htmlElement.classList.contains('dark'));
+    };
+
+    // Check initial theme
+    checkTheme();
+
+    // Create observer to watch for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          checkTheme();
+        }
+      });
+    });
+
+    // Observe changes to the html element's class attribute
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
   
   return (
     <div style={{
-      border: '1px solid #e5e7eb',
+      border: isDarkMode ? '1px solid #374151' : '1px solid #e5e7eb',
       borderRadius: '12px',
       boxShadow: '0 2px 8px 0 rgba(0,0,0,0.04)',
-      background: isDarkMode ? '#1e1e1e' : '#ffffff',
+      background: isDarkMode ? '#1f2937' : '#ffffff',
       margin: '1rem 0',
       overflow: 'auto',
     }}>
@@ -35,12 +62,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           fontSize: '14px',
           background: 'transparent',
           padding: '1.25rem',
-          color: isDarkMode ? '#d4d4d4' : '#24292e',
+          color: isDarkMode ? '#e5e7eb' : '#374151',
         }}
         codeTagProps={{
           style: {
-            color: isDarkMode ? '#d4d4d4' : '#24292e',
+            color: isDarkMode ? '#e5e7eb' : '#374151',
             fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+            background: 'transparent',
           }
         }}
       >

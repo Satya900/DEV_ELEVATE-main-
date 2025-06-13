@@ -24,47 +24,47 @@ body {
 
 /* Markdown Styles */
 .prose h1 {
-  @apply text-3xl font-bold mb-6 text-black;
+  @apply text-3xl font-bold mb-6 text-black dark:text-white;
 }
 
 .prose h2 {
-  @apply text-2xl font-bold mt-8 mb-4 text-black;
+  @apply text-2xl font-bold mt-8 mb-4 text-black dark:text-white;
 }
 
 .prose h3 {
-  @apply text-xl font-semibold mt-6 mb-3 text-black;
+  @apply text-xl font-semibold mt-6 mb-3 text-black dark:text-white;
 }
 
 .prose p {
-  @apply text-black mb-4;
+  @apply text-black mb-4 dark:text-gray-300;
 }
 
 .prose ul {
-  @apply list-disc list-inside mb-4 text-black;
+  @apply list-disc list-inside mb-4 text-black dark:text-gray-300;
 }
 
 .prose ol {
-  @apply list-decimal list-inside mb-4 text-black;
+  @apply list-decimal list-inside mb-4 text-black dark:text-gray-300;
 }
 
 .prose li {
-  @apply mb-2;
+  @apply mb-2 dark:text-gray-300;
 }
 
 .prose code {
-  @apply px-2 py-1 bg-gray-100 text-black rounded text-sm;
+  @apply px-2 py-1 bg-gray-100 text-black rounded text-sm dark:bg-gray-800 dark:text-gray-200;
 }
 
 .prose pre {
-  @apply p-4 bg-gray-100 rounded-lg overflow-x-auto mb-4;
+  @apply p-4 bg-gray-100 rounded-lg overflow-x-auto mb-4 dark:bg-gray-800;
 }
 
 .prose blockquote {
-  @apply pl-4 border-l-4 border-purple-500 italic text-black mb-4;
+  @apply pl-4 border-l-4 border-purple-500 italic text-black mb-4 dark:text-gray-300;
 }
 
 .prose a {
-  @apply text-purple-600 hover:underline;
+  @apply text-purple-600 hover:underline dark:text-purple-400;
 }
 
 .prose table {
@@ -73,9 +73,23 @@ body {
 
 .prose th,
 .prose td {
-  @apply border border-gray-200 p-2 text-left text-black;
+  @apply border border-gray-200 p-2 text-left text-black dark:border-gray-700 dark:text-gray-300;
 }
 
 .prose th {
-  @apply bg-gray-50 font-semibold;
+  @apply bg-gray-50 font-semibold dark:bg-gray-800;
+}
+
+/* Fix for code blocks in dark mode */
+.dark pre {
+  background-color: #1f2937 !important;
+}
+
+.dark code {
+  color: #e5e7eb !important;
+}
+
+/* Ensure code blocks have proper contrast */
+pre code {
+  background-color: transparent !important;
 }

@@ -61,20 +61,18 @@
 }
 
 .markdown-body pre code {
-  background: transparent;
+  background: transparent !important;
   padding: 0;
   border-radius: 0;
-  color: inherit;
+  color: inherit !important;
 }
 
-/* Ensure code blocks have proper contrast */
+/* Fix for syntax highlighting in code blocks */
 .hljs {
-  background: #f8fafc !important;
-  color: #1e293b !important;
+  background: transparent !important;
 }
 
 .dark .hljs {
-  background: #1e293b !important;
   color: #e2e8f0 !important;
 }
 
@@ -118,4 +116,9 @@
 .dark .hljs-number,
 .dark .hljs-literal {
   color: #f87171 !important;
+}
+
+/* Fix for code block background in dark mode */
+.dark .markdown-body pre code {
+  background-color: transparent !important;
 }
