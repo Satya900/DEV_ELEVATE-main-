@@ -1,51 +1,121 @@
 .markdown-body {
-  color: #333;
+  color: #374151;
 }
 
 .dark .markdown-body {
-  color: #e0e0e0;
+  color: #d1d5db;
 }
 
-.markdown-body h1 {
-  color: #333;
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  color: #111827;
 }
 
-.dark .markdown-body h1 {
-  color: #ffffff;
-}
-
-.markdown-body h2 {
-  color: #333;
-}
-
-.dark .markdown-body h2 {
-  color: #ffffff;
-}
-
-.markdown-body h3 {
-  color: #333;
-}
-
-.dark .markdown-body h3 {
-  color: #ffffff;
+.dark .markdown-body h1,
+.dark .markdown-body h2,
+.dark .markdown-body h3,
+.dark .markdown-body h4,
+.dark .markdown-body h5,
+.dark .markdown-body h6 {
+  color: #f9fafb;
 }
 
 .markdown-body p {
-  color: #333;
+  color: #374151;
 }
 
 .dark .markdown-body p {
-  color: #e0e0e0;
+  color: #d1d5db;
 }
 
-.custom-code-block {
+.markdown-body code {
   background: #f3f4f6;
-  color: #1e293b;
-  padding: 2px 4px;
+  color: #1f2937;
+  padding: 2px 6px;
   border-radius: 4px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.875em;
 }
 
-.dark .custom-code-block {
+.dark .markdown-body code {
+  background: #374151;
+  color: #f3f4f6;
+}
+
+.markdown-body pre {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.dark .markdown-body pre {
   background: #1e293b;
-  color: #f0f6fc;
+  border-color: #475569;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  color: inherit;
+}
+
+/* Ensure code blocks have proper contrast */
+.hljs {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+.dark .hljs {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Override syntax highlighting colors for better visibility */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in {
+  color: #7c3aed !important;
+}
+
+.dark .hljs-keyword,
+.dark .hljs-selector-tag,
+.dark .hljs-built_in {
+  color: #a78bfa !important;
+}
+
+.hljs-string,
+.hljs-attr {
+  color: #059669 !important;
+}
+
+.dark .hljs-string,
+.dark .hljs-attr {
+  color: #34d399 !important;
+}
+
+.hljs-comment {
+  color: #6b7280 !important;
+  font-style: italic;
+}
+
+.dark .hljs-comment {
+  color: #9ca3af !important;
+}
+
+.hljs-number,
+.hljs-literal {
+  color: #dc2626 !important;
+}
+
+.dark .hljs-number,
+.dark .hljs-literal {
+  color: #f87171 !important;
 }
