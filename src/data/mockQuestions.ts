@@ -9,14 +9,17 @@ export const mockQuestions = [
     tags: ['Arrays', 'Basics'],
     timeToSolve: 10,
     starterCode: {
-      python: '# Write your code here',
-      javascript: '// Write your code here',
-      java: '// Write your code here',
-      cpp: '// Write your code here',
-      c: '// Write your code here'
+      python: '# Write your code here\n# Read input and print output\na, b = map(int, input().split())\nresult = a + b\nprint(result)',
+      javascript: '// Write your code here\n// Read input and print output\nconst readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nrl.on("line", (line) => {\n  const [a, b] = line.split(" ").map(Number);\n  const result = a + b;\n  console.log(result);\n  rl.close();\n});',
+      java: 'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        int result = a + b;\n        System.out.println(result);\n        scanner.close();\n    }\n}',
+      cpp: '#include <iostream>\nusing namespace std;\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    int result = a + b;\n    cout << result << endl;\n    return 0;\n}',
+      c: '#include <stdio.h>\n\nint main() {\n    int a, b;\n    scanf("%d %d", &a, &b);\n    int result = a + b;\n    printf("%d\\n", result);\n    return 0;\n}'
     },
     solution: '',
-    testCases: []
+    testCases: [
+      { input: '2 3', expectedOutput: '5\n' },
+      { input: '10 20', expectedOutput: '30\n' }
+    ]
   },
   {
     id: 'q2',
@@ -28,14 +31,17 @@ export const mockQuestions = [
     tags: ['Strings'],
     timeToSolve: 15,
     starterCode: {
-      python: '# Write your code here',
-      javascript: '// Write your code here',
-      java: '// Write your code here',
-      cpp: '// Write your code here',
-      c: '// Write your code here'
+      python: '# Write your code here\n# Read input and print output\ntext = input()\nprint(text[::-1])',
+      javascript: '// Write your code here\n// Read input and print output\nconst readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nrl.on("line", (line) => {\n  const reversed = line.split("").reverse().join("");\n  console.log(reversed);\n  rl.close();\n});',
+      java: 'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        String text = scanner.nextLine();\n        StringBuilder sb = new StringBuilder(text);\n        System.out.println(sb.reverse().toString());\n        scanner.close();\n    }\n}',
+      cpp: '#include <iostream>\n#include <algorithm>\n#include <string>\nusing namespace std;\n\nint main() {\n    string text;\n    getline(cin, text);\n    reverse(text.begin(), text.end());\n    cout << text << endl;\n    return 0;\n}',
+      c: '#include <stdio.h>\n#include <string.h>\n\nint main() {\n    char text[100];\n    scanf("%s", text);\n    int length = strlen(text);\n    for (int i = length - 1; i >= 0; i--) {\n        printf("%c", text[i]);\n    }\n    printf("\\n");\n    return 0;\n}'
     },
     solution: '',
-    testCases: []
+    testCases: [
+      { input: 'hello', expectedOutput: 'olleh\n' },
+      { input: 'world', expectedOutput: 'dlrow\n' }
+    ]
   },
   // Python
   {
@@ -46,7 +52,7 @@ export const mockQuestions = [
     language: 'python',
     languageId: 71,
     starterCode: {
-      python: 'class Solution:\n    def sum_two(self, a, b):\n        # Write your code here\n        pass',
+      python: '# Read input and print output\na, b = map(int, input().split())\n\nclass Solution:\n    def sum_two(self, a, b):\n        # Write your code here\n        pass\n\n# Create solution instance and call function\nsolution = Solution()\nresult = solution.sum_two(a, b)\nprint(result)',
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -82,7 +88,7 @@ export const mockQuestions = [
     language: 'java',
     languageId: 62,
     starterCode: {
-      java: 'public class Main {\n    public static int sumTwo(int a, int b) {\n        // Write your code here\n        return 0;\n    }\n    public static void main(String[] args) {\n        // Test code\n    }\n}',
+      java: 'import java.util.Scanner;\n\npublic class Main {\n    public static int sumTwo(int a, int b) {\n        // Write your code here\n        return 0;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int a = scanner.nextInt();\n        int b = scanner.nextInt();\n        int result = sumTwo(a, b);\n        System.out.println(result);\n        scanner.close();\n    }\n}',
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -118,7 +124,7 @@ export const mockQuestions = [
     language: 'javascript',
     languageId: 63,
     starterCode: {
-      javascript: 'function sumTwo(a, b) {\n  // Write your code here\n}',
+      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction sumTwo(a, b) {\n  // Write your code here\n}\n\nrl.on("line", (line) => {\n  const [a, b] = line.split(" ").map(Number);\n  const result = sumTwo(a, b);\n  console.log(result);\n  rl.close();\n});',
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -154,7 +160,7 @@ export const mockQuestions = [
     language: 'cpp',
     languageId: 54,
     starterCode: {
-      cpp: '#include <iostream>\nusing namespace std;\nint sumTwo(int a, int b) {\n    // Write your code here\n    return 0;\n}\nint main() {\n    // Test code\n    return 0;\n}'
+      cpp: '#include <iostream>\nusing namespace std;\n\nint sumTwo(int a, int b) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    int a, b;\n    cin >> a >> b;\n    int result = sumTwo(a, b);\n    cout << result << endl;\n    return 0;\n}'
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -190,7 +196,7 @@ export const mockQuestions = [
     language: 'c',
     languageId: 50,
     starterCode: {
-      c: '#include <stdio.h>\nint sumTwo(int a, int b) {\n    // Write your code here\n    return 0;\n}\nint main() {\n    // Test code\n    return 0;\n}'
+      c: '#include <stdio.h>\n\nint sumTwo(int a, int b) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    int a, b;\n    scanf("%d %d", &a, &b);\n    int result = sumTwo(a, b);\n    printf("%d\\n", result);\n    return 0;\n}'
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -226,7 +232,7 @@ export const mockQuestions = [
     language: 'python',
     languageId: 71,
     starterCode: {
-      python: 'class Solution:\n    def reverse_string(self, s):\n        # Write your code here\n        pass',
+      python: '# Read input and print output\ns = input()\n\nclass Solution:\n    def reverse_string(self, s):\n        # Write your code here\n        pass\n\n# Create solution instance and call function\nsolution = Solution()\nresult = solution.reverse_string(s)\nprint(result)',
     },
     difficulty: 'Easy',
     tags: ['string', 'reverse'],
@@ -262,7 +268,7 @@ export const mockQuestions = [
     language: 'java',
     languageId: 62,
     starterCode: {
-      java: 'public class Main {\n    public static int factorial(int n) {\n        // Write your code here\n        return 1;\n    }\n    public static void main(String[] args) {\n        // Test code\n    }\n}'
+      java: 'import java.util.Scanner;\n\npublic class Main {\n    public static int factorial(int n) {\n        // Write your code here\n        return 1;\n    }\n    \n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        int n = scanner.nextInt();\n        int result = factorial(n);\n        System.out.println(result);\n        scanner.close();\n    }\n}'
     },
     difficulty: 'Easy',
     tags: ['math', 'factorial'],
@@ -298,7 +304,7 @@ export const mockQuestions = [
     language: 'javascript',
     languageId: 63,
     starterCode: {
-      javascript: 'function filterEven(arr) {\n  // Write your code here\n}'
+      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction filterEven(arr) {\n  // Write your code here\n}\n\nrl.on("line", (line) => {\n  // Parse input like "nums = [1,2,3,4,5,6]" to get the array\n  const match = line.match(/nums = \\[(.*?)\\]/);\n  if (match) {\n    const nums = match[1].split(",").map(Number);\n    const result = filterEven(nums);\n    console.log(JSON.stringify(result));\n  }\n  rl.close();\n});'
     },
     difficulty: 'Easy',
     tags: ['array', 'filter'],
@@ -321,7 +327,7 @@ export const mockQuestions = [
     timeComplexity: 'O(n)',
     spaceComplexity: 'O(n)',
     testCases: [
-      { input: 'nums = [1,2,3,4,5,6]', expectedOutput: '[2, 4, 6]\n' },
+      { input: 'nums = [1,2,3,4,5,6]', expectedOutput: '[2,4,6]\n' },
       { input: 'nums = [7,8,9]', expectedOutput: '[8]\n' }
     ]
   },
@@ -334,7 +340,7 @@ export const mockQuestions = [
     language: 'cpp',
     languageId: 54,
     starterCode: {
-      cpp: '#include <iostream>\n#include <vector>\nusing namespace std;\nint findMax(const vector<int>& arr) {\n    // Write your code here\n    return 0;\n}\nint main() {\n    // Test code\n    return 0;\n}'
+      cpp: '#include <iostream>\n#include <vector>\n#include <sstream>\n#include <string>\nusing namespace std;\n\nint findMax(const vector<int>& arr) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    string line;\n    getline(cin, line);\n    \n    // Parse input like "nums = [1, 5, 3, 9, 2]"\n    size_t start = line.find("[");\n    size_t end = line.find("]");\n    if (start != string::npos && end != string::npos) {\n        string numsStr = line.substr(start + 1, end - start - 1);\n        stringstream ss(numsStr);\n        vector<int> nums;\n        string token;\n        while (getline(ss, token, \',\')) {\n            nums.push_back(stoi(token));\n        }\n        \n        int result = findMax(nums);\n        cout << result << endl;\n    }\n    \n    return 0;\n}'
     },
     difficulty: 'Easy',
     tags: ['array', 'maximum'],
@@ -370,7 +376,7 @@ export const mockQuestions = [
     language: 'c',
     languageId: 50,
     starterCode: {
-      c: '#include <stdio.h>\nint countVowels(const char* s) {\n    // Write your code here\n    return 0;\n}\nint main() {\n    // Test code\n    return 0;\n}'
+      c: '#include <stdio.h>\n#include <string.h>\n\nint countVowels(const char* s) {\n    // Write your code here\n    return 0;\n}\n\nint main() {\n    char s[101];\n    scanf("%s", s);\n    int result = countVowels(s);\n    printf("%d\\n", result);\n    return 0;\n}'
     },
     difficulty: 'Easy',
     tags: ['string', 'vowel'],
@@ -397,4 +403,4 @@ export const mockQuestions = [
       { input: 'rhythm', expectedOutput: '0\n' }
     ]
   }
-]; 
+];

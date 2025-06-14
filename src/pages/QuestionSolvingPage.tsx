@@ -97,13 +97,19 @@ export default function QuestionSolvingPage() {
     if (!question) return;
     
     setAttempts(prev => prev + 1);
+    console.log("Running code with test cases:", question.testCases);
+    
+    // Use the first test case as custom input if none provided
+    const inputToUse = customInput.trim() || (question.testCases[0]?.input || '');
     
     const result = await runCode(
       code,
       selectedLanguage,
-      customInput,
+      inputToUse,
       question.testCases
     );
+
+    console.log("Run code result:", result);
 
     if (result.allTestsPassed) {
       setLastSubmissionStatus('success');
@@ -479,7 +485,6 @@ export default function QuestionSolvingPage() {
                   roundedSelection: false,
                   readOnly: false,
                   cursorStyle: 'line',
-                  automaticLayout: true,
                 }}
               />
             </div>

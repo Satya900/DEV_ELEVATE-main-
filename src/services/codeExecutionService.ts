@@ -18,14 +18,15 @@ export const executeCode = async (
   input: string
 ): Promise<SubmissionResult> => {
   try {
+    console.log(`Executing code in ${language} with input: ${input}`);
+    
     // Submit the code
     const submission = await axios.post(
-      `${JUDGE0_API}/submissions?base64_encoded=false`,
+      `${JUDGE0_API}/submissions?base64_encoded=false&wait=true`,
       {
         source_code: code,
-        language_id: parseInt(languageMap[language].judgeId),
+        language_id: parseInt(languageMap[language]?.judgeId || '71'),
         stdin: input,
-        wait: true
       },
       {
         headers: {
@@ -36,27 +37,46 @@ export const executeCode = async (
     );
 
     const { token } = submission.data;
+    console.log(`Submission token: ${token}`);
 
     // Poll for results
     let result = null;
+    let attempts = 0;
+    const maxAttempts = 10;
+    
     do {
-      const { data } = await axios.get(
-        `${JUDGE0_API}/submissions/${token}`,
-        {
-          headers: {
-            'X-RapidAPI-Key': API_KEY,
-            'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+      attempts++;
+      console.log(`Polling attempt ${attempts}/${maxAttempts}`);
+      
+      try {
+        const { data } = await axios.get(
+          `${JUDGE0_API}/submissions/${token}?base64_encoded=false`,
+          {
+            headers: {
+              'X-RapidAPI-Key': API_KEY,
+              'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+            }
           }
+        );
+        result = data;
+        
+        console.log(`Status: ${result.status?.description}, ID: ${result.status?.id}`);
+        
+        // If not In Queue (1) or Processing (2)
+        if (result.status?.id > 2) {
+          break;
         }
-      );
-      result = data;
-
-      if (result.status.id > 2) { // If not In Queue (1) or Processing (2)
-        break;
+      } catch (error) {
+        console.error('Error polling for results:', error);
       }
 
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second before polling again
-    } while (true);
+      // Wait before polling again
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } while (attempts < maxAttempts);
+
+    if (!result) {
+      throw new Error('Failed to get execution results after multiple attempts');
+    }
 
     // Map Judge0 status to our SubmissionResult status
     let status: SubmissionResult['status'] = 'Runtime Error';
@@ -68,6 +88,8 @@ export const executeCode = async (
       status = 'Time Limit Exceeded';
     }
 
+    console.log(`Final result: ${status}, Output: ${result.stdout || result.stderr || 'No output'}`);
+
     return {
       status,
       output: result.stdout || result.stderr || 'No output',
@@ -78,7 +100,7 @@ export const executeCode = async (
     console.error('Code execution error:', error);
     return {
       status: 'Runtime Error',
-      output: 'Error executing code. Please try again.'
+      output: `Error executing code: ${error.message || 'Unknown error'}`
     };
   }
 };

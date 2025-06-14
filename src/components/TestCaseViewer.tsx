@@ -27,7 +27,7 @@ export const TestCaseViewer: React.FC<TestCaseViewerProps> = ({
         >
           <div className="flex items-center justify-between mb-2">
             <h4 className="font-medium">Test Case {index + 1}</h4>
-            {showResults && (
+            {showResults && testCase.passed !== undefined && (
               <div className="flex items-center gap-2">
                 {testCase.passed ? (
                   <CheckCircle className="w-5 h-5 text-green-500" />
@@ -58,7 +58,7 @@ export const TestCaseViewer: React.FC<TestCaseViewerProps> = ({
               </pre>
             </div>
 
-            {showResults && testCase.actualOutput && (
+            {showResults && testCase.actualOutput !== undefined && (
               <div>
                 <label className="text-sm font-medium">Your Output:</label>
                 <pre className={`mt-1 p-2 rounded ${
@@ -66,7 +66,7 @@ export const TestCaseViewer: React.FC<TestCaseViewerProps> = ({
                     ? 'bg-green-50 dark:bg-green-900/20' 
                     : 'bg-red-50 dark:bg-red-900/20'
                 }`}>
-                  {testCase.actualOutput}
+                  {testCase.actualOutput || "No output"}
                 </pre>
               </div>
             )}
