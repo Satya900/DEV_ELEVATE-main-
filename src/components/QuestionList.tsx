@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CodeQuestion } from '../types/questions';
 import { useQuestionProgress } from '../hooks/useQuestionProgress';
 import DifficultyBadge from './DifficultyBadge';
+import { CheckCircle } from 'lucide-react';
 
 interface QuestionListProps {
   questions: CodeQuestion[];
@@ -31,9 +32,14 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, className = '' }
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white">
-                    {question.title}
-                  </h3>
+                  <div className="flex items-center">
+                    <h3 className="font-medium text-gray-900 dark:text-white">
+                      {question.title}
+                    </h3>
+                    {progress.status === 'solved' && (
+                      <CheckCircle className="ml-2 h-4 w-4 text-green-500" />
+                    )}
+                  </div>
                   <div className="mt-1 flex gap-2">
                     <DifficultyBadge difficulty={question.difficulty} />
                     {progress.status === 'solved' && (
@@ -41,7 +47,15 @@ const QuestionList: React.FC<QuestionListProps> = ({ questions, className = '' }
                         Solved
                       </span>
                     )}
+                    {progress.status === 'attempted' && (
+                      <span className="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                        Attempted
+                      </span>
+                    )}
                   </div>
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {question.acceptanceRate}% acceptance
                 </div>
               </div>
             </Link>
