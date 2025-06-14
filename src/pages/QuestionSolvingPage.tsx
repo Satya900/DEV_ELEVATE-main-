@@ -40,7 +40,7 @@ export default function QuestionSolvingPage() {
   const question = mockQuestions.find(q => q.id === questionId);
   
   // State management
-  const [selectedLanguage, setSelectedLanguage] = useState('python');
+  const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState('');
   const [activeTab, setActiveTab] = useState<'description' | 'editorial' | 'submissions'>('description');

@@ -124,7 +124,7 @@ export const mockQuestions = [
     language: 'javascript',
     languageId: 63,
     starterCode: {
-      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction sumTwo(a, b) {\n  // Write your code here\n}\n\nrl.on("line", (line) => {\n  const [a, b] = line.split(" ").map(Number);\n  const result = sumTwo(a, b);\n  console.log(result);\n  rl.close();\n});',
+      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction sumTwo(a, b) {\n  // Write your code here\n  return 0;\n}\n\nrl.on("line", (line) => {\n  const [a, b] = line.split(" ").map(Number);\n  const result = sumTwo(a, b);\n  console.log(result);\n  rl.close();\n});',
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
@@ -164,7 +164,7 @@ export const mockQuestions = [
     },
     difficulty: 'Easy',
     tags: ['math', 'function'],
-    acceptanceRate: 85,
+    acceptanceRate: 88,
     examples: [
       { input: '2 3', output: '5', explanation: '2 + 3 = 5' },
       { input: '10 20', output: '30', explanation: '10 + 20 = 30' }
@@ -304,7 +304,7 @@ export const mockQuestions = [
     language: 'javascript',
     languageId: 63,
     starterCode: {
-      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction filterEven(arr) {\n  // Write your code here\n}\n\nrl.on("line", (line) => {\n  // Parse input like "nums = [1,2,3,4,5,6]" to get the array\n  const match = line.match(/nums = \\[(.*?)\\]/);\n  if (match) {\n    const nums = match[1].split(",").map(Number);\n    const result = filterEven(nums);\n    console.log(JSON.stringify(result));\n  }\n  rl.close();\n});'
+      javascript: 'const readline = require("readline");\nconst rl = readline.createInterface({\n  input: process.stdin,\n  output: process.stdout\n});\n\nfunction filterEven(arr) {\n  // Write your code here\n  return [];\n}\n\nrl.on("line", (line) => {\n  // Parse input like "nums = [1,2,3,4,5,6]" to get the array\n  const match = line.match(/nums = \\[(.*?)\\]/);\n  if (match) {\n    const nums = match[1].split(",").map(Number);\n    const result = filterEven(nums);\n    console.log(JSON.stringify(result));\n  }\n  rl.close();\n});'
     },
     difficulty: 'Easy',
     tags: ['array', 'filter'],
