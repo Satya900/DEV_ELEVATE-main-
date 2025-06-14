@@ -24,14 +24,16 @@ import {
   Zap,
   Target,
   Award,
-  TrendingUp
+  TrendingUp,
+  Send
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Submission } from '../types/questions';
 
 export default function QuestionSolvingPage() {
   const { questionId } = useParams<{ questionId: string }>();
   const navigate = useNavigate();
-  const { currentUser, addSubmission, updateSolvedQuestion } = useAuth();
+  const { currentUser, addSubmission, updateSolvedQuestion, userProgress } = useAuth();
   const { isRunning, output, testResults, runCode } = useCodeExecution();
   
   // Find the question
@@ -51,6 +53,8 @@ export default function QuestionSolvingPage() {
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [lastSubmissionStatus, setLastSubmissionStatus] = useState<'success' | 'failed' | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   
   const timerRef = useRef<NodeJS.Timeout>();
   const editorRef = useRef<any>();
@@ -61,6 +65,17 @@ export default function QuestionSolvingPage() {
       setCode(question.starterCode[selectedLanguage]);
     }
   }, [question, selectedLanguage]);
+
+  // Load user submissions for this question
+  useEffect(() => {
+    if (userProgress?.submissions && questionId) {
+      const questionSubmissions = userProgress.submissions
+        .filter(sub => sub.questionId === questionId)
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      
+      setSubmissions(questionSubmissions);
+    }
+  }, [userProgress, questionId]);
 
   // Timer functionality
   useEffect(() => {
@@ -113,26 +128,63 @@ export default function QuestionSolvingPage() {
 
     if (result.allTestsPassed) {
       setLastSubmissionStatus('success');
-      setIsTimerRunning(false);
-      
-      // Add submission record
-      if (currentUser && addSubmission) {
-        await addSubmission({
-          questionId: question.id,
-          code,
-          language: selectedLanguage,
-          status: 'Accepted',
-          timestamp: new Date(),
-          executionTime: result.executionTime,
-        });
-      }
-      
-      // Mark question as solved
-      if (updateSolvedQuestion) {
-        updateSolvedQuestion(question.id);
-      }
     } else {
       setLastSubmissionStatus('failed');
+    }
+  };
+
+  const handleSubmitCode = async () => {
+    if (!question || !currentUser || !addSubmission) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Run the code against all test cases first
+      const result = await runCode(
+        code,
+        selectedLanguage,
+        question.testCases[0]?.input || '',
+        question.testCases
+      );
+      
+      const status = result.allTestsPassed ? 'Accepted' : 'Wrong Answer';
+      setLastSubmissionStatus(result.allTestsPassed ? 'success' : 'failed');
+      
+      // Create submission record
+      const submission: Omit<Submission, 'id'> = {
+        userId: currentUser.uid,
+        questionId: question.id,
+        questionTitle: question.title,
+        code,
+        language: selectedLanguage,
+        status,
+        timestamp: new Date(),
+        executionTime: result.executionTime,
+        runtime: result.executionTime,
+        memory: result.memory || 0
+      };
+      
+      // Add submission to database
+      await addSubmission(submission);
+      
+      // If successful, mark question as solved
+      if (result.allTestsPassed && updateSolvedQuestion) {
+        await updateSolvedQuestion(question.id);
+      }
+      
+      // Switch to submissions tab to show the new submission
+      setActiveTab('submissions');
+      
+      // Update local submissions list
+      if (userProgress?.submissions) {
+        const newSubmission = { ...submission, id: Date.now().toString() };
+        setSubmissions([newSubmission as Submission, ...submissions]);
+      }
+      
+    } catch (error) {
+      console.error('Error submitting code:', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -389,9 +441,53 @@ export default function QuestionSolvingPage() {
               {activeTab === 'submissions' && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Your Submissions</h3>
-                  <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                    No submissions yet. Run your code to see results here.
-                  </div>
+                  
+                  {submissions.length > 0 ? (
+                    <div className="space-y-4">
+                      {submissions.map((submission, index) => (
+                        <div 
+                          key={submission.id || index}
+                          className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4 shadow-sm"
+                        >
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="flex items-center">
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                submission.status === 'Accepted' 
+                                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' 
+                                  : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                              }`}>
+                                {submission.status}
+                              </span>
+                              <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                                {new Date(submission.timestamp).toLocaleString()}
+                              </span>
+                            </div>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                              {submission.language}
+                            </span>
+                          </div>
+                          
+                          <div className="bg-gray-50 dark:bg-gray-800 rounded p-3 text-sm font-mono overflow-x-auto">
+                            <pre className="whitespace-pre-wrap">{submission.code.length > 200 
+                              ? submission.code.substring(0, 200) + '...' 
+                              : submission.code}
+                            </pre>
+                          </div>
+                          
+                          {submission.executionTime && (
+                            <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                              Runtime: {submission.executionTime} ms
+                              {submission.memory && ` | Memory: ${submission.memory} KB`}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      No submissions yet. Submit your code to see results here.
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -456,6 +552,23 @@ export default function QuestionSolvingPage() {
                       </>
                     )}
                   </button>
+                  <button
+                    onClick={handleSubmitCode}
+                    disabled={isSubmitting}
+                    className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-md text-sm font-medium"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                        <span>Submitting...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="h-4 w-4" />
+                        <span>Submit</span>
+                      </>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>
@@ -475,7 +588,6 @@ export default function QuestionSolvingPage() {
                   fontSize: 14,
                   minimap: { enabled: false },
                   scrollBeyondLastLine: false,
-                  automaticLayout: true,
                   tabSize: 2,
                   insertSpaces: true,
                   wordWrap: 'on',
@@ -485,6 +597,7 @@ export default function QuestionSolvingPage() {
                   roundedSelection: false,
                   readOnly: false,
                   cursorStyle: 'line',
+                  automaticLayout: true,
                 }}
               />
             </div>

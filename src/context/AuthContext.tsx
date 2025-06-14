@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
@@ -11,7 +11,9 @@ import {
   doc, 
   getDoc, 
   setDoc, 
-  updateDoc
+  updateDoc,
+  arrayUnion,
+  Timestamp
 } from 'firebase/firestore';
 import { mockUserProgress, UserProgress, Submission } from "../data/userProgress";
 import { topics, getTopicsForQuestion, calculateTopicProgress, getPointsPerQuestion } from '../data/topics';
@@ -49,8 +51,8 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<void>;
-  addSubmission: (submission: Omit<Submission, "id">) => void;
-  updateSolvedQuestion: (questionId: string) => void;
+  addSubmission: (submission: Omit<Submission, "id">) => Promise<void>;
+  updateSolvedQuestion: (questionId: string) => Promise<void>;
 }
 
 const defaultProfile: UserProfile = {
@@ -170,6 +172,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
   const [userSubmissions, setUserSubmissions] = useState<Submission[]>([]);
+  
+  // Reference to progress listeners
+  const progressListeners = useRef<((progress: UserProgress) => void)[]>([]);
 
   // Fetch user profile from Firestore
   const fetchUserProfile = async (userId: string) => {
@@ -244,7 +249,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       const progressDocRef = doc(db, 'userProgress', currentUser.uid);
-      await setDoc(progressDocRef, progress);
+      
+      // Convert Date objects to Firestore timestamps
+      const firestoreProgress = {
+        ...progress,
+        streak: {
+          ...progress.streak,
+          lastActive: Timestamp.fromDate(new Date(progress.streak.lastActive))
+        },
+        submissions: progress.submissions?.map(sub => ({
+          ...sub,
+          timestamp: Timestamp.fromDate(new Date(sub.timestamp))
+        })),
+        badges: progress.badges?.map(badge => ({
+          ...badge,
+          earnedAt: Timestamp.fromDate(new Date(badge.earnedAt))
+        }))
+      };
+      
+      await setDoc(progressDocRef, firestoreProgress);
     } catch (error) {
       console.error('Error saving user progress:', error);
     }
@@ -357,35 +380,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const newSubmission: Submission = {
         id: Date.now().toString(),
         userId: currentUser.uid,
-        questionTitle, // Add the question title to the submission
+        questionTitle: questionTitle || submission.questionTitle, // Add the question title to the submission
         ...submission,
       };
 
       // Add to Firestore
-      const submissionRef = doc(db, 'submissions', newSubmission.id);
-      await setDoc(submissionRef, newSubmission);
-      
-      // Also add to the user's submissions array in the userProgress document
       const userProgressRef = doc(db, 'userProgress', currentUser.uid);
-      if (userProgress) {
+      
+      // Get current progress
+      const userProgressDoc = await getDoc(userProgressRef);
+      if (userProgressDoc.exists()) {
+        const currentProgress = userProgressDoc.data() as UserProgress;
+        
         // Update with new submission at the beginning of the array
-        const updatedSubmissions = [newSubmission, ...(userProgress.submissions || [])];
+        const updatedSubmissions = [newSubmission, ...(currentProgress.submissions || [])];
+        
         await updateDoc(userProgressRef, {
+          submissions: updatedSubmissions
+        });
+        
+        // Update local state
+        setUserProgress({
+          ...userProgress,
           submissions: updatedSubmissions
         });
       }
 
-      // Update the local state immediately for faster UI response
-      const updatedSubmissions = [...userSubmissions, newSubmission];
-      setUserSubmissions(updatedSubmissions);
-
       // Only update solved status if the submission was successful
-      if (submission.status === 'success') {
+      if (submission.status === 'Accepted') {
         // Don't await this to make the UI more responsive
         updateSolvedQuestion(submission.questionId);
       }
     } catch (error) {
       console.error("Error adding submission:", error);
+      throw error;
     }
   };
 
@@ -482,209 +510,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const updateUserProgress = async (
-    userId: string,
-    questionId: string,
-    isCorrect: boolean,
-    language: string
-  ) => {
-    try {
-      console.log(`Updating progress for user ${userId}, question ${questionId}, isCorrect: ${isCorrect}`);
-      // Get user progress document
-      const userProgressRef = doc(db, 'userProgress', userId);
-      const userProgressSnap = await getDoc(userProgressRef);
-      
-      if (!userProgressSnap.exists()) {
-        console.error('User progress document not found');
-        return;
-      }
-      
-      const userProgress = userProgressSnap.data() as UserProgress;
-      console.log('Current user progress:', userProgress);
-      
-      // Only update if submission is correct
-      if (isCorrect) {
-        const solvedQuestions = userProgress.solvedQuestions || [];
-        const now = Date.now();
-        let isNewlySolved = false;
-        
-        // Check if question was already solved (handling both array and object formats)
-        const questionAlreadySolved = Array.isArray(solvedQuestions) 
-          ? solvedQuestions.includes(questionId)
-          : solvedQuestions[questionId] === true;
-          
-        console.log(`Question already solved: ${questionAlreadySolved}`);
-        
-        // If not already solved, add to solved questions
-        if (!questionAlreadySolved) {
-          isNewlySolved = true;
-          
-          // Update the solvedQuestions based on its current structure
-          if (Array.isArray(solvedQuestions)) {
-            userProgress.solvedQuestions = [...solvedQuestions, questionId];
-          } else {
-            userProgress.solvedQuestions = { 
-              ...solvedQuestions, 
-              [questionId]: true 
-            };
-          }
-          
-          // Increment the right counter based on difficulty
-          const question = mockQuestions.find(q => q.id === questionId);
-          
-          if (question) {
-            // Add experience points for solving a problem
-            const difficultyMultiplier = 
-              question.difficulty === 'Easy' ? 10 :
-              question.difficulty === 'Medium' ? 20 : 30;
-            
-            userProgress.stats.experiencePoints += difficultyMultiplier;
-            userProgress.stats.level = calculateLevel(userProgress.stats.experiencePoints);
-            
-            // Update the difficulty counters
-            if (question.difficulty === 'Easy') {
-              userProgress.stats.easyCount += 1;
-            } else if (question.difficulty === 'Medium') {
-              userProgress.stats.mediumCount += 1;
-            } else if (question.difficulty === 'Hard') {
-              userProgress.stats.hardCount += 1;
-            }
-            
-            // Increment the totalSolved counter
-            userProgress.stats.totalSolved += 1;
-            
-            // Update topic progress for this question
-            const relatedTopics = getTopicsForQuestion(questionId);
-            console.log(`Question ${questionId} is related to topics:`, relatedTopics);
-            
-            // Initialize topic progress array if it doesn't exist
-            if (!userProgress.topicProgress) {
-              userProgress.topicProgress = [];
-            }
-            
-            // Update progress for each related topic
-            relatedTopics.forEach(topicId => {
-              // Find existing topic progress or create new one
-              let topicProgress = userProgress.topicProgress.find(tp => tp.topicId === topicId);
-              
-              if (!topicProgress) {
-                topicProgress = {
-                  topicId,
-                  solvedQuestions: [],
-                  points: 0,
-                  badgeLevel: 0,
-                  lastUpdated: now
-                };
-                userProgress.topicProgress.push(topicProgress);
-              }
-              
-              // Add question to solved list if not already there
-              if (!topicProgress.solvedQuestions.includes(questionId)) {
-                topicProgress.solvedQuestions.push(questionId);
-                
-                // Add points for this question
-                const pointsForQuestion = getPointsPerQuestion(topicId, questionId);
-                topicProgress.points += pointsForQuestion;
-                
-                // Calculate new badge level
-                const { badgeLevel } = calculateTopicProgress(topicId, topicProgress.solvedQuestions);
-                topicProgress.badgeLevel = badgeLevel;
-                topicProgress.lastUpdated = now;
-                
-                console.log(`Updated topic ${topicId}: points=${topicProgress.points}, badge=${topicProgress.badgeLevel}`);
-              }
-            });
-            
-            // Add to activity log
-            const newActivity: Activity = {
-              type: 'submission',
-              timestamp: now,
-              data: {
-                questionId,
-                questionTitle: question.title,
-                difficulty: question.difficulty,
-                language
-              }
-            };
-            
-            // If user leveled up, add that activity too
-            if (userProgress.stats.level > (userProgressSnap.data() as UserProgress).stats.level) {
-              const levelUpActivity: Activity = {
-                type: 'level_up',
-                timestamp: now,
-                data: {
-                  newLevel: userProgress.stats.level
-                }
-              };
-              userProgress.activities = [levelUpActivity, ...(userProgress.activities || [])];
-            }
-            
-            userProgress.activities = [newActivity, ...(userProgress.activities || [])];
-          }
-        }
-        
-        // Always update the lastActiveDate
-        userProgress.lastActiveDate = now;
-        
-        // Update streak
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const todayTimestamp = today.getTime();
-        
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayTimestamp = yesterday.getTime();
-        
-        const lastActiveDate = userProgress.lastActiveDate
-          ? new Date(userProgress.lastActiveDate)
-          : new Date(0);
-        lastActiveDate.setHours(0, 0, 0, 0);
-        const lastActiveDateTimestamp = lastActiveDate.getTime();
-        
-        if (lastActiveDateTimestamp < todayTimestamp) {
-          if (lastActiveDateTimestamp === yesterdayTimestamp) {
-            // User was active yesterday, increment streak
-            userProgress.stats.streak += 1;
-          } else if (lastActiveDateTimestamp < yesterdayTimestamp) {
-            // User wasn't active yesterday, reset streak
-            userProgress.stats.streak = 1;
-          }
-          // Update max streak if current streak is higher
-          if (userProgress.stats.streak > userProgress.stats.maxStreak) {
-            userProgress.stats.maxStreak = userProgress.stats.streak;
-          }
-        }
-        
-        // Update acceptance rate
-        const submissions = userProgress.submissions || [];
-        const correctSubmissions = submissions.filter(s => s.status === 'Accepted').length;
-        userProgress.stats.acceptanceRate = submissions.length > 0
-          ? Math.round((correctSubmissions / submissions.length) * 100)
-          : 0;
-        
-        console.log('Updated user progress:', userProgress);
-        
-        // Update Firestore
-        await setDoc(userProgressRef, userProgress);
-        console.log('Successfully updated user progress in Firestore');
-        
-        // Call any registered progress listeners
-        if (progressListeners.current.length > 0) {
-          progressListeners.current.forEach(listener => {
-            listener(userProgress);
-          });
-        }
-        
-        return userProgress;
-      }
-      
-      return userProgress;
-    } catch (error) {
-      console.error('Error updating user progress:', error);
-      return null;
-    }
-  };
-
   const value = {
     currentUser,
     userProfile,
@@ -696,8 +521,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     updateUserProfile,
     addSubmission,
-    updateSolvedQuestion,
-    updateUserProgress,
+    updateSolvedQuestion
   };
 
   return (
@@ -705,4 +529,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {!loading && children}
     </AuthContext.Provider>
   );
-}; 
+};
