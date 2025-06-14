@@ -49,7 +49,7 @@ export function Home() {
                   href="https://github.com/Satya900/DEV_MAIN.git"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-8 py-3 rounded-full text-black bg-gray-100 hover:bg-gray-200 transition-all font-medium"
+                  className="inline-flex items-center px-8 py-3 rounded-full text-black bg-gray-100 hover:bg-gray-200 transition-all font-medium dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
                 >
                   <Github className="mr-2 h-5 w-5" />
                   View on GitHub
@@ -146,7 +146,7 @@ export function Home() {
               whileHover={{ y: -5 }}
               className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center dark:bg-black dark:border-gray-700"
             >
-              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 dark:bg-emerald-900/30 dark:text-emerald-400">
                 <Gift className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Bronze Tier</h3>
@@ -156,9 +156,9 @@ export function Home() {
 
             <motion.div
               whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center transform scale-105  dark:bg-black dark:border-gray-700 "
+              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center transform scale-105 dark:bg-black dark:border-gray-700"
             >
-              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 dark:bg-emerald-900/30 dark:text-emerald-400">
                 <Award className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Silver Tier</h3>
@@ -168,14 +168,14 @@ export function Home() {
 
             <motion.div
               whileHover={{ y: -5 }}
-              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center  dark:bg-black dark:border-gray-700"
+              className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 text-center dark:bg-black dark:border-gray-700"
             >
-              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-6 dark:bg-emerald-900/30 dark:text-emerald-400">
                 <Trophy className="h-8 w-8" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 dark:text-neutral-200">Gold Tier</h3>
               <p className="text-gray-600 mb-4 dark:text-neutral-400">Earn 30 points and win Rs. 2000 cash prize + Swag Box</p>
-              <div className="text-emerald-500 font-semibold ">30 Points</div>
+              <div className="text-emerald-500 font-semibold">30 Points</div>
             </motion.div>
           </div>
 
@@ -192,8 +192,6 @@ export function Home() {
           </div>
         </div>
       </section>
-
-
     </div>
   );
 }
@@ -233,7 +231,7 @@ function FeatureCard({
     <Link to={to}>
       <motion.div
         whileHover={{ y: -5 }}
-        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer dark:bg-black dark:border-gray-700 "
+        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer dark:bg-black dark:border-gray-700"
       >
         <div className="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
           {icon}
@@ -241,17 +239,6 @@ function FeatureCard({
         <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-500 transition-colors dark:text-neutral-200">{title}</h3>
         <p className="text-gray-600 dark:text-neutral-400">{description}</p>
       </motion.div>
-    </Link>
-  );
-}
-
-function FooterLink({ to, children }: { to: string; children: React.ReactNode }) {
-  return (
-    <Link
-      to={to}
-      className="block text-gray-600 hover:text-gray-900 mb-3 transition-colors dark:text-neutral-400 dark:hover:text-neutral-200"
-    >
-      {children}
     </Link>
   );
 }
