@@ -23,6 +23,7 @@ import Courses from './pages/Courses';
 import { PasswordRecovery } from './pages/PasswordRecovery';
 import UserDashboard from './pages/UserDashboard';
 import ProblemsPage from './pages/ProblemsPage';
+import TechBuzz from './pages/TechBuzz';
 
 function LoadingSpinner() {
   return (
@@ -56,6 +57,8 @@ function AppContent() {
                 <Route path="/dashboard" element={<UserDashboard />} />
                 <Route path="/projects" element={<Projects />} />
                 <Route path="/projects/:id" element={<ProjectDetails />} />
+                <Route path="/techbuzz" element={<TechBuzz />} />
+                <Route path="/techbuzz/:slug" element={<TechBuzz />} />
                 {Object.entries(categories).map(([key, category]) => (
                   <Route
                     key={key}
