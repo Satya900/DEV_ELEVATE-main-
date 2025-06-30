@@ -46,7 +46,7 @@ src/
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/DEV_MAIN.git
+git clone https://github.com/Satya900/DEV_MAIN.git
 cd DEV_MAIN
 ```
 
@@ -105,9 +105,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔗 Links
 
-- [Live Demo](https://your-demo-link.com)
-- [Documentation](https://your-docs-link.com)
-- [Issues](https://github.com/yourusername/DEV_MAIN/issues)
+- [Live Demo](https://develevate.tech)
+- [Documentation](//In progress)
+- [Issues](https://github.com/Satya900/DEV_MAIN/issues)
 
 ---
 
