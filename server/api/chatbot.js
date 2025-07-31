@@ -1,25 +1,33 @@
+require('dotenv').config();
+
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+const corsOptions = {
+      origin: 'https://5173-firebase-develevate-main--1753943697992.cluster-6dx7corvpngoivimwvvljgokdw.cloudworkstations.dev', // Replace with your actual frontend origin
+      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    };
+    app.use(cors(corsOptions));
 
-// Your OpenAI API key - store this securely in production
-const OPENAI_API_KEY = "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";
+// Your Gemini API key - store this securely in production
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 // Validate API key on startup
-if (!OPENAI_API_KEY || OPENAI_API_KEY === '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') {
-  console.error('❌ ERROR: OpenAI API key not configured!');
-  console.error('Please set your OPENAI_API_KEY in the .env file');
-  console.error('Get your API key from: https://platform.openai.com/api-keys');
+if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
+  console.error('❌ ERROR: Gemini API key not configured!');
+  console.error('Please set your GEMINI_API_KEY in the .env file');
   process.exit(1);
 }
 
-console.log('✅ OpenAI API key configured');
+console.log('✅ Gemini API key configured');
 
-const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
 app.post('/api/chatbot', async (req, res) => {
   try {
@@ -31,26 +39,24 @@ app.post('/api/chatbot', async (req, res) => {
       });
     }
 
-    // Call OpenAI API
-    const response = await axios.post(
-      OPENAI_API_URL,
-      {
-        model: 'gpt-3.5-turbo',
-        messages,
-        max_tokens: 1000,
-        temperature: 0.7,
-        presence_penalty: 0.1,
-        frequency_penalty: 0.1,
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${OPENAI_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    // Format messages for Gemini API
+    const formattedMessages = messages.map(msg => ({
+      role: msg.role === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.content }],
+    }));
 
-    const assistantMessage = response.data.choices[0]?.message?.content;
+    // Start a chat session and send messages
+    const chat = model.startChat({
+      history: formattedMessages.slice(0, -1), // Use all but the last message as history
+      generationConfig: {
+        maxOutputTokens: 1000,
+      },
+    });
+
+    const msg = formattedMessages[formattedMessages.length - 1].parts[0].text; // Get the latest message text
+    const result = await chat.sendMessage(msg);
+    const response = await result.response;
+    const assistantMessage = response.text();
     
     if (!assistantMessage) {
       throw new Error('No response from AI assistant');
@@ -68,40 +74,20 @@ app.post('/api/chatbot', async (req, res) => {
       message: error.message
     });
     
-    if (error.response?.status === 401) {
-      console.error('❌ 401 Error: Invalid or missing OpenAI API key');
-      res.status(401).json({
-        error: 'Invalid API key. Please check your OpenAI API key configuration.',
-      });
-    } else if (error.response?.status === 429) {
-      res.status(429).json({
-        error: 'Rate limit exceeded. Please try again in a moment.',
-      });
-    } else if (error.response?.status >= 500) {
-      res.status(500).json({
-        error: 'Server error. Please try again later.',
-      });
-    } else {
-      res.status(500).json({
-        error: error.message || 'Failed to get response from AI assistant.',
-      });
-    }
+    // Basic error handling, may need refinement based on Gemini API errors
+    res.status(500).json({
+      error: error.message || 'Failed to get response from AI assistant.',
+    });
   }
 });
 
-// Test endpoint to verify API key
+// Test endpoint - may need to be updated for Gemini API
 app.get('/api/test', async (req, res) => {
   try {
-    const response = await axios.get('https://api.openai.com/v1/models', {
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-      },
-    });
-    
+    // You might want to use a different way to test the Gemini API
     res.json({
       success: true,
-      message: 'API key is valid',
-      models: response.data.data.length
+      message: 'Test endpoint reached. Gemini API key should be configured in .env',
     });
   } catch (error) {
     console.error('API key test failed:', error.response?.status, error.response?.data);

@@ -9,14 +9,21 @@
     "setup": "node setup.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.6.0",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "keywords": ["chatbot", "openai", "api", "backend"],
+  "keywords": [
+    "chatbot",
+    "openai",
+    "api",
+    "backend"
+  ],
   "author": "DevElevate Team",
   "license": "MIT"
-} 
+}
