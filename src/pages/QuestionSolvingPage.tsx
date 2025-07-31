@@ -5,6 +5,7 @@ import { mockQuestions } from '../data/mockQuestions';
 import { useCodeExecution } from '../hooks/useCodeExecution';
 import { useAuth } from '../context/AuthContext';
 import { TestCaseViewer } from '../components/TestCaseViewer';
+import { AIChatbot } from '../components/AIChatbot';
 import { 
   Play, 
   RotateCcw, 
@@ -25,7 +26,8 @@ import {
   Target,
   Award,
   TrendingUp,
-  Send
+  Send,
+  Bot
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Submission } from '../types/questions';
@@ -43,7 +45,7 @@ export default function QuestionSolvingPage() {
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
   const [code, setCode] = useState('');
   const [customInput, setCustomInput] = useState('');
-  const [activeTab, setActiveTab] = useState<'description' | 'editorial' | 'submissions'>('description');
+  const [activeTab, setActiveTab] = useState<'description' | 'ai-tutor' | 'submissions'>('description');
   const [showHints, setShowHints] = useState(false);
   const [currentHint, setCurrentHint] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -55,6 +57,7 @@ export default function QuestionSolvingPage() {
   const [lastSubmissionStatus, setLastSubmissionStatus] = useState<'success' | 'failed' | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+
   
   const timerRef = useRef<NodeJS.Timeout>();
   const editorRef = useRef<any>();
@@ -225,6 +228,7 @@ export default function QuestionSolvingPage() {
   return (
     <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 pt-20 ${isFullscreen ? 'fixed inset-0 z-50 pt-0' : ''}`}>
       <div className="h-full flex flex-col">
+
         {/* Header */}
         <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
           <div className="flex items-center justify-between">
@@ -299,15 +303,15 @@ export default function QuestionSolvingPage() {
                 Description
               </button>
               <button
-                onClick={() => setActiveTab('editorial')}
+                onClick={() => setActiveTab('ai-tutor')}
                 className={`px-4 py-2 text-sm font-medium ${
-                  activeTab === 'editorial'
+                  activeTab === 'ai-tutor'
                     ? 'text-emerald-600 border-b-2 border-emerald-500'
                     : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
                 }`}
               >
-                <Lightbulb className="h-4 w-4 inline mr-1" />
-                Hints & Editorial
+                <Bot className="h-4 w-4 inline mr-1" />
+                AI Tutor
               </button>
               <button
                 onClick={() => setActiveTab('submissions')}
@@ -372,69 +376,13 @@ export default function QuestionSolvingPage() {
                 </div>
               )}
 
-              {activeTab === 'editorial' && (
-                <div className="space-y-6">
-                  {question.hints && question.hints.length > 0 && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Hints</h3>
-                      <div className="space-y-3">
-                        {question.hints.slice(0, currentHint + 1).map((hint, index) => (
-                          <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4"
-                          >
-                            <div className="flex items-start space-x-2">
-                              <Lightbulb className="h-5 w-5 text-blue-500 mt-0.5" />
-                              <div>
-                                <span className="text-sm font-medium text-blue-800 dark:text-blue-300">
-                                  Hint {hint.level}:
-                                </span>
-                                <p className="text-sm text-blue-700 dark:text-blue-200 mt-1">{hint.content}</p>
-                              </div>
-                            </div>
-                          </motion.div>
-                        ))}
-                        
-                        {currentHint < question.hints.length - 1 && (
-                          <button
-                            onClick={handleNextHint}
-                            className="w-full py-2 px-4 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-50 dark:hover:bg-blue-900/20 text-sm"
-                          >
-                            Show Next Hint
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {question.walkthrough && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Solution Approach</h3>
-                      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-                        <p className="text-green-800 dark:text-green-200">{question.walkthrough}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {question.timeComplexity && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Complexity Analysis</h3>
-                      <div className="space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Time Complexity:</span>
-                          <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">{question.timeComplexity}</code>
-                        </div>
-                        {question.spaceComplexity && (
-                          <div className="flex items-center space-x-2">
-                            <span className="text-sm font-medium text-gray-600 dark:text-gray-400">Space Complexity:</span>
-                            <code className="text-sm bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">{question.spaceComplexity}</code>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
+              {activeTab === 'ai-tutor' && (
+                <div className="h-full">
+                  <AIChatbot
+                    question={question}
+                    userCode={code}
+                    selectedLanguage={selectedLanguage}
+                  />
                 </div>
               )}
 

@@ -45,11 +45,11 @@ function AppContent() {
     <ThemeProvider value={{ themeMode, storedTheme, lightTheme, darkTheme, systemTheme }}>
       <AuthProvider>
         <Router>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              <Navbar />
-              <Routes>
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              <main className="flex-grow">
+                <Navbar />
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signin" element={!currentUser ? <SignIn /> : <Navigate to="/profile" />} />
                 <Route path="/signup" element={!currentUser ? <SignUp /> : <Navigate to="/profile" />} />
@@ -79,9 +79,9 @@ function AppContent() {
             </main>
             <Footer />
             <Toaster position="bottom-right" />
-          </div>
-        </Router>
-      </AuthProvider>
+                      </div>
+          </Router>
+        </AuthProvider>
     </ThemeProvider>
   );
 }
