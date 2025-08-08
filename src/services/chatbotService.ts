@@ -46,7 +46,7 @@ Remember: Your goal is to help the student learn and understand the problem-solv
 };
 
 // Server-side API endpoint for chatbot
-const CHATBOT_API_ENDPOINT = '/api/chatbot';
+const CHATBOT_API_ENDPOINT = import.meta.env.VITE_PUBLIC_BACKEND_URL || '';
 
 export const sendMessageToChatbot = async (
   messages: ChatMessage[]
