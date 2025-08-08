@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: './.env' });
 
 const express = require('express');
 const axios = require('axios');
@@ -8,11 +8,18 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 app.use(cors());
 app.use(express.json());
+// CORS configuration for development
 const corsOptions = {
-      origin: 'https://5173-firebase-develevate-main--1753943697992.cluster-6dx7corvpngoivimwvvljgokdw.cloudworkstations.dev', // Replace with your actual frontend origin
-      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-    };
-    app.use(cors(corsOptions));
+  origin: ['http://localhost:5173', 'http://localhost:3000'], // Add your frontend URLs
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
+
+// Debug environment variables
+console.log('Environment variables:');
+console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'SET' : 'NOT SET');
+console.log('PORT:', process.env.PORT);
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 // Your Gemini API key - store this securely in production
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -27,7 +34,7 @@ if (!GEMINI_API_KEY || GEMINI_API_KEY === 'your-gemini-api-key-here') {
 console.log('✅ Gemini API key configured');
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
 app.post('/api/chatbot', async (req, res) => {
   try {

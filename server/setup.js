@@ -24,7 +24,7 @@ if (fs.existsSync(envPath)) {
 
 console.log('\n📋 Next Steps:');
 console.log('1. Edit server/.env file');
-console.log('2. Replace "your-openai-api-key-here" with your actual OpenAI API key');
-console.log('3. Make sure your API key starts with "sk-"');
+console.log('2. Replace "your-gemini-api-key-here" with your actual Gemini API key');
+console.log('3. Make sure your API key is from Google AI Studio');
 console.log('4. Start the server with: npm run dev');
-console.log('\n🔗 Get your API key from: https://platform.openai.com/api-keys'); 
+console.log('\n🔗 Get your API key from: https://makersuite.google.com/app/apikey'); 
