@@ -26,13 +26,15 @@ interface GlobalChatbotProps {
   theme?: 'light' | 'dark' | 'auto';
   apiEndpoint?: string;
   welcomeMessage?: string;
+  systemPrompt?: string;
 }
 
 export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
   position = 'bottom-right',
   theme = 'auto',
-  apiEndpoint =import.meta.env.VITE_PUBLIC_BACKEND_URL || '',
-  welcomeMessage = "Hi! I'm your AI assistant. How can I help you today?"
+  apiEndpoint = import.meta.env.VITE_PUBLIC_BACKEND_URL || '',
+  welcomeMessage = "Hi! I'm your AI assistant. How can I help you today?",
+  systemPrompt = "Provide hints and guidance, but don't give complete solutions unless specifically asked"
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -44,19 +46,81 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // Comprehensive markdown to HTML converter
+  const convertMarkdownToHtml = (text: string): string => {
+    let html = text;
+
+    // Handle code blocks first (before inline code)
+    html = html.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, language, code) => {
+      const lang = language || '';
+      return `<pre class="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg overflow-x-auto my-2"><code class="text-xs ${lang ? `language-${lang}` : ''}">${escapeHtml(code.trim())}</code></pre>`;
+    });
+
+    // Handle inline code (after code blocks)
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-200 dark:bg-gray-600 px-1 py-0.5 rounded text-xs">$1</code>');
+
+    // Handle headers
+    html = html.replace(/^### (.*$)/gim, '<h3 class="text-sm font-semibold mt-3 mb-1">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 class="text-base font-semibold mt-3 mb-1">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 class="text-lg font-bold mt-3 mb-1">$1</h1>');
+
+    // Handle bold and italic (in correct order to avoid conflicts)
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle unordered lists
+    html = html.replace(/^[•\-\*]\s+(.*)$/gim, '<li class="ml-3 mb-1 text-xs">$1</li>');
+    html = html.replace(/(<li.*<\/li>)/s, '<ul class="list-disc list-inside my-2">$1</ul>');
+
+    // Handle numbered lists
+    html = html.replace(/^\d+\.\s+(.*)$/gim, '<li class="ml-3 mb-1 text-xs">$1</li>');
+    
+    // Clean up multiple consecutive list tags
+    html = html.replace(/<\/ul>\s*<ul[^>]*>/g, '');
+    html = html.replace(/<\/ol>\s*<ol[^>]*>/g, '');
+
+    // Handle links
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-500 hover:text-blue-700 underline" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // Handle line breaks (convert double newlines to paragraphs)
+    html = html.replace(/\n\n/g, '</p><p class="mb-1">');
+    html = `<p class="mb-1">${html}</p>`;
+
+    // Clean up empty paragraphs
+    html = html.replace(/<p[^>]*><\/p>/g, '');
+
+    // Handle blockquotes
+    html = html.replace(/^> (.*)$/gim, '<blockquote class="border-l-2 border-gray-300 pl-2 italic my-1 text-xs">$1</blockquote>');
+
+    // Handle horizontal rules
+    html = html.replace(/^---$/gim, '<hr class="border-gray-300 my-2">');
+
+    return html;
+  };
+
+  // Helper function to escape HTML
+  const escapeHtml = (text: string): string => {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  };
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Initialize with welcome message
+  // Initialize with welcome message and system prompt
   useEffect(() => {
     if (messages.length === 0) {
-      setMessages([{
-        role: 'assistant',
-        content: welcomeMessage,
-        timestamp: new Date()
-      }]);
+      setMessages([
+        {
+          role: 'assistant',
+          content: welcomeMessage,
+          timestamp: new Date()
+        }
+      ]);
     }
   }, [welcomeMessage]);
 
@@ -72,35 +136,67 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
     }
   }, [isOpen, messages]);
 
-  // Mock API call - replace with your actual API
-  const sendMessageToAPI = async (message: string): Promise<string> => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
-    
-    // Mock responses based on message content
-    const responses = [
-      "That's a great question! Let me help you with that.",
-      "I understand what you're asking. Here's what I think...",
-      "Based on your question, I'd recommend the following approach:",
-      "That's an interesting problem. Let's break it down step by step.",
-      "I can definitely help you with that! Here's my suggestion:",
-      "Good point! Here's how you can approach this:",
-      "I see what you mean. Here's a detailed explanation:",
-      "That's a common question. Here's what you need to know:"
-    ];
-    
-    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-    
-    // Add some context-aware responses
-    if (message.toLowerCase().includes('code') || message.toLowerCase().includes('programming')) {
-      return `${randomResponse} For coding questions, I can help you debug, explain concepts, or suggest best practices. What specific programming challenge are you facing?`;
+  // Real API call that sends the full message array with roles
+  const sendMessageToAPI = async (messages: ChatMessage[]): Promise<string> => {
+    try {
+      // Find the first user message and start conversation from there
+      const firstUserMessageIndex = messages.findIndex(msg => msg.role === 'user');
+      
+      if (firstUserMessageIndex === -1) {
+        throw new Error('No user messages found in conversation');
+      }
+
+      // Only include messages from the first user message onwards
+      const conversationMessages = messages.slice(firstUserMessageIndex);
+
+      // Prepare messages for API
+      const messagesToSend = conversationMessages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      // Add system prompt at the beginning if it exists
+      if (systemPrompt) {
+        messagesToSend.unshift({ role: 'system' as any, content: systemPrompt });
+      }
+
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: messagesToSend
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      
+      // Handle different possible response formats
+      if (data.message) return data.message;
+      if (data.response) return data.response;
+      if (data.content) return data.content;
+      if (data.choices && data.choices[0]?.message?.content) {
+        return data.choices[0].message.content; // OpenAI format
+      }
+      
+      throw new Error('Invalid response format from API');
+      
+    } catch (error) {
+      console.error('API Error:', error);
+      
+      // Re-throw the error to be handled by the calling function
+      throw new Error(
+        error instanceof Error 
+          ? `API Error: ${error.message}` 
+          : 'Failed to connect to AI service'
+      );
     }
-    
-    if (message.toLowerCase().includes('help') || message.toLowerCase().includes('how')) {
-      return `${randomResponse} I'm here to assist you with any questions or problems you might have. Feel free to be specific about what you need help with!`;
-    }
-    
-    return `${randomResponse} Feel free to ask me anything else you'd like to know!`;
   };
 
   const sendMessage = async (content: string) => {
@@ -112,12 +208,13 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputMessage('');
     setIsLoading(true);
 
     try {
-      const response = await sendMessageToAPI(content);
+      const response = await sendMessageToAPI(updatedMessages);
       
       const assistantMessage: ChatMessage = {
         role: 'assistant',
@@ -127,9 +224,11 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
       
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
+      console.error('Chat Error:', error);
+      
       const errorMessage: ChatMessage = {
         role: 'assistant',
-        content: '❌ Sorry, I encountered an error. Please try again.',
+        content: `❌ ${error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.'}`,
         timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
@@ -272,9 +371,12 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
                           ? 'bg-blue-500 text-white rounded-br-md'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-bl-md'
                       }`}>
-                        <div className="whitespace-pre-wrap break-words">
-                          {message.content}
-                        </div>
+                        <div 
+                          className="whitespace-pre-wrap break-words"
+                          dangerouslySetInnerHTML={{ 
+                            __html: convertMarkdownToHtml(message.content)
+                          }}
+                        />
                         {message.timestamp && (
                           <div className={`text-xs mt-1 opacity-70 ${
                             message.role === 'user' ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'
@@ -327,7 +429,7 @@ export const GlobalChatbot: React.FC<GlobalChatbotProps> = ({
                   >
                     <Send className="h-4 w-4" />
                   </button>
-                </div>
+                  </div>
               </div>
             </>
           )}

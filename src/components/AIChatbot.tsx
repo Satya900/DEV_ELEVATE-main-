@@ -12,19 +12,38 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChatMessage, ChatResponse, analyzeUserCode, getProgressiveHint, sendMessageToChatbot as sendMessageToChatbotService } from '../services/chatbotService';
-import { CodeQuestion } from '../types/questions';
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp?: Date;
+}
+
+interface ChatResponse {
+  message: string;
+  error?: string;
+}
+
+interface CodeQuestion {
+  title: string;
+  description?: string;
+  // Add other question properties as needed
+}
 
 interface AIChatbotProps {
   question: CodeQuestion;
   userCode: string;
   selectedLanguage: string;
+  apiEndpoint?: string;
+  systemPrompt?: string;
 }
 
 export const AIChatbot: React.FC<AIChatbotProps> = ({
   question,
   userCode,
-  selectedLanguage
+  selectedLanguage,
+  apiEndpoint = import.meta.env.VITE_PUBLIC_BACKEND_URL || '',
+  systemPrompt = "You are a programming tutor. Provide hints and guidance, but don't give complete solutions unless specifically asked. Help students learn by understanding concepts."
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
@@ -32,6 +51,66 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({
   const [showSettings, setShowSettings] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Comprehensive markdown to HTML converter
+  const convertMarkdownToHtml = (text: string): string => {
+    let html = text;
+
+    // Handle code blocks first (before inline code)
+    html = html.replace(/```(\w+)?\n?([\s\S]*?)```/g, (match, language, code) => {
+      const lang = language || '';
+      return `<pre class="bg-gray-100 dark:bg-gray-800 p-3 rounded-lg overflow-x-auto my-2"><code class="text-sm ${lang ? `language-${lang}` : ''}">${escapeHtml(code.trim())}</code></pre>`;
+    });
+
+    // Handle inline code (after code blocks)
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-200 dark:bg-gray-600 px-1 py-0.5 rounded text-sm">$1</code>');
+
+    // Handle headers
+    html = html.replace(/^### (.*$)/gim, '<h3 class="text-lg font-semibold mt-4 mb-2">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 class="text-xl font-semibold mt-4 mb-2">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>');
+
+    // Handle bold and italic (in correct order to avoid conflicts)
+    html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle unordered lists
+    html = html.replace(/^[•\-\*]\s+(.*)$/gim, '<li class="ml-4 mb-1">$1</li>');
+    html = html.replace(/(<li.*<\/li>)/s, '<ul class="list-disc list-inside my-2">$1</ul>');
+
+    // Handle numbered lists
+    html = html.replace(/^\d+\.\s+(.*)$/gim, '<li class="ml-4 mb-1">$1</li>');
+    
+    // Clean up multiple consecutive list tags
+    html = html.replace(/<\/ul>\s*<ul[^>]*>/g, '');
+    html = html.replace(/<\/ol>\s*<ol[^>]*>/g, '');
+
+    // Handle links
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-blue-500 hover:text-blue-700 underline" target="_blank" rel="noopener noreferrer">$1</a>');
+
+    // Handle line breaks (convert double newlines to paragraphs)
+    html = html.replace(/\n\n/g, '</p><p class="mb-2">');
+    html = `<p class="mb-2">${html}</p>`;
+
+    // Clean up empty paragraphs
+    html = html.replace(/<p[^>]*><\/p>/g, '');
+
+    // Handle blockquotes
+    html = html.replace(/^> (.*)$/gim, '<blockquote class="border-l-4 border-gray-300 pl-4 italic my-2">$1</blockquote>');
+
+    // Handle horizontal rules
+    html = html.replace(/^---$/gim, '<hr class="border-gray-300 my-4">');
+
+    return html;
+  };
+
+  // Helper function to escape HTML
+  const escapeHtml = (text: string): string => {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  };
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -57,124 +136,147 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({
 • Request hints at different levels
 • Ask for explanations of concepts
 
-What would you like to start with?`
+What would you like to start with?`,
+      timestamp: new Date()
     };
     setMessages([welcomeMessage]);
   }, [question.title]);
+
+  // Fixed API call function that properly sends messages
+  const sendMessageToAPI = async (messages: ChatMessage[]): Promise<string> => {
+    try {
+      // Find the first user message and start conversation from there
+      const firstUserMessageIndex = messages.findIndex(msg => msg.role === 'user');
+      
+      if (firstUserMessageIndex === -1) {
+        throw new Error('No user messages found in conversation');
+      }
+
+      // Only include messages from the first user message onwards
+      const conversationMessages = messages.slice(firstUserMessageIndex);
+
+      // Prepare messages for API
+      const messagesToSend = conversationMessages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
+
+      // Add system prompt at the beginning if it exists
+      if (systemPrompt) {
+        messagesToSend.unshift({ role: 'system' as any, content: systemPrompt });
+      }
+
+      const response = await fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: messagesToSend
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+
+      const data = await response.json();
+      
+      // Handle different possible response formats
+      if (data.message) return data.message;
+      if (data.response) return data.response;
+      if (data.content) return data.content;
+      if (data.choices && data.choices[0]?.message?.content) {
+        return data.choices[0].message.content; // OpenAI format
+      }
+      
+      throw new Error('Invalid response format from API');
+      
+    } catch (error) {
+      console.error('API Error:', error);
+      
+      // Re-throw the error to be handled by the calling function
+      throw new Error(
+        error instanceof Error 
+          ? `API Error: ${error.message}` 
+          : 'Failed to connect to AI service'
+      );
+    }
+  };
 
   const sendMessage = async (content: string) => {
     if (!content.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       role: 'user',
-      content: content.trim()
+      content: content.trim(),
+      timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
     setInputMessage('');
     setIsLoading(true);
 
     try {
-      const allMessages = [...messages, userMessage];
-      const response = await sendMessageToChatbot(allMessages);
+      const response = await sendMessageToAPI(updatedMessages);
       
-      if (response.error) {
-        const errorMessage: ChatMessage = {
-          role: 'assistant',
-          content: `❌ **Error**: ${response.error}`
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      } else {
-        const assistantMessage: ChatMessage = {
-          role: 'assistant',
-          content: response.message
-        };
-        setMessages(prev => [...prev, assistantMessage]);
-      }
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: response,
+        timestamp: new Date()
+      };
+      
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
+      console.error('Chat Error:', error);
+      
       const errorMessage: ChatMessage = {
         role: 'assistant',
-        content: '❌ **Error**: Failed to get response. Please try again.'
+        content: `❌ ${error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.'}`,
+        timestamp: new Date()
       };
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const sendMessageToChatbot = async (messages: ChatMessage[]): Promise<ChatResponse> => {
-    // Use the service that calls our backend API
-    return await sendMessageToChatbotService(messages);
   };
 
   const handleAnalyzeCode = async () => {
-    if (isLoading) return;
+    if (isLoading || !userCode.trim()) return;
     
-    setIsLoading(true);
-    try {
-      const response = await analyzeUserCode(question, userCode, selectedLanguage);
-      
-      if (response.error) {
-        const errorMessage: ChatMessage = {
-          role: 'assistant',
-          content: `❌ **Error**: ${response.error}`
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      } else {
-        const assistantMessage: ChatMessage = {
-          role: 'assistant',
-          content: response.message
-        };
-        setMessages(prev => [...prev, assistantMessage]);
-      }
-    } catch (error) {
-      const errorMessage: ChatMessage = {
-        role: 'assistant',
-        content: '❌ **Error**: Failed to analyze code. Please try again.'
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+    const analysisPrompt = `Please analyze this ${selectedLanguage} code for the problem "${question.title}":
+
+\`\`\`${selectedLanguage}
+${userCode}
+\`\`\`
+
+Please provide feedback on:
+- Code correctness and logic
+- Potential improvements
+- Best practices
+- Any issues or bugs you notice`;
+
+    await sendMessage(analysisPrompt);
   };
 
   const handleGetHint = async () => {
     if (isLoading) return;
     
-    setIsLoading(true);
-    try {
-      const hintLevel = Math.floor(messages.length / 2); // Simple hint progression
-      const response = await getProgressiveHint(question, hintLevel);
-      
-      if (response.error) {
-        const errorMessage: ChatMessage = {
-          role: 'assistant',
-          content: `❌ **Error**: ${response.error}`
-        };
-        setMessages(prev => [...prev, errorMessage]);
-      } else {
-        const assistantMessage: ChatMessage = {
-          role: 'assistant',
-          content: `💡 **Hint ${hintLevel + 1}**: ${response.message}`
-        };
-        setMessages(prev => [...prev, assistantMessage]);
-      }
-    } catch (error) {
-      const errorMessage: ChatMessage = {
-        role: 'assistant',
-        content: '❌ **Error**: Failed to get hint. Please try again.'
-      };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+    const hintLevel = Math.floor(messages.filter(m => m.role === 'user').length / 2); // Simple hint progression
+    const hintPrompt = `Can you give me a progressive hint (level ${hintLevel + 1}) for solving "${question.title}"? Please don't give away the complete solution, just guide me in the right direction.`;
+    
+    await sendMessage(hintPrompt);
   };
 
   const handleResetChat = () => {
-    setMessages([{
+    const welcomeMessage: ChatMessage = {
       role: 'assistant',
-      content: `Hello! I'm your AI programming tutor for **${question.title}**. How can I help you today?`
-    }]);
+      content: `Hello! I'm your AI programming tutor for **${question.title}**. How can I help you today?`,
+      timestamp: new Date()
+    };
+    setMessages([welcomeMessage]);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -221,7 +323,7 @@ What would you like to start with?`
           </div>
           <div>
             <h3 className="font-semibold text-gray-900 dark:text-white">AI Tutor</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Powered by ChatGPT</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">Powered by AI</p>
           </div>
         </div>
         
@@ -289,13 +391,17 @@ What would you like to start with?`
                     <div 
                       className="whitespace-pre-wrap"
                       dangerouslySetInnerHTML={{ 
-                        __html: message.content
-                          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                          .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                          .replace(/`(.*?)`/g, '<code class="bg-gray-200 dark:bg-gray-600 px-1 rounded">$1</code>')
+                        __html: convertMarkdownToHtml(message.content)
                       }}
                     />
                   </div>
+                  {message.timestamp && (
+                    <div className={`text-xs mt-1 opacity-70 ${
+                      message.role === 'user' ? 'text-emerald-100' : 'text-gray-500 dark:text-gray-400'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -346,9 +452,7 @@ What would you like to start with?`
             <Send className="h-4 w-4" />
           </button>
         </div>
-        
-
       </div>
     </div>
   );
-}; 
+};
