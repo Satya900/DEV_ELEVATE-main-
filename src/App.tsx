@@ -24,6 +24,7 @@ import { PasswordRecovery } from './pages/PasswordRecovery';
 import UserDashboard from './pages/UserDashboard';
 import ProblemsPage from './pages/ProblemsPage';
 import TechBuzz from './pages/TechBuzz';
+import { GlobalChatbot } from './components/GlobalChatbot';
 
 function LoadingSpinner() {
   return (
@@ -82,6 +83,7 @@ function AppContent() {
                       </div>
           </Router>
         </AuthProvider>
+        <GlobalChatbot />
     </ThemeProvider>
   );
 }
