@@ -9,27 +9,21 @@ import { AIChatbot } from '../components/AIChatbot';
 import { 
   Play, 
   RotateCcw, 
-  Settings, 
   Clock, 
   CheckCircle, 
   XCircle, 
-  Lightbulb,
   BookOpen,
   Code,
-  Terminal,
   Maximize2,
   Minimize2,
   Split,
   Eye,
   EyeOff,
-  Zap,
   Target,
-  Award,
   TrendingUp,
   Send,
   Bot
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Submission } from '../types/questions';
 
 export default function QuestionSolvingPage() {
@@ -327,7 +321,7 @@ export default function QuestionSolvingPage() {
             </div>
 
             {/* Tab content */}
-            <div className="flex-1 overflow-y-auto p-6">
+            <div className="overflow-y-auto p-6 h-[620px]">
               {activeTab === 'description' && (
                 <div className="space-y-6">
                   <div>
