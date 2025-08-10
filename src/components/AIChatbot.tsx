@@ -103,10 +103,13 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({
           );
           setCurrentTypingIndex(-1);
           setIsTyping(false);
-          setIsAiGenerating(false);
           setAutoScroll(true);
+          setTimeout(() => setIsAiGenerating(false), 100); // Always reset isAiGenerating after typing
         }
       }
+    } else {
+      // If no typing is happening, make sure isAiGenerating is not stuck
+      setIsAiGenerating(false);
     }
   }, [messages, currentTypingIndex]);
 
@@ -183,6 +186,7 @@ What would you like to start with?`,
       };
       setMessages(prev => [...prev, errorMessage]);
       setCurrentTypingIndex(messages.length + 1);
+      setIsAiGenerating(false);
     }
   };
 
@@ -225,6 +229,7 @@ What would you like to start with?`,
       };
       setMessages(prev => [...prev, errorMessage]);
       setCurrentTypingIndex(messages.length + 1);
+      setIsAiGenerating(false);
     }
   };
 
@@ -264,6 +269,7 @@ What would you like to start with?`,
       };
       setMessages(prev => [...prev, errorMessage]);
       setCurrentTypingIndex(messages.length + 1);
+      setIsAiGenerating(false);
     }
   };
 

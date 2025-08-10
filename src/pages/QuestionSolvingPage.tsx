@@ -370,13 +370,20 @@ export default function QuestionSolvingPage() {
                 </div>
               )}
 
+
               {activeTab === 'ai-tutor' && (
                 <div className="h-full">
-                  <AIChatbot
-                    question={question}
-                    userCode={code}
-                    selectedLanguage={selectedLanguage}
-                  />
+                  {question ? (
+                    <AIChatbot
+                      question={question}
+                      userCode={code}
+                      selectedLanguage={selectedLanguage}
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-red-500 font-semibold">
+                      Unable to load question context for AI Tutor.
+                    </div>
+                  )}
                 </div>
               )}
 
