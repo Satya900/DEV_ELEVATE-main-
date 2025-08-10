@@ -3,16 +3,16 @@ import {
   Send, 
   Bot, 
   User, 
-  Loader2, 
+  // Loader2, 
   Sparkles, 
-  Code, 
+  // Code, 
   Lightbulb,
   RotateCcw,
-  Settings,
-  AlertCircle,
+  // Settings,
+  // AlertCircle,
   Brain,
   Code2,
-  Zap,
+  // Zap,
   MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -37,7 +37,7 @@ export const AIChatbot: React.FC<AIChatbotProps> = ({
 }) => {
   const [messages, setMessages] = useState<EnhancedMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [currentTypingIndex, setCurrentTypingIndex] = useState(-1);
   const [autoScroll, setAutoScroll] = useState(true);
