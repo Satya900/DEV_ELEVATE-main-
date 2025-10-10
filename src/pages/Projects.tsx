@@ -28,15 +28,28 @@ export function Projects() {
           </p>
         </motion.div>
 
-        <div className="flex justify-center gap-4 mb-12 overflow-x-auto pb-4 ">
+        
+        <div
+          className="
+          flex gap-3 mb-12
+          overflow-x-auto
+          pb-4 px-4 md:px-0
+          w-full max-w-full
+          scroll-smooth
+          snap-x snap-mandatory
+          [-webkit-overflow-scrolling:touch]
+          [scroll-padding-left:1rem]
+          md:justify-center
+        "
+        >
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full capitalize transition-colors  ${
+              className={`shrink-0 snap-start px-4 py-2 rounded-full capitalize transition-colors ${
                 selectedCategory === category
                   ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-100 text-black hover:bg-emerald-100  dark:bg-gray-800 dark:text-white'
+                  : 'bg-gray-100 text-black hover:bg-emerald-100 dark:bg-gray-800 dark:text-white'
               }`}
             >
               {category}
