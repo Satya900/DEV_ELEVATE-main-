@@ -27,13 +27,24 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
   const [frontmatter, setFrontmatter] = useState<Frontmatter | null>(null);
 
   useEffect(() => {
-    // Update the fetch path to use the content directory
-    fetch(`/content/${article.markdownFile}`)
-      .then(response => {
+    let isMounted = true;
+    // Fetch markdown from public/content
+    fetch(`/content/${article.markdownFile}`, {
+      headers: { 'Accept': 'text/markdown, text/plain, text/*;q=0.9, */*;q=0.8' }
+    })
+      .then(async (response) => {
         if (!response.ok) {
           throw new Error(`Failed to load article: ${response.status} ${response.statusText}`);
         }
-        return response.text();
+        const contentType = response.headers.get('content-type') || '';
+        const text = await response.text();
+
+        // Guard: if content-type indicates HTML or the text looks like an HTML document,
+        // treat as an error (likely SPA fallback) instead of rendering raw HTML
+        if (contentType.includes('text/html') || /^\s*<!doctype html>/i.test(text) || /<html[\s>]/i.test(text)) {
+          throw new Error('Unexpected HTML received instead of markdown. Check file path.');
+        }
+        return text;
       })
       .then(text => {
         // Extract frontmatter
@@ -53,16 +64,25 @@ export function ArticleLayout({ article, categoryTitle, categoryPath }: ArticleL
               return { ...acc, [key.trim()]: value };
             }, {}) as Frontmatter;
           
-          setFrontmatter(parsedFrontmatter);
-          setContent(contentText);
+          if (isMounted) {
+            setFrontmatter(parsedFrontmatter);
+            setContent(contentText);
+          }
         } else {
-          setContent(text);
+          if (isMounted) {
+            setContent(text);
+          }
         }
       })
       .catch(error => {
         console.error('Error loading article:', error);
-        setContent('# Error\nFailed to load the article content. Please try again later.');
+        if (isMounted) {
+          setFrontmatter(null);
+          setContent('# Error\nFailed to load the article content. Please try again later.');
+        }
       });
+
+    return () => { isMounted = false; };
   }, [article.markdownFile]);
 
   return (
