@@ -25,6 +25,7 @@ import UserDashboard from './pages/UserDashboard';
 import ProblemsPage from './pages/ProblemsPage';
 import TechBuzz from './pages/TechBuzz';
 import { GlobalChatbot } from './components/GlobalChatbot';
+import NotFound from './pages/NotFound';
 
 function LoadingSpinner() {
   return (
@@ -76,6 +77,7 @@ function AppContent() {
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/password-recovery" element={<PasswordRecovery />} />
                 <Route path="/problems" element={<ProblemsPage />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <Footer />
