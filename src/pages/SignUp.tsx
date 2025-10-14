@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, User } from 'lucide-react';
+import { useNavigate,Link } from 'react-router-dom';
+import { Mail, Lock, User,Eye,EyeOff } from 'lucide-react';
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -9,6 +9,8 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
@@ -65,37 +67,55 @@ export default function SignUp() {
               />
             </div>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    <Lock className="h-5 w-5 text-gray-400" />
+  </div>
+  <input
+    id="password"
+    name="password"
+    type={showPassword ? 'text' : 'password'}
+    autoComplete="new-password"
+    required
+    className="appearance-none block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
+    placeholder="Password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+  <button
+    type="button"
+    onClick={() => setShowPassword((prev) => !prev)}
+    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    tabIndex={-1}
+  >
+    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+  </button>
+</div>
+
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Lock className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
+  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+    <Lock className="h-5 w-5 text-gray-400" />
+  </div>
+  <input
+    id="confirm-password"
+    name="confirm-password"
+    type={showConfirmPassword ? 'text' : 'password'}
+    autoComplete="new-password"
+    required
+    className="appearance-none block w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-lg placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent dark:bg-gray-700 dark:text-white transition duration-150 ease-in-out"
+    placeholder="Confirm Password"
+    value={confirmPassword}
+    onChange={(e) => setConfirmPassword(e.target.value)}
+  />
+  <button
+    type="button"
+    onClick={() => setShowConfirmPassword((prev) => !prev)}
+    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+    tabIndex={-1}
+  >
+    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+  </button>
+</div>
+
           </div>
 
           <div className="flex items-center">
@@ -170,6 +190,14 @@ export default function SignUp() {
             </button>
           </div>
         </div>
+         <div className="text-center mt-4">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Already have an account?{' '}
+                    <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
+                      Sign in now
+                    </Link>
+                  </p>
+                </div>
       </div>
     </div>
   );
