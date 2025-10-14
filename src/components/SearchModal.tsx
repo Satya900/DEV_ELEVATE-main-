@@ -96,6 +96,11 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
     };
   }, [isOpen]);
 
+  // close modal
+  const handleClose = () => {
+  onClose();
+  };
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -115,6 +120,15 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
               className="w-full max-w-2xl"
             >
+              {/* Close Button */}
+              <button
+                onClick={handleClose}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-500 dark:hover:bg-gray-200 transition-all"
+                aria-label="Close search modal"
+              >
+                <X className="h-5 w-5 text-gray-100 dark:text-gray-400" />
+              </button>
+
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden">
                 {/* Search Input */}
                 <div className="p-4 border-b border-gray-100 dark:border-gray-700">
