@@ -7,7 +7,7 @@ const topics = [
     icon: '☕',
     questions: ['java-1'],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 10
+    totalPoints: 10,
   },
   {
     id: 'python-basics',
@@ -15,9 +15,9 @@ const topics = [
     description: 'Start your Python journey here.',
     color: '#3572A5',
     icon: '🐍',
-    questions: ['py-1','py-unique-1'],
+    questions: ['py-1', 'py-unique-1'],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 10
+    totalPoints: 10,
   },
   {
     id: 'javascript-basics',
@@ -25,9 +25,23 @@ const topics = [
     description: 'Master the basics of JavaScript.',
     color: '#f7df1e',
     icon: '🟨',
-    questions: ['js-1'],
+    questions: [
+      'js-1',
+      'js-2',
+      'js-3',
+      'js-4',
+      'js-5',
+      'js-6',
+      'js-7',
+      'js-8',
+      'js-9',
+      'js-10',
+      'js-11',
+      'js-12',
+      'js-13',
+    ],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 10
+    totalPoints: 10,
   },
   {
     id: 'cpp-basics',
@@ -37,7 +51,7 @@ const topics = [
     icon: '💠',
     questions: ['cpp-1'],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 10
+    totalPoints: 10,
   },
   {
     id: 'c-basics',
@@ -47,7 +61,7 @@ const topics = [
     icon: '🔵',
     questions: ['c-1'],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 10
+    totalPoints: 10,
   },
   {
     id: 'arrays-hashing',
@@ -57,7 +71,7 @@ const topics = [
     icon: '🔢',
     questions: [],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 0
+    totalPoints: 0,
   },
   {
     id: 'binary-search',
@@ -67,7 +81,7 @@ const topics = [
     icon: '🔍',
     questions: [],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 0
+    totalPoints: 0,
   },
   {
     id: 'pointers-references',
@@ -77,7 +91,7 @@ const topics = [
     icon: '📌',
     questions: [],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 0
+    totalPoints: 0,
   },
   {
     id: 'async-programming',
@@ -87,46 +101,50 @@ const topics = [
     icon: '⚡',
     questions: [],
     badgeThresholds: { bronze: 10, silver: 20, gold: 30 },
-    totalPoints: 0
-  }
-];
+    totalPoints: 0,
+  },
+]
 
 // Helper: get topic by id
 export function getTopicById(topicId) {
-  return topics.find(t => t.id === topicId);
+  return topics.find((t) => t.id === topicId)
 }
 
 // Helper: get points per question (default 10)
 export function getPointsPerQuestion(topicId, questionId) {
-  const topic = getTopicById(topicId);
-  if (!topic) return 0;
+  const topic = getTopicById(topicId)
+  if (!topic) return 0
   // You can customize per-topic/question points here
-  return 10;
+  return 10
 }
 
 // Helper: calculate topic progress, badge, and points
 export function calculateTopicProgress(topic, solvedQuestions) {
-  const totalQuestions = topic.questions.length;
-  const solved = topic.questions.filter(qId => solvedQuestions.includes(qId));
-  const solvedCount = solved.length;
-  const percentage = totalQuestions === 0 ? 0 : Math.round((solvedCount / totalQuestions) * 100);
-  const points = solvedCount * 10;
-  let badgeLevel = 'none';
-  if (percentage === 100) badgeLevel = 'gold';
-  else if (percentage >= 50) badgeLevel = 'silver';
-  else if (percentage > 0) badgeLevel = 'bronze';
+  const totalQuestions = topic.questions.length
+  const solved = topic.questions.filter((qId) => solvedQuestions.includes(qId))
+  const solvedCount = solved.length
+  const percentage =
+    totalQuestions === 0 ? 0 : Math.round((solvedCount / totalQuestions) * 100)
+  const points = solvedCount * 10
+  let badgeLevel = 'none'
+  if (percentage === 100) badgeLevel = 'gold'
+  else if (percentage >= 50) badgeLevel = 'silver'
+  else if (percentage > 0) badgeLevel = 'bronze'
   return {
     solvedQuestions: solved,
     percentage,
     points,
-    badgeLevel
-  };
+    badgeLevel,
+  }
 }
 
 // Returns all topics that contain the given questionId
 export function getTopicsForQuestion(questionId) {
-  return topics.filter(topic => Array.isArray(topic.questions) && topic.questions.includes(questionId));
+  return topics.filter(
+    (topic) =>
+      Array.isArray(topic.questions) && topic.questions.includes(questionId)
+  )
 }
 
-export { topics };
-export default topics; 
+export { topics }
+export default topics
