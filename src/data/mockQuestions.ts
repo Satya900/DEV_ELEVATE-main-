@@ -3,6 +3,10 @@ import { javaQuestion } from './question/JAVA'
 import { cpp } from './question/CPP'
 import { python } from './question/Python'
 import { cq } from './question/C'
+import { arraysHashing } from './question/Arrays_Hashing'
+import { binarySearch } from './question/Binary_Search'
+import { pointersReferences } from './question/Pointers_References'
+import { asyncProgramming } from './question/Async_Programming'
 
 export const mockQuestions = [
   ...python,
@@ -10,6 +14,10 @@ export const mockQuestions = [
   ...js,
   ...cpp,
   ...cq,
+  ...arraysHashing,
+  ...binarySearch,
+  ...pointersReferences,
+  ...asyncProgramming,
   // Unique Python Question
   {
     id: 'py-unique-1',
