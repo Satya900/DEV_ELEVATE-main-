@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ProjectCard } from '../components/ProjectCard';
 import { projects } from '../data/projects';
 
-const categories = ['all', 'web', 'mobile', 'ai', 'blockchain', 'game'] as const;
+const categories = ['all', 'web', 'Mobile App', 'AI/ML', 'Blockchain', 'Game'] as const;
 
 export function Projects() {
   const [selectedCategory, setSelectedCategory] = useState<typeof categories[number]>('all');
@@ -61,9 +61,11 @@ export function Projects() {
           layout
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {filteredProjects.map((project) => (
+          {filteredProjects.length > 0 ? (filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
-          ))}
+          ))) : (
+            <p className="col-span-full text-gray-600 text-center">No projects yet in this category.</p>
+          )}
         </motion.div>
       </div>
     </div>
