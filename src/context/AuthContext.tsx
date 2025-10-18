@@ -396,13 +396,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const updatedSubmissions = [newSubmission, ...(currentProgress.submissions || [])];
         
         await updateDoc(userProgressRef, {
-          submissions: updatedSubmissions
+          submissions: updatedSubmissions,
+          totalAttempted: Math.max(userProgress.totalAttempted || 0, updatedSubmissions.length)
         });
         
-        // Update local state
+        // Update local state with new submission and totalAttempted count
         setUserProgress({
           ...userProgress,
-          submissions: updatedSubmissions
+          submissions: updatedSubmissions,
+          totalAttempted: Math.max(userProgress.totalAttempted || 0, updatedSubmissions.length)
         });
       }
 
