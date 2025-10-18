@@ -267,15 +267,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // --- Auth & Data Actions ---
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // State updated via onAuthStateChanged listener
-    } catch (error) {
-      console.error('AuthContext: Sign in failed with error:', error);
-      throw error;
+  const signIn = async (email: string, password: string): Promise<void> => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error: unknown) {
+    console.error('AuthContext: Sign in failed with error:', error);
+
+    let message = 'An error occurred during sign in.';
+
+    if (error && typeof error === 'object' && 'code' in error) {
+      switch ((error as any).code) {
+        case 'auth/wrong-password':
+          message = 'Invalid password. Please try again.';
+          break;
+        case 'auth/user-not-found':
+          message = 'No user found with this email.';
+          break;
+        case 'auth/too-many-requests':
+          message = 'Too many failed attempts. Please try later.';
+          break;
+        case 'auth/invalid-email':
+          message = 'Please enter a valid email address.';
+          break;
+        default:
+          message = (error as any).message || message;
+      }
     }
-  };
+
+    // Throw a string instead of Error object for easier display in TSX form
+    throw message;
+  }
+};
+
+
 
   const signUp = async (email: string, password: string) => {
     try {
