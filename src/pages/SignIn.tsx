@@ -28,7 +28,10 @@ export default function SignIn() {
 			navigate('/profile');
 		} catch (err) {
 			console.error('Sign in error:', err);
-			if (err instanceof FirebaseError) {
+if(typeof err == 'string') {
+setError(err);
+}
+else if(err instanceof FirebaseError) {
 				// Handle specific Firebase Auth errors with user-friendly messages
 				switch (err.code) {
 					case 'auth/invalid-email':

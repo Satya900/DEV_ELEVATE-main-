@@ -1,27 +1,33 @@
-import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
-import { 
-  signInWithEmailAndPassword, 
+// src/context/AuthContext.tsx (Merged and Unified)
+
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+
+import {
+  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  signOut,
+  signOut as firebaseSignOutFn, // Renamed to avoid collision with context method
   onAuthStateChanged,
   User,
   updateProfile
 } from 'firebase/auth';
-import { 
-  doc, 
-  getDoc, 
-  setDoc, 
+import {
+  doc,
+  getDoc,
+  setDoc,
   updateDoc,
-  arrayUnion,
   Timestamp
 } from 'firebase/firestore';
-import { mockUserProgress, UserProgress, Submission } from "../data/userProgress";
-import { topics, getTopicsForQuestion, calculateTopicProgress, getPointsPerQuestion } from '../data/topics';
-import { mockQuestions } from '../data/mockQuestions';
 
-// Import Firebase instances from the centralized config
+// NOTE: You must ensure these imports point to the correct files in your project.
+// Adjust as necessary, e.g., 'firebase/config' vs 'firebaseClient'
 import { auth, db } from '../firebase/config';
+import { mockQuestions } from '../data/mockQuestions';
+import { UserProgress, Submission } from "../data/userProgress";
+import { getTopicsForQuestion, calculateTopicProgress } from '../data/topics';
 
+// --- Type Definitions (from second code block) ---
+
+// Define the shape of the user profile stored in Firestore
 export interface UserProfile {
   displayName: string;
   bio: string;
@@ -38,12 +44,17 @@ export interface UserProfile {
   }>;
 }
 
+// Define the slimmed-down user object exposed by the context
+export interface CurrentUser {
+  uid: string;
+  email: string;
+  displayName: string;
+}
+
+// Define the shape of the context value
 interface AuthContextType {
-  currentUser: {
-    uid: string;
-    email: string;
-    displayName: string;
-  } | null;
+  currentUser: CurrentUser | null;
+  userProfile: UserProfile | null;
   userProgress: UserProgress | null;
   loading: boolean;
   profileLoading: boolean;
@@ -51,9 +62,11 @@ interface AuthContextType {
   signUp: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<void>;
-  addSubmission: (submission: Omit<Submission, "id">) => Promise<void>;
+  addSubmission: (submission: Omit<Submission, "id" | "userId" | "questionTitle"> & { questionTitle?: string }) => Promise<void>;
   updateSolvedQuestion: (questionId: string) => Promise<void>;
 }
+
+// --- Default Data (from second code block) ---
 
 const defaultProfile: UserProfile = {
   displayName: '',
@@ -73,7 +86,6 @@ const defaultProfile: UserProfile = {
   ]
 };
 
-// Initialize default user progress with zero values
 const defaultUserProgress: UserProgress = {
   userId: "",
   displayName: "",
@@ -86,62 +98,17 @@ const defaultUserProgress: UserProgress = {
     calendar: {}
   },
   categoryProgress: [
-    {
-      category: "Array",
-      solved: 0,
-      total: 3,
-      percentage: 0
-    },
-    {
-      category: "Hash Table",
-      solved: 0,
-      total: 2,
-      percentage: 0
-    },
-    {
-      category: "Math",
-      solved: 0,
-      total: 1,
-      percentage: 0
-    },
-    {
-      category: "Basics",
-      solved: 0,
-      total: 1,
-      percentage: 0
-    }
+    { category: "Array", solved: 0, total: 3, percentage: 0 },
+    { category: "Hash Table", solved: 0, total: 2, percentage: 0 },
+    { category: "Math", solved: 0, total: 1, percentage: 0 },
+    { category: "Basics", solved: 0, total: 1, percentage: 0 }
   ],
   difficultyProgress: [
-    {
-      difficulty: "Beginner",
-      solved: 0,
-      total: 1,
-      percentage: 0
-    },
-    {
-      difficulty: "Easy",
-      solved: 0,
-      total: 3,
-      percentage: 0
-    },
-    {
-      difficulty: "Medium",
-      solved: 0,
-      total: 1,
-      percentage: 0
-    },
-    {
-      difficulty: "Hard",
-      solved: 0,
-      total: 0,
-      percentage: 0
-    },
-    {
-      difficulty: "Expert",
-      solved: 0,
-      total: 0,
-      percentage: 0
-    }
+    { difficulty: "Beginner", solved: 0, total: 1, percentage: 0 },
+    { difficulty: "Easy", solved: 0, total: 3, percentage: 0 },
+    { difficulty: "Medium", solved: 0, total: 1, percentage: 0 },
+    { difficulty: "Hard", solved: 0, total: 0, percentage: 0 },
+    { difficulty: "Expert", solved: 0, total: 0, percentage: 0 }
   ],
   badges: [],
   totalSolved: 0,
@@ -150,6 +117,8 @@ const defaultUserProgress: UserProgress = {
   xp: 0,
   level: 1
 };
+
+// --- Context & Hook ---
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -161,95 +130,23 @@ export const useAuth = () => {
   return context;
 };
 
+// --- Provider Component ---
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<{
-    uid: string;
-    email: string;
-    displayName: string;
-  } | null>(null);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
   const [loading, setLoading] = useState(true);
   const [profileLoading, setProfileLoading] = useState(true);
-  const [userSubmissions, setUserSubmissions] = useState<Submission[]>([]);
-  
-  // Reference to progress listeners
-  const progressListeners = useRef<((progress: UserProgress) => void)[]>([]);
 
-  // Fetch user profile from Firestore
-  const fetchUserProfile = async (userId: string) => {
-    setProfileLoading(true);
-    try {
-      const userDocRef = doc(db, 'users', userId);
-      const userDoc = await getDoc(userDocRef);
-      
-      if (userDoc.exists()) {
-        setUserProfile(userDoc.data() as UserProfile);
-      } else {
-        // Create default profile if none exists
-        await setDoc(userDocRef, defaultProfile);
-        setUserProfile(defaultProfile);
-      }
+  // --- Firestore Utility Functions ---
 
-      // Fetch user progress data
-      await fetchUserProgress(userId);
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
-    } finally {
-      setProfileLoading(false);
-    }
-  };
-
-  // Fetch user progress from Firestore
-  const fetchUserProgress = async (userId: string) => {
-    try {
-      const progressDocRef = doc(db, 'userProgress', userId);
-      const progressDoc = await getDoc(progressDocRef);
-      
-      if (progressDoc.exists()) {
-        // Convert Firestore timestamps back to Date objects if needed
-        const data = progressDoc.data();
-        
-        // Handle date conversions
-        const progress = {
-          ...data,
-          streak: {
-            ...data.streak,
-            lastActive: data.streak.lastActive?.toDate() || new Date()
-          },
-          submissions: data.submissions?.map((sub: any) => ({
-            ...sub,
-            timestamp: sub.timestamp?.toDate() || new Date()
-          })) || [],
-          badges: data.badges?.map((badge: any) => ({
-            ...badge,
-            earnedAt: badge.earnedAt?.toDate() || new Date()
-          })) || []
-        } as UserProgress;
-        
-        setUserProgress(progress);
-      } else {
-        // Create default progress if none exists
-        const newProgress = {
-          ...defaultUserProgress,
-          userId,
-          displayName: currentUser?.displayName || ""
-        };
-        await setDoc(progressDocRef, newProgress);
-        setUserProgress(newProgress);
-      }
-    } catch (error) {
-      console.error('Error fetching user progress:', error);
-    }
-  };
-
-  // Save user progress to Firestore
-  const saveUserProgress = async (progress: UserProgress) => {
+  const saveUserProgress = useCallback(async (progress: UserProgress) => {
     if (!currentUser) return;
-    
+
     try {
       const progressDocRef = doc(db, 'userProgress', currentUser.uid);
-      
+
       // Convert Date objects to Firestore timestamps
       const firestoreProgress = {
         ...progress,
@@ -266,88 +163,203 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           earnedAt: Timestamp.fromDate(new Date(badge.earnedAt))
         }))
       };
-      
+
       await setDoc(progressDocRef, firestoreProgress);
     } catch (error) {
       console.error('Error saving user progress:', error);
     }
-  };
+  }, [currentUser]);
+
+  const fetchUserProgress = useCallback(async (userId: string) => {
+    try {
+      const progressDocRef = doc(db, 'userProgress', userId);
+      const progressDoc = await getDoc(progressDocRef);
+
+      if (progressDoc.exists()) {
+        const data = progressDoc.data();
+
+        // Handle date conversions from Timestamp
+        const progress: UserProgress = {
+          ...data,
+          streak: {
+            ...data.streak,
+            lastActive: data.streak.lastActive?.toDate() || new Date()
+          },
+          submissions: data.submissions?.map((sub: any) => ({
+            ...sub,
+            timestamp: sub.timestamp?.toDate() || new Date()
+          })) || [],
+          badges: data.badges?.map((badge: any) => ({
+            ...badge,
+            earnedAt: badge.earnedAt?.toDate() || new Date()
+          })) || []
+        } as UserProgress;
+
+        setUserProgress(progress);
+      } else {
+        // Create default progress if none exists
+        const newProgress: UserProgress = {
+          ...defaultUserProgress,
+          userId,
+          displayName: auth.currentUser?.displayName || ""
+        };
+        await setDoc(progressDocRef, newProgress);
+        setUserProgress(newProgress);
+      }
+    } catch (error) {
+      console.error('Error fetching user progress:', error);
+    }
+  }, []);
+
+  const fetchUserProfile = useCallback(async (userId: string) => {
+    setProfileLoading(true);
+    try {
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
+
+      if (userDoc.exists()) {
+        setUserProfile(userDoc.data() as UserProfile);
+      } else {
+        // Create default profile if none exists
+        const newProfile = {
+            ...defaultProfile,
+            displayName: auth.currentUser?.displayName || '',
+        };
+        await setDoc(userDocRef, newProfile);
+        setUserProfile(newProfile);
+      }
+
+      // Fetch user progress data
+      await fetchUserProgress(userId);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, [fetchUserProgress]);
+
+  // --- Auth State Listener ---
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setCurrentUser({
+        // Map Firebase User to CurrentUser
+        const mappedUser: CurrentUser = {
           uid: user.uid,
           email: user.email || '',
-          displayName: user.displayName || ''
-        });
+          displayName: user.displayName || 'User'
+        };
+        setCurrentUser(mappedUser);
+
+        // Fetch profile and progress data
         fetchUserProfile(user.uid);
       } else {
         setCurrentUser(null);
         setUserProfile(null);
         setUserProgress(null);
+        setProfileLoading(false); // Ensure profile loading is off when logged out
       }
       setLoading(false);
     });
 
     return unsubscribe;
-  }, []);
+  }, [fetchUserProfile]);
 
-  const signIn = async (email: string, password: string) => {
-    console.log('AuthContext: Attempting sign in with email:', email);
+  // --- Auth & Data Actions ---
+
+  const signIn = async (email: string, password: string): Promise<void> => {
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error: unknown) {
+    console.error('AuthContext: Sign in failed with error:', error);
+
+    let message = 'An error occurred during sign in.';
+
+    if (error && typeof error === 'object' && 'code' in error) {
+      switch ((error as any).code) {
+        case 'auth/wrong-password':
+          message = 'Invalid password. Please try again.';
+          break;
+        case 'auth/user-not-found':
+          message = 'No user found with this email.';
+          break;
+        case 'auth/too-many-requests':
+          message = 'Too many failed attempts. Please try later.';
+          break;
+        case 'auth/invalid-email':
+          message = 'Please enter a valid email address.';
+          break;
+        default:
+          message = (error as any).message || message;
+      }
+    }
+
+    // Throw a string instead of Error object for easier display in TSX form
+    throw message;
+  }
+};
+
+
+
+  const signUp = async (email: string, password: string) => {
     try {
-      const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log('AuthContext: Sign in successful, user:', result.user.uid);
-      return result;
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const userId = credential.user.uid;
+
+        // 1. Set Auth display name
+        await updateProfile(credential.user, { displayName: 'New User' });
+
+        // 2. Create default profile for new users
+        const userDocRef = doc(db, 'users', userId);
+        const profileToCreate = {
+            ...defaultProfile,
+            displayName: 'New User'
+        };
+        await setDoc(userDocRef, profileToCreate);
+
+        // 3. Create default progress for new users
+        const progressDocRef = doc(db, 'userProgress', userId);
+        const newProgress = {
+            ...defaultUserProgress,
+            userId: userId,
+            displayName: 'New User'
+        };
+        await setDoc(progressDocRef, newProgress);
+        // State updated via onAuthStateChanged listener
     } catch (error) {
-      console.error('AuthContext: Sign in failed with error:', error);
-      throw error;
+        console.error('AuthContext: Sign up failed with error:', error);
+        throw error;
     }
   };
 
-  const signUp = async (email: string, password: string) => {
-    const credential = await createUserWithEmailAndPassword(auth, email, password);
-    // Create default profile for new users
-    const userDocRef = doc(db, 'users', credential.user.uid);
-    await setDoc(userDocRef, defaultProfile);
-    
-    // Create default progress for new users
-    const progressDocRef = doc(db, 'userProgress', credential.user.uid);
-    const newProgress = {
-      ...defaultUserProgress,
-      userId: credential.user.uid,
-      displayName: credential.user.displayName || ""
-    };
-    await setDoc(progressDocRef, newProgress);
-  };
-
   const logout = async () => {
-    await signOut(auth);
+    // Retained the behavior of the second context (just signs out, listener handles state change)
+    await firebaseSignOutFn(auth);
   };
 
   const updateUserProfile = async (profileData: Partial<UserProfile>) => {
     if (!currentUser) throw new Error('No authenticated user');
-    
+
     setProfileLoading(true);
     try {
-      // Update displayName in Firebase Auth if it's provided
+      // 1. Update displayName in Firebase Auth if provided
       if (profileData.displayName) {
         await updateProfile(auth.currentUser!, {
           displayName: profileData.displayName
         });
       }
-      
-      // Update user data in Firestore
+
+      // 2. Update user data in Firestore
       const userDocRef = doc(db, 'users', currentUser.uid);
-      await updateDoc(userDocRef, profileData);
-      
-      // Update local state
+      await updateDoc(userDocRef, profileData as Record<string, any>);
+
+      // 3. Update local state
       setUserProfile(prev => {
         if (!prev) return profileData as UserProfile;
         return { ...prev, ...profileData };
       });
-      
-      // Update displayName in userProgress if it changed
+
+      // 4. Update displayName in userProgress if it changed
       if (profileData.displayName && userProgress) {
         const updatedProgress = {
           ...userProgress,
@@ -364,51 +376,52 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Function to add a new submission
-  const addSubmission = async (submission: Omit<Submission, "id">) => {
+  const addSubmission = async (submission: Omit<Submission, "id" | "userId" | "questionTitle"> & { questionTitle?: string }) => {
     if (!currentUser || !userProgress) {
       console.error("Cannot add submission: user or progress data is missing");
       return;
     }
 
     try {
-      // Get the question details to include title
       const question = mockQuestions.find(q => q.id === submission.questionId);
-      const questionTitle = question ? question.title : `Problem #${submission.questionId}`;
-      
-      // Create a submission record with ID and question title
+      const questionTitle = question ? question.title : submission.questionTitle || `Problem #${submission.questionId}`;
+
       const newSubmission: Submission = {
         id: Date.now().toString(),
         userId: currentUser.uid,
-        questionTitle: questionTitle || submission.questionTitle, // Add the question title to the submission
+        questionTitle: questionTitle,
+        timestamp: new Date().toISOString(), // Use ISO string initially
         ...submission,
       };
 
-      // Add to Firestore
       const userProgressRef = doc(db, 'userProgress', currentUser.uid);
-      
-      // Get current progress
       const userProgressDoc = await getDoc(userProgressRef);
+
       if (userProgressDoc.exists()) {
-        const currentProgress = userProgressDoc.data() as UserProgress;
-        
-        // Update with new submission at the beginning of the array
-        const updatedSubmissions = [newSubmission, ...(currentProgress.submissions || [])];
-        
+        const currentData = userProgressDoc.data() as any;
+        const updatedSubmissions = [newSubmission, ...(currentData.submissions?.map((sub: any) => ({
+            ...sub,
+            timestamp: sub.timestamp?.toDate() || new Date()
+        })) || [])];
+
+        // Prepare for Firestore: convert timestamps back
+        const firestoreSubmissions = updatedSubmissions.map(sub => ({
+            ...sub,
+            timestamp: Timestamp.fromDate(new Date(sub.timestamp))
+        }));
+
         await updateDoc(userProgressRef, {
-          submissions: updatedSubmissions
+          submissions: firestoreSubmissions
         });
-        
-        // Update local state
-        setUserProgress({
-          ...userProgress,
+
+        // Update local state (with Date objects)
+        setUserProgress(prev => prev ? {
+          ...prev,
           submissions: updatedSubmissions
-        });
+        } : null);
       }
 
-      // Only update solved status if the submission was successful
       if (submission.status === 'Accepted') {
-        // Don't await this to make the UI more responsive
         updateSolvedQuestion(submission.questionId);
       }
     } catch (error) {
@@ -417,98 +430,78 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Function to update solved questions
   const updateSolvedQuestion = async (questionId: string) => {
     if (!userProgress || !currentUser) {
       console.error("Cannot update solved question: userProgress or currentUser is null");
       return;
     }
 
-    // Check if already solved - handle both array and object storage formats
-    let alreadySolved = false;
-    if (Array.isArray(userProgress.solvedQuestions)) {
-      alreadySolved = userProgress.solvedQuestions.includes(questionId);
-    } else if (typeof userProgress.solvedQuestions === 'object' && userProgress.solvedQuestions !== null) {
-      alreadySolved = !!userProgress.solvedQuestions[questionId];
-    }
+    // Check if already solved (handling both array and object storage formats)
+    const isSolvedArray = Array.isArray(userProgress.solvedQuestions) && userProgress.solvedQuestions.includes(questionId);
+    const isSolvedObject = typeof userProgress.solvedQuestions === 'object' && userProgress.solvedQuestions !== null && !!userProgress.solvedQuestions[questionId];
 
-    if (alreadySolved) {
-      return;
-    }
+    if (isSolvedArray || isSolvedObject) return;
 
-    // Handle both array and object formats for solvedQuestions
-    let updatedSolvedQuestions: any;
+    // Convert to object format for updates if currently an array
+    let updatedSolvedQuestions: Record<string, boolean>;
     if (Array.isArray(userProgress.solvedQuestions)) {
-      updatedSolvedQuestions = [...userProgress.solvedQuestions, questionId];
+      updatedSolvedQuestions = userProgress.solvedQuestions.reduce((acc, id) => ({ ...acc, [id]: true }), {});
     } else {
-      // If it's an object or undefined, create/update an object
-      updatedSolvedQuestions = { 
-        ...(userProgress.solvedQuestions || {}), 
-        [questionId]: true 
-      };
+      updatedSolvedQuestions = userProgress.solvedQuestions || {};
     }
+    updatedSolvedQuestions[questionId] = true;
 
-    // Update solved questions list
+    const solvedQuestionsArray = Object.keys(updatedSolvedQuestions);
+
+    // 1. Calculate new progress state
     const updatedProgress: UserProgress = {
       ...userProgress,
       solvedQuestions: updatedSolvedQuestions,
       totalSolved: userProgress.totalSolved + 1,
       totalAttempted: Math.max(userProgress.totalAttempted, userProgress.totalSolved + 1),
-      xp: userProgress.xp + 10 // Add 10 XP for solving a problem (changed from 50)
+      xp: userProgress.xp + 10
     };
 
-    // Update topic progress
+    // Update Topic Progress
     const affectedTopics = getTopicsForQuestion(questionId);
-    
     if (affectedTopics.length > 0) {
-      // Convert solved questions to array format for topic progress calculation
-      const solvedQuestionsArray = Array.isArray(updatedSolvedQuestions) 
-        ? updatedSolvedQuestions 
-        : Object.keys(updatedSolvedQuestions).filter(id => updatedSolvedQuestions[id]);
-      
-      // Update each affected topic progress
       const updatedTopicProgress = [...(updatedProgress.topicProgress || [])];
-      
+
       affectedTopics.forEach(topic => {
-        // Calculate progress using our optimized function
         const topicProgress = calculateTopicProgress(topic, solvedQuestionsArray);
         const existingTopicProgressIndex = updatedTopicProgress.findIndex(tp => tp.topicId === topic.id);
-        
-        // Each solved question is worth exactly 10 points for more predictable progress
-        const newPoints = solvedQuestionsArray.filter(qId => topic.questions.includes(qId)).length * 10;
-        
+        const topicSolvedQuestions = solvedQuestionsArray.filter(qId => topic.questions.includes(qId));
+        const newPoints = topicSolvedQuestions.length * 10;
+
+        const newTopicProgress = {
+          topicId: topic.id,
+          solvedQuestions: topicSolvedQuestions,
+          points: newPoints,
+          badgeLevel: topicProgress.badgeLevel,
+          lastUpdated: new Date().toISOString()
+        };
+
         if (existingTopicProgressIndex >= 0) {
-          updatedTopicProgress[existingTopicProgressIndex] = {
-            ...updatedTopicProgress[existingTopicProgressIndex],
-            solvedQuestions: solvedQuestionsArray.filter(qId => topic.questions.includes(qId)),
-            points: newPoints,
-            badgeLevel: topicProgress.badgeLevel,
-            lastUpdated: new Date().toISOString()
-          };
+          updatedTopicProgress[existingTopicProgressIndex] = newTopicProgress;
         } else {
-          updatedTopicProgress.push({
-            topicId: topic.id,
-            solvedQuestions: solvedQuestionsArray.filter(qId => topic.questions.includes(qId)),
-            points: newPoints,
-            badgeLevel: topicProgress.badgeLevel,
-            lastUpdated: new Date().toISOString()
-          });
+          updatedTopicProgress.push(newTopicProgress);
         }
       });
-      
       updatedProgress.topicProgress = updatedTopicProgress;
     }
 
-    // Immediately update local state for faster UI updates
+    // 2. Update local state
     setUserProgress(updatedProgress);
-    
-    // Then asynchronously save to Firebase
+
+    // 3. Asynchronously save to Firebase
     try {
       await saveUserProgress(updatedProgress);
     } catch (error) {
       console.error("Error saving user progress to Firebase:", error);
     }
   };
+
+  // --- Context Value ---
 
   const value = {
     currentUser,
@@ -526,6 +519,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <AuthContext.Provider value={value}>
+      {/* Only render children after initial loading is complete */}
       {!loading && children}
     </AuthContext.Provider>
   );
