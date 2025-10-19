@@ -68,9 +68,10 @@ export function SearchModal({ isOpen, onClose }: { isOpen: boolean; onClose: () 
 	}, [searchQuery]);
 
 	const handleSelect = (url: string) => {
-		onClose();
-		navigate(url);
-	};
+  onClose();
+  setTimeout(() => navigate(url), 150);
+};
+
 
 	// Handle keyboard events
 	useEffect(() => {
