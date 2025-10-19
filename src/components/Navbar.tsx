@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Code2, Menu, X, Github, User, ChevronDown } from 'lucide-react';
+import { Code2, Menu, X, Github, User } from 'lucide-react';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { nav_links } from '../../lib/utils';
