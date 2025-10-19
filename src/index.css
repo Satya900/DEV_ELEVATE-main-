@@ -20,6 +20,23 @@ body {
   .text-gradient {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-blue-500;
   }
+  
+  /* Dropdown Animation Utilities */
+  .dropdown-enter {
+    @apply opacity-0 transform scale-95 translate-y-1;
+  }
+  
+  .dropdown-enter-active {
+    @apply opacity-100 transform scale-100 translate-y-0 transition-all duration-200 ease-out;
+  }
+  
+  .dropdown-shadow {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .dark .dropdown-shadow {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
 }
 
 /* Markdown Styles */

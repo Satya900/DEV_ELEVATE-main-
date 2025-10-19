@@ -3,19 +3,30 @@ import { motion } from 'framer-motion';
 import { Code2, Menu, X, Github, User, ChevronDown } from 'lucide-react';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { nav_links } from '../../lib/utils';
+import { nav_links, NavLink as NavLinkType, SubNavItem } from '../../lib/utils';
 import ThemeBtn from './ThemeBtn';
 
 export function Navbar() {
 	const { currentUser, logout } = useAuth();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const [userMenuOpen, setUserMenuOpen] = React.useState(false);
+	const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null);
 	const userMenuRef = React.useRef<HTMLDivElement>(null);
+	const dropdownRefs = React.useRef<{ [key: string]: HTMLDivElement | null }>({});
 
 	React.useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
 			if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
 				setUserMenuOpen(false);
+			}
+			
+			// Check if click is outside any dropdown
+			const clickedOutsideDropdown = Object.values(dropdownRefs.current).every(
+				ref => !ref || !ref.contains(event.target as Node)
+			);
+			
+			if (clickedOutsideDropdown) {
+				setActiveDropdown(null);
 			}
 		}
 
@@ -47,11 +58,21 @@ export function Navbar() {
 
 					<div className="hidden md:flex items-center justify-between space-x-8">
 						<div className="flex items-center justify-between gap-6">
-							{
-								nav_links.map((link) => (
-								<NavLink key={link.name} to={link.path}>
-									{link.name}
-								</NavLink>
+							{nav_links.map((link) => (
+								<div key={link.name} className="relative">
+									{link.hasDropdown ? (
+										<DropdownNavLink 
+											link={link}
+											isActive={activeDropdown === link.name}
+											onToggle={() => setActiveDropdown(activeDropdown === link.name ? null : link.name)}
+											ref={(el) => dropdownRefs.current[link.name] = el}
+										/>
+									) : (
+										<NavLink to={link.path}>
+											{link.name}
+										</NavLink>
+									)}
+								</div>
 							))}
 						</div>
 						<ThemeBtn />
@@ -119,15 +140,17 @@ export function Navbar() {
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: -20 }}
-					className="md:hidden bg-white border-t border-gray-100"
+					className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-700"
 				>
 					<div className="px-4 pt-2 pb-3 space-y-1">
-						<MobileNavLink to="/dsa" onClick={() => setIsOpen(false)}>DSA</MobileNavLink>
-						<MobileNavLink to="/web-dev" onClick={() => setIsOpen(false)}>Web Dev</MobileNavLink>
-						<MobileNavLink to="/system-design" onClick={() => setIsOpen(false)}>System Design</MobileNavLink>
-						<MobileNavLink to="/projects" onClick={() => setIsOpen(false)}>Projects</MobileNavLink>
-						<MobileNavLink to="/topics" onClick={() => setIsOpen(false)}>Prepare</MobileNavLink>
-						<MobileNavLink to="/compiler" onClick={() => setIsOpen(false)}>Compiler</MobileNavLink>
+						{nav_links.map((link) => (
+							<MobileDropdownNavLink 
+								key={link.name}
+								link={link}
+								onClose={() => setIsOpen(false)}
+							/>
+						))}
+						
 						{currentUser && (
 							<MobileNavLink to="/profile" onClick={() => setIsOpen(false)}>Profile</MobileNavLink>
 						)}
@@ -135,7 +158,7 @@ export function Navbar() {
 							href="https://github.com"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex items-center px-4 py-3 text-black hover:bg-gray-50 rounded-lg transition-colors"
+							className="flex items-center px-4 py-3 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
 						>
 							<Github className="h-5 w-5 mr-3" />
 							GitHub
@@ -147,7 +170,7 @@ export function Navbar() {
 									handleLogout();
 									setIsOpen(false);
 								}}
-								className="flex items-center w-full px-4 py-3 text-black hover:bg-gray-50 rounded-lg transition-colors"
+								className="flex items-center w-full px-4 py-3 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
 							>
 								Sign out
 							</button>
@@ -158,6 +181,46 @@ export function Navbar() {
 		</nav>
 	);
 }
+
+// Dropdown Navigation Link Component
+const DropdownNavLink = React.forwardRef<HTMLDivElement, {
+	link: NavLinkType;
+	isActive: boolean;
+	onToggle: () => void;
+}>(({ link, isActive, onToggle }, ref) => {
+	return (
+		<div ref={ref} className="relative">
+			<button
+				onClick={onToggle}
+				className="flex items-center space-x-1 whitespace-nowrap px-4 py-2 rounded-lg text-sm font-medium transition-colors text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+			>
+				<span>{link.name}</span>
+				<ChevronDown className={`h-4 w-4 transition-transform ${isActive ? 'rotate-180' : ''}`} />
+			</button>
+			
+			{isActive && (
+				<motion.div
+					initial={{ opacity: 0, y: -10, scale: 0.95 }}
+					animate={{ opacity: 1, y: 0, scale: 1 }}
+					exit={{ opacity: 0, y: -10, scale: 0.95 }}
+					transition={{ duration: 0.2, ease: "easeOut" }}
+					className="absolute top-full left-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg dropdown-shadow border border-gray-200 dark:border-gray-700 py-2 z-50 backdrop-blur-sm"
+				>
+					{link.subItems?.map((subItem: SubNavItem) => (
+						<Link
+							key={subItem.name}
+							to={subItem.path}
+							className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all duration-150 rounded-md mx-2"
+							onClick={() => onToggle()}
+						>
+							{subItem.name}
+						</Link>
+					))}
+				</motion.div>
+			)}
+		</div>
+	);
+});
 
 function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 	return (
@@ -175,11 +238,56 @@ function NavLink({ to, children }: { to: string; children: React.ReactNode }) {
 	);
 }
 
+// Mobile Dropdown Navigation Component
+function MobileDropdownNavLink({ link, onClose }: { link: NavLinkType; onClose: () => void }) {
+	const [isExpanded, setIsExpanded] = React.useState(false);
+
+	if (!link.hasDropdown) {
+		return (
+			<MobileNavLink to={link.path} onClick={onClose}>
+				{link.name}
+			</MobileNavLink>
+		);
+	}
+
+	return (
+		<div className="space-y-1">
+			<button
+				onClick={() => setIsExpanded(!isExpanded)}
+				className="flex items-center justify-between w-full px-4 py-3 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
+			>
+				<span>{link.name}</span>
+				<ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+			</button>
+			
+			{isExpanded && (
+				<motion.div
+					initial={{ opacity: 0, height: 0 }}
+					animate={{ opacity: 1, height: 'auto' }}
+					exit={{ opacity: 0, height: 0 }}
+					className="ml-4 space-y-1"
+				>
+					{link.subItems?.map((subItem: SubNavItem) => (
+						<Link
+							key={subItem.name}
+							to={subItem.path}
+							className="block px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-all duration-150"
+							onClick={onClose}
+						>
+							{subItem.name}
+						</Link>
+					))}
+				</motion.div>
+			)}
+		</div>
+	);
+}
+
 function MobileNavLink({ to, children, onClick }: { to: string; children: React.ReactNode; onClick: () => void }) {
 	return (
 		<RouterNavLink
 			to={to}
-			className="flex items-center px-4 py-3 text-black hover:bg-gray-50 rounded-lg transition-colors"
+			className="flex items-center px-4 py-3 text-black dark:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors"
 			onClick={onClick}
 		>
 			{children}
