@@ -1,0 +1,9 @@
+@echo off
+echo Adding changes to git...
+git add .
+echo Committing changes...
+git commit -m "Fix theme toggle functionality - restore original performance"
+echo Pushing to repository...
+git push origin main
+echo Done!
+pause
