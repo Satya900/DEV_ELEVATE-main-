@@ -60,8 +60,8 @@ export function ArticleLayout({
         return text
       })
       .then((text) => {
-        // Extract frontmatter
-        const match = text.match(/^---([\s\S]*?)---\n([\s\S]*)$/)
+  // Extract frontmatter (support both Unix and Windows line endings)
+  const match = text.match(/^---([\s\S]*?)---\r?\n([\s\S]*)$/)
         if (match) {
           const [, frontmatterText, contentText] = match
           const parsedFrontmatter = frontmatterText
