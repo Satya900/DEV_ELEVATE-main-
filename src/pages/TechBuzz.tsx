@@ -3,6 +3,7 @@ import { techbuzz } from '../data/categories/techbuzz';
 import { Link, useParams } from 'react-router-dom';
 import { ArticleLayout } from '../components/ArticleLayout';
 import { Helmet } from 'react-helmet';
+import { a } from 'framer-motion/client';
 
 export default function TechBuzz() {
   const { slug } = useParams();
@@ -12,8 +13,11 @@ export default function TechBuzz() {
     category: sub.title
   }))), []);
 
+  console.log(articles , "this is the articles");
+
   if (slug) {
     const article = articles.find(a => a.slug === slug);
+    console.log(article , "this is the find article");
     if (!article) {
       return (
         <div className="min-h-screen bg-white dark:bg-black pt-20 pb-12 flex items-center justify-center">
@@ -94,4 +98,4 @@ export default function TechBuzz() {
       </div>
     </div>
   );
-} 
+}
