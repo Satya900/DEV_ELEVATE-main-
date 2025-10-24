@@ -17,13 +17,10 @@ export const nav_links: NavLink[] = [
         path: '/dsa',
         hasDropdown: true,
         subItems: [
-            { name: 'Arrays', path: '/dsa/arrays' },
-            { name: 'Linked Lists', path: '/dsa/linked-lists' },
-            { name: 'Stacks & Queues', path: '/dsa/stacks-queues' },
-            { name: 'Trees', path: '/dsa/trees' },
-            { name: 'Graphs', path: '/dsa/graphs' },
-            { name: 'Dynamic Programming', path: '/dsa/dynamic-programming' },
-            { name: 'Sorting & Searching', path: '/dsa/sorting-searching' }
+            { name: 'Arrays', path: '/dsa/arrays/arrays-basics' },
+            { name: 'Linked Lists', path: '/dsa/linked-lists/linked-list-basics' },
+            { name: 'Stacks & Queues', path: '/dsa/Stack/introduction-to-stack' },
+            { name: 'Time & Space Complexity', path: '/dsa/basics/time-space-complexity' },
         ]
     },
     { 
@@ -31,12 +28,9 @@ export const nav_links: NavLink[] = [
         path: '/web-dev',
         hasDropdown: true,
         subItems: [
-            { name: 'Frontend', path: '/web-dev/frontend' },
-            { name: 'Backend', path: '/web-dev/backend' },
-            { name: 'Full Stack', path: '/web-dev/fullstack' },
-            { name: 'JavaScript', path: '/web-dev/javascript' },
-            { name: 'React', path: '/web-dev/react' },
-            { name: 'Node.js', path: '/web-dev/nodejs' }
+            { name: 'HTML & CSS', path: '/web-dev/frontend/html-css-fundamentals' },
+            { name: 'React', path: '/web-dev/frontend/react-tailwind-fundamentals' },
+            { name: 'Node.js', path: '/web-dev/backend/nodejs-fundamentals' }
         ]
     },
     { 
@@ -44,12 +38,9 @@ export const nav_links: NavLink[] = [
         path: '/system-design',
         hasDropdown: true,
         subItems: [
-            { name: 'Microservices', path: '/system-design/microservices' },
-            { name: 'Databases', path: '/system-design/databases' },
-            { name: 'Caching', path: '/system-design/caching' },
-            { name: 'Load Balancing', path: '/system-design/load-balancing' },
-            { name: 'Scalability', path: '/system-design/scalability' },
-            { name: 'Security', path: '/system-design/security' }
+            { name: 'Microservices', path: '/system-design/fundamentals/intro-to-microservices-architecture' },
+            { name: 'Scalability', path: '/system-design/fundamentals/scalability-patterns' },
+            { name: 'High Availability & Fault Tolerance', path: '/system-design/HA & FT/introduction-to-ha-ft' }
         ]
     },
     { name: 'Projects', path: '/projects' },
