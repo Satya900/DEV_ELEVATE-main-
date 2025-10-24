@@ -56,12 +56,12 @@ export function Navbar() {
 						<span className="text-black font-bold text-xl tracking-tight dark:text-neutral-100">DEVELEVATE</span>
 					</Link>
 
-					<div className="hidden md:flex items-center justify-between space-x-8">
-						<div className="flex items-center justify-between gap-6">
+					<div className="hidden md:flex items-center justify-between space-x-4">
+						<div className="flex items-center gap-4">
 							{nav_links.map((link) => (
 								<div key={link.name} className="relative">
 									{link.hasDropdown ? (
-										<DropdownNavLink 
+										<DropdownNavLink
 											link={link}
 											isActive={activeDropdown === link.name}
 											onToggle={() => setActiveDropdown(activeDropdown === link.name ? null : link.name)}
@@ -110,13 +110,13 @@ export function Navbar() {
 							<div className="flex items-center space-x-4">
 								<Link
 									to="/signin"
-									className=" whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+									className=" whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-600 dark:hover:border-emerald-400 border border-transparent px-4 py-2 rounded-md text-sm font-medium focus:outline-none transition-colors"
 								>
 									Sign In
 								</Link>
 								<Link
 									to="/signup"
-									className=" whitespace-nowrap bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+									className=" whitespace-nowrap text-gray-700 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:border-emerald-600 dark:hover:border-emerald-400 border border-transparent px-4 py-2 rounded-md text-sm font-medium focus:outline-none transition-colors"
 								>
 									Sign Up
 								</Link>
@@ -127,7 +127,7 @@ export function Navbar() {
 					<div className="md:hidden">
 						<button
 							onClick={() => setIsOpen(!isOpen)}
-							className="p-2 rounded-lg transition-colors duration-300 text-white hover:text-white-400 focus:outline-none focus:ring-2 focus:ring-white-400"
+							className="p-2 rounded-lg transition-colors duration-300 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-gray-400 bg-transparent"
 						>
 							{isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
 						</button>
