@@ -28,7 +28,10 @@ export function ArticleLayout({
   categoryPath,
 }: ArticleLayoutProps) {
   const [content, setContent] = useState('')
+
   const [frontmatter, setFrontmatter] = useState<Frontmatter | null>(null)
+
+  console.log(article.markdownFile, 'article markdown file')
 
   useEffect(() => {
     let isMounted = true
