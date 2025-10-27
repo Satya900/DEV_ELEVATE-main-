@@ -3,6 +3,7 @@ import { Category, Subcategory, Article } from '../types'
 import { Link, Routes, Route, useLocation } from 'react-router-dom'
 import { ChevronRight, Clock, Calendar } from 'lucide-react'
 import { ArticleLayout } from './ArticleLayout'
+import { useEffect } from 'react'
 
 interface CategoryLayoutProps {
   category: Category
@@ -10,14 +11,39 @@ interface CategoryLayoutProps {
 
 export function CategoryLayout({ category }: CategoryLayoutProps) {
   const location = useLocation()
-  const isRoot = location.pathname === `/${category.id}`
+  const isRoot = location.pathname === `/${category.id}/`
 
   // Debugging: log the current pathname and whether we consider this the root
-  console.log('CategoryLayout:', {
-    categoryId: category.id,
-    pathname: location.pathname,
-    isRoot,
-  })
+  // console.log('CategoryLayout:', {
+  //   categoryId: category.id,
+  //   pathname: location.pathname,
+  //   isRoot,
+  // })
+
+  let cat = category.subcategories
+
+  if (!isRoot) {
+    cat = category.subcategories.filter((elem) =>
+      location.pathname.includes(elem.id)
+    )
+  }
+
+  if (cat.length === 0) {
+    return (
+      <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black ">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-xl shadow-sm p-8 mt-6 border border-gray-100 dark:bg-black dark:border-gray-700">
+            <h2 className="text-2xl font-bold text-black mb-4 dark:text-neutral-100">
+              No articles found
+            </h2>
+            <p className="text-lg text-black dark:text-neutral-300">
+              We couldn't find any subcategories or articles for this category.
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black ">
@@ -40,7 +66,7 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
 
         {/* Subcategories */}
         <div className="space-y-12 ">
-          {category.subcategories.map((subcategory) => (
+          {cat.map((subcategory) => (
             <SubcategorySection
               key={subcategory.id}
               subcategory={subcategory}
@@ -88,15 +114,13 @@ function ArticleCard({
   categoryId: string
   subcategoryId: string
 }) {
+  console.log(article)
   return (
     <motion.div
       whileHover={{ y: -5 }}
       className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100  dark:bg-black dark:border-gray-700"
     >
-      <Link
-        to={`/${categoryId}/${subcategoryId}/${article.slug}`}
-        className="block p-6"
-      >
+      <Link to={'/'} className="block p-6">
         <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-emerald-500 dark:text-neutral-100">
           {article.title}
         </h3>
