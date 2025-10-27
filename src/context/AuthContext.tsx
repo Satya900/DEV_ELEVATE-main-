@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useState, useRef } from 'r
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
   signOut,
   onAuthStateChanged,
   User,
@@ -49,6 +51,7 @@ interface AuthContextType {
   profileLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateUserProfile: (profileData: Partial<UserProfile>) => Promise<void>;
   addSubmission: (submission: Omit<Submission, "id">) => Promise<void>;
@@ -321,6 +324,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await setDoc(progressDocRef, newProgress);
   };
 
+  const signInWithGoogle = async () => {
+    console.log('AuthContext: Attempting Google sign in');
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      console.log('AuthContext: Google sign in successful, user:', user.uid);
+      
+      // Check if user profile exists in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      // If new user (no profile), create one
+      if (!userDoc.exists()) {
+        const newUserProfile = {
+          ...defaultProfile,
+          displayName: user.displayName || 'Google User'
+        };
+        await setDoc(userDocRef, newUserProfile);
+        
+        // Create default progress for new users
+        const progressDocRef = doc(db, 'userProgress', user.uid);
+        const newProgress = {
+          ...defaultUserProgress,
+          userId: user.uid,
+          displayName: user.displayName || 'Google User'
+        };
+        await setDoc(progressDocRef, newProgress);
+      }
+      
+      return result;
+    } catch (error) {
+      console.error('AuthContext: Google sign in failed with error:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     await signOut(auth);
   };
@@ -518,6 +559,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profileLoading,
     signIn,
     signUp,
+    signInWithGoogle,
     logout,
     updateUserProfile,
     addSubmission,
