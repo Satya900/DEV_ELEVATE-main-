@@ -120,7 +120,10 @@ function ArticleCard({
       whileHover={{ y: -5 }}
       className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100  dark:bg-black dark:border-gray-700"
     >
-      <Link to={'/'} className="block p-6">
+      <Link
+        to={`/${categoryId}/${subcategoryId}/${article.slug}`}
+        className="block p-6"
+      >
         <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-emerald-500 dark:text-neutral-100">
           {article.title}
         </h3>
