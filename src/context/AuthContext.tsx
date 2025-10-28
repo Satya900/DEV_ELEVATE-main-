@@ -411,16 +411,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }));
 
         await updateDoc(userProgressRef, {
-          submissions: updatedSubmissions,
+          submissions: firestoreSubmissions,
           totalAttempted: Math.max(userProgress.totalAttempted || 0, updatedSubmissions.length)
         });
         
         // Update local state with new submission and totalAttempted count
-        setUserProgress({
+        const updatedProgress = {
           ...userProgress,
           submissions: updatedSubmissions,
           totalAttempted: Math.max(userProgress.totalAttempted || 0, updatedSubmissions.length)
+        };
+        
+        console.log('Updated user progress with new submission:', {
+          totalSubmissions: updatedSubmissions.length,
+          newSubmission,
+          updatedProgress
         });
+        
+        setUserProgress(updatedProgress);
       }
 
       if (submission.status === 'Accepted') {

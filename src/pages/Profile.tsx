@@ -37,8 +37,17 @@ export default function Profile() {
       level: 1
     };
     
-    const totalSubmissions = userProgress.submissions?.length || 0;
-    const acceptedSubmissions = userProgress.submissions?.filter(s => s.status === 'Accepted').length || 0;
+    // Ensure we have a fresh count of submissions
+    const submissions = userProgress.submissions || [];
+    const totalSubmissions = submissions.length;
+    const acceptedSubmissions = submissions.filter(s => s.status === 'Accepted').length;
+    
+    console.log('Stats calculation:', {
+      submissionsArray: submissions,
+      totalSubmissions,
+      acceptedSubmissions,
+      userProgressSubmissions: userProgress.submissions
+    });
     
     return {
       totalSolved: userProgress.totalSolved || 0,
@@ -48,7 +57,7 @@ export default function Profile() {
       xp: userProgress.xp || 0,
       level: userProgress.level || 1
     };
-  }, [userProgress]);
+  }, [userProgress, userProgress?.submissions]);
   
   // Update local state when profile data is loaded
   useEffect(() => {
@@ -933,12 +942,28 @@ export default function Profile() {
             )}
             
             {/* Add this button after the user info section */}
-            <div className="mt-8 text-center">
+            <div className="mt-8 text-center space-x-4">
               <button
                 onClick={testAndFixFirebaseConnection}
                 className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-800/50"
               >
                 Test & Fix Firebase Connection
+              </button>
+              
+              <button
+                onClick={() => {
+                  console.log('Current userProgress:', userProgress);
+                  console.log('Current stats:', stats);
+                  console.log('Submissions count:', userProgress?.submissions?.length || 0);
+                  setDbTestResult(`Debug Info: 
+                    - Total submissions: ${userProgress?.submissions?.length || 0}
+                    - Stats total submissions: ${stats.totalSubmissions}
+                    - User progress exists: ${!!userProgress}
+                    - Submissions array exists: ${!!userProgress?.submissions}`);
+                }}
+                className="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-800/50"
+              >
+                Debug Submissions Count
               </button>
             </div>
             
