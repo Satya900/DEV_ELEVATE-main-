@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
 import { Projects } from './pages/Projects';
@@ -16,7 +16,6 @@ import TopicsPage from './pages/TopicsPage';
 import TopicDetailPage from './pages/TopicDetailPage';
 import QuestionSolvingPage from './pages/QuestionSolvingPage';
 import { Toaster } from 'react-hot-toast';
-import ProtectedRoute from './components/ProtectedRoute';
 import { Footer } from './components/Footer';
 import Header from './components/Header';
 import Courses from './pages/Courses';
@@ -35,66 +34,131 @@ function LoadingSpinner() {
   );
 }
 
+// Modal versions of SignIn and SignUp
+function ModalSignIn() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const backgroundLocation = location.state?.backgroundLocation;
+
+  const handleClose = () => {
+    navigate(backgroundLocation?.pathname || '/', { replace: true });
+  };
+
+  return (
+    <SignIn onSuccess={handleClose} isModal={true} />
+  );
+}
+
+function ModalSignUp() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const backgroundLocation = location.state?.backgroundLocation;
+
+  const handleClose = () => {
+    navigate(backgroundLocation?.pathname || '/', { replace: true });
+  };
+
+  return (
+    <SignUp onSuccess={handleClose} isModal={true} />
+  );
+}
+
 function AppContent() {
   const { loading, currentUser } = useAuth();
   const { themeMode, storedTheme, lightTheme, darkTheme, systemTheme } = useThemeManager();
+  const location = useLocation();
+  
+  // Check if current route is a modal route
+  const state = location.state as { backgroundLocation?: Location; isModal?: boolean };
+  const isModalRoute = state?.isModal;
+  const backgroundLocation = state?.backgroundLocation;
   
   if (loading) {
     return <LoadingSpinner />;
   }
 
   return (
-    <ThemeProvider value={{ themeMode, storedTheme, lightTheme, darkTheme, systemTheme }}>
-      <AuthProvider>
-        <Router>
-            <div className="flex flex-col min-h-screen">
-              <Header />
-              <main className="flex-grow">
-                <Navbar />
-                <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/signin" element={!currentUser ? <SignIn /> : <Navigate to="/profile" />} />
-                <Route path="/signup" element={!currentUser ? <SignUp /> : <Navigate to="/profile" />} />
-                <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/signin" />} />
-                <Route path="/dashboard" element={<UserDashboard />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/projects/:id" element={<ProjectDetails />} />
-                <Route path="/techbuzz" element={<TechBuzz />} />
-                <Route path="/techbuzz/:slug" element={<TechBuzz />} />
-                {Object.entries(categories).map(([key, category]) => (
-                  <Route
-                    key={key}
-                    path={`/${category.id}/*`}
-                    element={<CategoryLayout category={category} />}
-                  />
-                ))}
-                <Route path="/compiler" element={<Compiler />} />
-                
-                {/* Topic-based preparation routes */}
-                <Route path="/topics" element={<TopicsPage />} />
-                <Route path="/topics/:topicId" element={<TopicDetailPage />} />
-                <Route path="/solve/:questionId" element={<QuestionSolvingPage />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/password-recovery" element={<PasswordRecovery />} />
-                <Route path="/problems" element={<ProblemsPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            <Footer />
-            <Toaster position="bottom-right" />
-                      </div>
-          </Router>
-        </AuthProvider>
-        <GlobalChatbot />
-    </ThemeProvider>
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow">
+        {/* Show navbar only if not in modal */}
+        {!isModalRoute && <Navbar />}
+        
+        {/* Main Routes */}
+        <Routes location={backgroundLocation || location}>
+          <Route path="/" element={<Home />} />
+          
+          {/* Full page auth routes - only accessible directly */}
+          <Route path="/signin" element={
+            !currentUser ? 
+              <SignIn isModal={false} /> 
+              : <Navigate to="/profile" replace />
+          } />
+          <Route path="/signup" element={
+            !currentUser ? 
+              <SignUp isModal={false} /> 
+              : <Navigate to="/profile" replace />
+          } />
+          
+          <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/" replace />} />
+          <Route path="/dashboard" element={<UserDashboard />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/:id" element={<ProjectDetails />} />
+          <Route path="/techbuzz" element={<TechBuzz />} />
+          <Route path="/techbuzz/:slug" element={<TechBuzz />} />
+          {Object.entries(categories).map(([key, category]) => (
+            <Route
+              key={key}
+              path={`/${category.id}/*`}
+              element={<CategoryLayout category={category} />}
+            />
+          ))}
+          <Route path="/compiler" element={<Compiler />} />
+          
+          {/* Topic-based preparation routes */}
+          <Route path="/topics" element={<TopicsPage />} />
+          <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+          <Route path="/solve/:questionId" element={<QuestionSolvingPage />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/password-recovery" element={<PasswordRecovery />} />
+          <Route path="/problems" element={<ProblemsPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        
+        {/* Modal Routes - only show when there's a background location */}
+        {backgroundLocation && (
+          <Routes>
+            <Route 
+              path="/signin" 
+              element={<ModalSignIn />} 
+            />
+            <Route 
+              path="/signup" 
+              element={<ModalSignUp />} 
+            />
+          </Routes>
+        )}
+      </main>
+      
+      {/* Show footer only if not in modal */}
+      {!isModalRoute && <Footer />}
+      <Toaster position="bottom-right" />
+    </div>
   );
 }
 
 function App() {
+  const { themeMode, storedTheme, lightTheme, darkTheme, systemTheme } = useThemeManager();
+  
   return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
+    <ThemeProvider value={{ themeMode, storedTheme, lightTheme, darkTheme, systemTheme }}>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+          <GlobalChatbot />
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
