@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { ArrowRight, Code2, Database, Layout, Brain, Sparkles, Github, Twitter, Linkedin, Instagram, Gift, Award, Trophy } from 'lucide-react';
+import { ArrowRight, Code2, Database, Layout, Github, Twitter, Linkedin, Instagram, Gift, Award, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { SearchModal } from '../components/SearchModal';
@@ -26,7 +26,7 @@ export function Home() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="bg-gradient-to-r from-emerald-500 to-teal-500 p-3 rounded-2xl inline-block mb-6"
+                className="bg-gradient-to-r from-emerald-500 to-teal-500 p-3 rounded-2xl inline-block mb-6 animate-float"
               >
                 <Code2 className="h-12 w-12 text-white" />
               </motion.div>
@@ -37,19 +37,19 @@ export function Home() {
               <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto dark:text-neutral-300">
                 Your comprehensive platform for learning programming, from data structures to system design. Build real-world projects and advance your career.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in animation-delay-400">
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90"
+                  className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90 group hover-glow"
                 >
                   Start Learning
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </button>
                 <a
                   href="https://github.com/Satya900/DEV_MAIN.git"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center px-8 py-3 rounded-full text-black bg-gray-100 hover:bg-gray-200 transition-all font-medium dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+                  className="inline-flex items-center px-8 py-3 rounded-full text-black bg-gray-100 hover:bg-gray-200 transition-all font-medium dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 hover-lift"
                 >
                   <Github className="mr-2 h-5 w-5" />
                   View on GitHub
@@ -184,10 +184,10 @@ export function Home() {
               href="https://github.com/Satya900/DEV_MAIN/blob/main/CONTRIBUTING.md"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90"
+              className="inline-flex items-center px-8 py-3 rounded-full text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 font-medium dark:hover:bg-emerald-500/90 group"
             >
               Start Contributing
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </a>
           </div>
         </div>
@@ -231,9 +231,9 @@ function FeatureCard({
     <Link to={to}>
       <motion.div
         whileHover={{ y: -5 }}
-        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer dark:bg-black dark:border-gray-700"
+        className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 transition-colors hover:border-emerald-500 group cursor-pointer dark:bg-black dark:border-gray-700 hover-lift hover-glow"
       >
-        <div className="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+        <div className="w-12 h-12 bg-emerald-500 text-white rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
           {icon}
         </div>
         <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-500 transition-colors dark:text-neutral-200">{title}</h3>
