@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Code2, Twitter, Github, Linkedin, Instagram, Mail, ArrowRight, Star, Zap, Users, BookOpen, Sparkles, Heart } from 'lucide-react';
+import { Code2, Twitter, Github, Linkedin, Instagram, Mail, ArrowRight, Zap, Users, BookOpen, Heart } from 'lucide-react';
 
 // Social media specific styles
 const socialMediaStyles = {
@@ -67,6 +67,19 @@ function SectionHeading({ children, icon }: { children: React.ReactNode; icon?: 
 }
 
 export function Footer() {
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email.trim()) {
+      setSubscribed(true);
+      setEmail('');
+      // Reset message after 3 seconds
+      setTimeout(() => setSubscribed(false), 3000);
+    }
+  };
+
   return (
     <footer className="relative bg-white dark:bg-neutral-950 border-t border-gray-200/80 dark:border-neutral-800/80 overflow-hidden">
       {/* Enhanced Background Design */}
@@ -112,17 +125,26 @@ export function Footer() {
               <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 dark:text-neutral-300">
                 Get weekly coding resources & updates
               </p>
-              <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm rounded-lg sm:rounded-xl border border-gray-300/80 focus:border-emerald-500 focus:ring-2 sm:focus:ring-3 focus:ring-emerald-500/10 outline-none transition-all duration-300 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white dark:focus:border-emerald-400"
-                />
-                <button className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:from-emerald-600 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2">
-                  Join
-                  <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
-                </button>
-              </div>
+              {subscribed ? (
+                <div className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm font-medium text-center animate-fade-in">
+                  ✓ You are subscribed!
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="flex-1 px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm rounded-lg sm:rounded-xl border border-gray-300/80 focus:border-emerald-500 focus:ring-2 sm:focus:ring-3 focus:ring-emerald-500/10 outline-none transition-all duration-300 dark:bg-neutral-800 dark:border-neutral-600 dark:text-white dark:focus:border-emerald-400"
+                  />
+                  <button type="submit" className="px-4 py-2 sm:px-6 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:from-emerald-600 hover:to-teal-600 hover:shadow-lg hover:shadow-emerald-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-1 sm:gap-2">
+                    Join
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Social Links */}

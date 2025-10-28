@@ -25,6 +25,7 @@ import ProblemsPage from './pages/ProblemsPage';
 import TechBuzz from './pages/TechBuzz';
 import { GlobalChatbot } from './components/GlobalChatbot';
 import NotFound from './pages/NotFound';
+import { ScrollToTop } from './components/ScrollToTop';
 
 function LoadingSpinner() {
   return (
@@ -103,6 +104,7 @@ function AppContent() {
           <Route path="/profile" element={currentUser ? <Profile /> : <Navigate to="/" replace />} />
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/projects" element={<Projects />} />
+          <Route path="/projects/p1" element={currentUser ? <ProjectDetails /> : <Navigate to="/signin" state={{ from: '/projects/p1' }} replace />} />
           <Route path="/projects/:id" element={<ProjectDetails />} />
           <Route path="/techbuzz" element={<TechBuzz />} />
           <Route path="/techbuzz/:slug" element={<TechBuzz />} />
@@ -142,6 +144,7 @@ function AppContent() {
       
       {/* Show footer only if not in modal */}
       {!isModalRoute && <Footer />}
+      <ScrollToTop />
       <Toaster position="bottom-right" />
     </div>
   );

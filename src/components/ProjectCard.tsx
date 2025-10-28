@@ -2,14 +2,17 @@ import { motion } from 'framer-motion';
 import { Github, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Project } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 export function ProjectCard({ project }: { project: Project }) {
+  const { currentUser } = useAuth();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100  dark:bg-black dark:border-gray-700"
+      className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-100 dark:bg-black dark:border-gray-700 hover-lift transition-smooth"
     >
       <div className="relative h-48 overflow-hidden group">
         <Link to={`/projects/${project.id}`}>
@@ -48,20 +51,31 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
 
         <div className="flex justify-between items-center">
-          <a
-            href={project.demoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-emerald-500 hover:text-emerald-600 transition-colors"
-          >
-            <Globe className="h-4 w-4" />
-            <span>Live Demo</span>
-          </a>
+          {currentUser ? (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-emerald-500 hover:text-emerald-600 transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              <span>Live Demo</span>
+            </a>
+          ) : (
+            <Link
+              to="/signin"
+              state={{ backgroundLocation: window.location }}
+              className="flex items-center gap-2 text-gray-400 hover:text-emerald-500 transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              <span>Live Demo (Login Required)</span>
+            </Link>
+          )}
           <a
             href={project.sourceUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-black hover:text-emerald-500 transition-colors"
+            className="flex items-center gap-2 text-black hover:text-emerald-500 transition-colors dark:text-white"
           >
             <Github className="h-4 w-4" />
             <span>Source</span>
