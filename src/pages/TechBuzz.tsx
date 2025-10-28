@@ -1,28 +1,40 @@
-import { useMemo } from 'react';
-import { techbuzz } from '../data/categories/techbuzz';
-import { Link, useParams } from 'react-router-dom';
-import { ArticleLayout } from '../components/ArticleLayout';
-import { Helmet } from 'react-helmet';
+import { useMemo } from 'react'
+import { techbuzz } from '../data/categories/techbuzz'
+import { Link, useParams } from 'react-router-dom'
+import { ArticleLayout } from '../components/ArticleLayout'
+import { Helmet } from 'react-helmet'
+import { a } from 'framer-motion/client'
 
 export default function TechBuzz() {
-  const { slug } = useParams();
+  const { slug } = useParams()
   // Flatten all articles from all subcategories
-  const articles = useMemo(() => techbuzz.subcategories.flatMap(sub => sub.articles.map(article => ({
-    ...article,
-    category: sub.title
-  }))), []);
+  const articles = useMemo(
+    () =>
+      techbuzz.subcategories.flatMap((sub) =>
+        sub.articles.map((article) => ({
+          ...article,
+          category: sub.title,
+        }))
+      ),
+    []
+  )
 
   if (slug) {
-    const article = articles.find(a => a.slug === slug);
+    const article = articles.find((a) => a.slug === slug)
+    console.log(article, 'this is the find article')
     if (!article) {
       return (
         <div className="min-h-screen bg-white dark:bg-black pt-20 pb-12 flex items-center justify-center">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Article Not Found</h1>
-            <Link to="/techbuzz" className="text-emerald-600 hover:underline">Back to TechBuzz</Link>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              Article Not Found
+            </h1>
+            <Link to="/techbuzz" className="text-emerald-600 hover:underline">
+              Back to TechBuzz
+            </Link>
           </div>
         </div>
-      );
+      )
     }
     return (
       <div className="min-h-screen bg-white dark:bg-black pt-20 pb-12">
@@ -37,18 +49,26 @@ export default function TechBuzz() {
             categoryPath="/techbuzz"
           />
           <div className="mt-8">
-            <Link to="/techbuzz" className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700">Back to TechBuzz</Link>
+            <Link
+              to="/techbuzz"
+              className="px-4 py-2 bg-emerald-600 text-white rounded hover:bg-emerald-700"
+            >
+              Back to TechBuzz
+            </Link>
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   return (
     <div className="min-h-screen bg-white dark:bg-black pt-20 pb-12">
       <Helmet>
         <title>TechBuzz | DevElevate</title>
-        <meta name="description" content="Trending tech articles on AI, Web3, Cloud, DevTools, and more." />
+        <meta
+          name="description"
+          content="Trending tech articles on AI, Web3, Cloud, DevTools, and more."
+        />
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-12 border border-gray-700 rounded-2xl p-8 bg-black">
@@ -58,7 +78,7 @@ export default function TechBuzz() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles.map(article => (
+          {articles.map((article) => (
             <div
               key={article.id}
               className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 flex flex-col"
@@ -93,5 +113,5 @@ export default function TechBuzz() {
         </div>
       </div>
     </div>
-  );
-} 
+  )
+}
