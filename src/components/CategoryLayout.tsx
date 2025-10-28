@@ -4,6 +4,7 @@ import { Link, Routes, Route, useLocation } from 'react-router-dom'
 import { ChevronRight, Clock, Calendar } from 'lucide-react'
 import { ArticleLayout } from './ArticleLayout'
 import { useEffect } from 'react'
+import { Github } from 'lucide-react'
 
 interface CategoryLayoutProps {
   category: Category
@@ -28,18 +29,73 @@ export function CategoryLayout({ category }: CategoryLayoutProps) {
     )
   }
 
+  // Fancy empty state with contribution links
   if (cat.length === 0) {
+    const repoUrl = 'https://github.com/Satya900/DEV_ELEVATE-main-' // change to your repo
+    const newDocUrl = `https://github.com/Satya900/DEV_ELEVATE-main-/issues`
+    const issueUrl = `${repoUrl}/issues/new?title=Docs%3A%20%5BTopic%5D&labels=documentation`
+
     return (
-      <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black ">
+      <div className="min-h-screen bg-white pt-20 pb-12 dark:bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-sm p-8 mt-6 border border-gray-100 dark:bg-black dark:border-gray-700">
-            <h2 className="text-2xl font-bold text-black mb-4 dark:text-neutral-100">
-              No articles found
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-xl border border-gray-100 dark:border-gray-700 bg-gradient-to-br from-emerald-50/70 to-cyan-50/70 dark:from-gray-900 dark:to-black p-10 mt-6 text-center"
+          >
+            <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">
+              <Github />
+            </div>
+            <h2 className="text-2xl font-bold text-black mb-3 dark:text-neutral-100">
+              No articles here — yet
             </h2>
-            <p className="text-lg text-black dark:text-neutral-300">
-              We couldn't find any subcategories or articles for this category.
+            <p className="text-lg text-black/80 dark:text-neutral-300">
+              Help us grow these docs. Add an article or suggest a topic on
+              GitHub.
             </p>
-          </div>
+
+            <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
+              <a
+                href={newDocUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-lg bg-emerald-600 px-4 py-2.5 text-white hover:bg-emerald-700 transition-colors"
+              >
+                Add article on GitHub
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </a>
+              <a
+                href={`${repoUrl}/blob/main/CONTRIBUTING.md`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-lg border border-emerald-200 px-4 py-2.5 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900 dark:text-emerald-300 dark:hover:bg-emerald-900/30 transition-colors"
+              >
+                Contribute to docs
+              </a>
+            </div>
+
+            <div className="mt-4 text-sm text-black/70 dark:text-neutral-400">
+              Prefer opening an issue?{' '}
+              <a
+                href={issueUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-2"
+              >
+                Suggest a topic
+              </a>
+            </div>
+
+            <div className="mt-8">
+              <Link
+                to={`/${category.id}/`}
+                className="inline-flex items-center text-emerald-600 hover:text-emerald-700 dark:text-emerald-400 dark:hover:text-emerald-300"
+              >
+                Browse all topics
+                <ChevronRight className="ml-1 h-4 w-4" />
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </div>
     )
@@ -114,16 +170,13 @@ function ArticleCard({
   categoryId: string
   subcategoryId: string
 }) {
-  console.log(article)
+  console.log(JSON.stringify(article), 'this is the article')
   return (
     <motion.div
       whileHover={{ y: -5 }}
       className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100  dark:bg-black dark:border-gray-700"
     >
-      <Link
-        to={`/${categoryId}/${subcategoryId}/${article.slug}`}
-        className="block p-6"
-      >
+      <Link to={`/tech/${article.markdownFile}`} className="block p-6">
         <h3 className="text-xl font-semibold text-black mb-2 group-hover:text-emerald-500 dark:text-neutral-100">
           {article.title}
         </h3>
