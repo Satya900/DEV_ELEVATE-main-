@@ -84,7 +84,7 @@ export function Navbar() {
 							{nav_links.map((link) => (
 								<div key={link.name} className="relative">
 									{link.hasDropdown ? (
-										<DropdownNavLink 
+										<DropdownNavLink
 											link={link}
 											isActive={activeDropdown === link.name}
 											onToggle={() => setActiveDropdown(activeDropdown === link.name ? null : link.name)}
