@@ -25,34 +25,34 @@ export interface Article {
   description: string;
   slug: string;
   markdownFile: string;
-  
+
   // Enhanced metadata
-  difficultyLevel: DifficultyLevel;
-  contentType: ContentType;
-  author: string;
+  difficultyLevel?: DifficultyLevel;
+  contentType?: ContentType;
+  author?: string;
   authorImageUrl?: string;
-  estimatedMinutes: number;
+  estimatedMinutes?: number;
   lastUpdated: string;
-  
+
   // Tags for improved categorization and search
-  tags: string[];
-  
+  tags?: string[];
+
   // Prerequisites for learning path
   prerequisites?: string[]; // Array of article IDs that should be completed first
-  
+
   // Learning outcomes
   learningOutcomes?: string[];
-  
+
   // Related content
   relatedArticles?: string[]; // Array of related article IDs
-  
+
   // Additional resources
   externalResources?: {
     title: string;
     url: string;
     type: 'video' | 'article' | 'documentation' | 'github' | 'other';
   }[];
-  
+
   // For backward compatibility
   readingTime?: string;
 }

@@ -7,8 +7,23 @@ import { Clock, Calendar, ChevronLeft, User, Tag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Article } from '../types'
 
+// Simplified article type for TechBuzz and other blog-style articles
+export interface SimpleArticle {
+  id: string;
+  title: string;
+  description: string;
+  slug: string;
+  markdownFile: string;
+  readingTime?: string;
+  lastUpdated?: string;
+  category?: string;
+}
+
+// Union type that accepts either full Article or simplified article
+type ArticleType = Article | SimpleArticle;
+
 interface ArticleLayoutProps {
-  article: Article
+  article: ArticleType
   categoryTitle: string
   categoryPath: string
 }
