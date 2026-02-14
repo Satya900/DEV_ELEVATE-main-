@@ -8,9 +8,11 @@ import remarkGfm from 'remark-gfm';
 import { useEffect, useState } from 'react';
 import { CodeBlock } from '../components/CodeBlock';
 import '../data/markdown/MarkdownStyles.css';
+import { useAuth } from '../context/AuthContext';
 
 export function ProjectDetails() {
   const { id } = useParams();
+  const { currentUser } = useAuth();
   const project = projects.find(p => p.id === id);
   const [markdown, setMarkdown] = useState('');
 
@@ -115,8 +117,9 @@ export function ProjectDetails() {
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  code({ node, inline, className, children, ...props }) {
+                  code({ className, children, ...props }: any) {
                     const match = /language-(\w+)/.exec(className || '');
+                    const inline = !className;
                     return !inline && match ? (
                       <CodeBlock
                         language={match[1]}
@@ -165,15 +168,26 @@ export function ProjectDetails() {
 
             {/* Project Links */}
             <div className="flex flex-col sm:flex-row gap-4 mt-12">
-              <a
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
-              >
-                <Globe className="mr-2 h-5 w-5" />
-                View Live Demo
-              </a>
+              {currentUser ? (
+                <a
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-emerald-500 hover:bg-emerald-600 transition-colors"
+                >
+                  <Globe className="mr-2 h-5 w-5" />
+                  View Live Demo
+                </a>
+              ) : (
+                <Link
+                  to="/signin"
+                  state={{ backgroundLocation: window.location }}
+                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gray-400 hover:bg-emerald-500 transition-colors"
+                >
+                  <Globe className="mr-2 h-5 w-5" />
+                  View Live Demo (Login Required)
+                </Link>
+              )}
               <a
                 href={project.sourceUrl}
                 target="_blank"
